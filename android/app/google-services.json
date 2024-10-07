@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "996553373997",
+    "project_id": "tabibinet",
+    "storage_bucket": "tabibinet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996553373997:android:5cb26c3e2c085e97463ba4",
+        "android_client_info": {
+          "package_name": "com.tabibinet.tabibinet_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ5e5fnwU_rQz9JxIqNONW6f-hsqpYpe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
