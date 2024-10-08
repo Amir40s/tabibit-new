@@ -1,6 +1,9 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../model/data/schedule_model.dart';
 
 class PatientHomeProvider extends ChangeNotifier{
 
@@ -88,6 +91,29 @@ class DateProvider extends ChangeNotifier {
   void updateSelectedDate(DateTime date) {
     _selectedDate = date;
     log(date.toString());
+    notifyListeners();
+  }
+
+
+  List<ScheduleItem> _schedulesData = [];
+  int _currentScheduleIndex = 0;
+
+  List<ScheduleItem> get schedulesData => _schedulesData;
+  int get currentScheduleIndex => _currentScheduleIndex;
+
+  // Fetch schedules from Firestore
+  Future<void> fetchSchedulesData() async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('bannerAds').get();
+      _schedulesData = snapshot.docs.map((doc) => ScheduleItem.fromFirestore(doc.data() as Map<String, dynamic>)).toList();
+      notifyListeners();
+    } catch (e) {
+      print("Error fetching schedules: $e");
+    }
+  }
+
+  void setScheduleIndex(int index) {
+    _currentScheduleIndex = index;
     notifyListeners();
   }
 }

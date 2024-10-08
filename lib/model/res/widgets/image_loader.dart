@@ -10,7 +10,7 @@ class ImageLoaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: imageUrl.isNotEmpty ? imageUrl : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1728259200&semt=ais_hybrid",
       placeholder: (context, url) => SvgPicture.asset(AppIcons.personIcon), // Path to your placeholder image
       errorWidget: (context, url, error) => SvgPicture.asset(AppIcons.personIcon), // Display an error icon if the image fails to load
       fit: BoxFit.cover,

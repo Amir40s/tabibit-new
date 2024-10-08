@@ -95,7 +95,8 @@ class FaqSection extends StatelessWidget {
                             SvgPicture.asset(
                               isSelected ? AppIcons.caretUpIcon
                                   : AppIcons.caretDownIcon,
-                              height: 3.h,)
+                              height: 3.h,
+                            )
                           ],
                         ),
                         Visibility(
@@ -109,10 +110,13 @@ class FaqSection extends StatelessWidget {
                             child: SizedBox(height: height1,)),
                         Visibility(
                           visible: isSelected,
-                          child: TextWidget(
-                            text: answer,
-                            fontSize: 12, fontWeight: FontWeight.w400,
-                            isTextCenter: false, textColor: textColor, maxLines: 2,),
+                          child: Text(
+                            answer,
+                              maxLines: 2,
+                           style:  TextStyle(
+                               fontSize: 16, fontWeight: FontWeight.w400,
+                               color: textColor
+                           ) ),
                         )
                       ],
                     ),

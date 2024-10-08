@@ -39,12 +39,12 @@ class AppUtils{
     String request = "",
   }) async {
     // change your email here
-    String username = 'tabibinet82@gmail.com';
+    String username = 'n9darsolutions@gmail.com';
     // change your password here
-    String password = 'wham ksgn qufv upla';
+    String password = 'luie wdzf xkaz hrex';
     final smtpServer = gmail(username, password);
     final message = Message()
-      ..from = Address(username, 'TabibiNet')
+      ..from = Address(username, 'Tabibi-Net')
       ..recipients.add(recipientEmail)
       ..subject = 'One-Time OTP Verification '
       ..text = "Your TabibiNet Verification Code is: $otpCode";
@@ -60,7 +60,6 @@ class AppUtils{
       // }else{
       //   Get.offAll(OtpScreen(otpCode: otpCode,email: recipientEmail));
       // }
-
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());

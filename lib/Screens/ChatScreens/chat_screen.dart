@@ -75,6 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _handleMicButton() async {
 
+    log("Enter");
     if (_isRecording) {
       // Stop recording
       await _recorder.stopRecording();
@@ -85,10 +86,12 @@ class _ChatScreenState extends State<ChatScreen> {
             filePath, context); // Upload to Firebase
         final provider = Provider.of<ChatProvider>(context, listen: false);
         final fcm = FCMService();
-        await fcm.sendNotification(widget.deviceToken,
-            "Incoming Message",
-            "you have received voice message",
-            widget.patientEmail);
+        if(widget.type != "support"){
+          await fcm.sendNotification(widget.deviceToken,
+              "Incoming Message",
+              "you have received voice message",
+              widget.patientEmail);
+        }
         await provider.sendFileMessage(
           chatRoomId: widget.chatRoomId,
           fileUrl: url ?? "",
@@ -145,6 +148,28 @@ class _ChatScreenState extends State<ChatScreen> {
             log("Microphone permission already granted.");
           }
         }
+      }
+    }
+    else{
+      // Start recording
+      var status = await Permission.microphone.status;
+      if (!status.isGranted) {
+        // Request the permission
+        status = await Permission.microphone.request();
+
+        if (status.isGranted) {
+          await _recorder.startRecording();
+          setState(() {
+            _isRecording = true;
+          });
+        } else if (status.isDenied) {
+          openAppSettings();
+        } else if (status.isPermanentlyDenied) {
+          openAppSettings();
+        }
+      }
+      else {
+        log("Microphone permission already granted.");
       }
     }
   }
@@ -540,9 +565,11 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               if (messageController.text.isNotEmpty) {
                 final fcm = FCMService();
-                await fcm.sendNotification(widget.deviceToken,
-                    "Incoming Message", messageController.text.toString(),
-                    widget.patientEmail);
+                if(widget.type != "support"){
+                  await fcm.sendNotification(widget.deviceToken,
+                      "Incoming Message", messageController.text.toString(),
+                      widget.patientEmail);
+                }
                 await provider.sendMessage(
                     chatRoomId: widget.chatRoomId,
                     message: messageController.text,
@@ -601,10 +628,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   if(docP.selectedFilePath != null){
                     final url = await docP.uploadFile();
                     final fcm = FCMService();
-                    await fcm.sendNotification(widget.deviceToken,
-                        "Incoming Message",
-                        "you have received document file",
-                        widget.patientEmail);
+                    if(widget.type != "support"){
+                      await fcm.sendNotification(widget.deviceToken,
+                          "Incoming Message",
+                          "you have received document file",
+                          widget.patientEmail);
+                    }
+
                     await provider.sendFileMessage(
                       chatRoomId: widget.chatRoomId,
                       fileUrl: url.toString(),
@@ -628,10 +658,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     final url = await imageP.uploadFileReturn();
 
                     final fcm = FCMService();
-                    await fcm.sendNotification(widget.deviceToken,
-                        "Incoming Message",
-                        "you have received Image file",
-                        widget.patientEmail);
+                    if(widget.type != "support"){
+                      await fcm.sendNotification(widget.deviceToken,
+                          "Incoming Message",
+                          "you have received Image file",
+                          widget.patientEmail);
+                    }
                     await provider.sendFileMessage(
                       chatRoomId: widget.chatRoomId,
                       fileUrl: url.toString(),

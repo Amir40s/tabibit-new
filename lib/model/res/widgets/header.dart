@@ -123,7 +123,7 @@ class ChatHeader extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)
                   ),
                   child: ImageLoaderWidget(imageUrl:
-                  picture != null && picture.isNotEmpty
+                  picture.isNotEmpty
                       ? picture
                       : "https://res.cloudinary.com/dz0mfu819/image/upload/v1725947218/profile_xfxlfl.pngs"
                   )

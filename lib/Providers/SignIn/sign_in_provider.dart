@@ -98,8 +98,10 @@ class SignInProvider extends ChangeNotifier{
       DocumentReference docRef =  fireStore.collection("users").doc(auth.currentUser!.uid);
       DocumentSnapshot docSnapshot = await docRef.get();
 
+      log("current User:: ${auth.currentUser?.uid.toString()}");
       if (docSnapshot.exists) {
         final type = docSnapshot.get("userType");
+        log("User type: $type");
         if(type == _userType){
           if (type == "Patient") {
             await profileProvider!.getSelfInfo()

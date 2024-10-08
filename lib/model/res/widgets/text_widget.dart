@@ -35,7 +35,6 @@ class TextWidget extends StatelessWidget {
 
     final provider = Provider.of<TranslationProvider>(context);
     return AutoSizeText(
-      minFontSize: 8,
       key: valueKey,
       provider.translatedTexts[text] ?? text,
       maxLines: maxLines,
