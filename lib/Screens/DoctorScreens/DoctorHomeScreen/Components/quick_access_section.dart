@@ -7,6 +7,7 @@ import 'package:tabibinet_project/Screens/DoctorScreens/ConsultationScreen/consu
 import 'package:tabibinet_project/Screens/DoctorScreens/DoctorHomeScreen/Components/quick_access_container.dart';
 import 'package:tabibinet_project/chart_screen.dart';
 
+import '../../../../call_screen.dart';
 import '../../../../constant.dart';
 import '../../../../model/res/constant/app_icons.dart';
 
@@ -30,7 +31,7 @@ class QuickAccessSection extends StatelessWidget {
         SizedBox(width: 15.w,),
         QuickAccessContainer(
           onTap: (){
-          //  Get.to(()=>CallScreen());
+           Get.to(()=>CallScreen());
             // Get.to(()=>ConsultationScreen());
           },
           text: 'Appointments Call',

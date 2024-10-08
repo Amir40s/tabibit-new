@@ -1,5 +1,7 @@
 class AppText{
 
+  
+
   static const appTextList = [
     "Choose Location",
     "Choose your location for near hospitals",

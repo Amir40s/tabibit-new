@@ -31,57 +31,59 @@ class ContactUsScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
-        body: Column(
-          children: [
-             Header(text: languageP.translatedTexts["Contact Us"] ?? "Contact Us"),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   TextWidget(
-                    text: "Full Name", fontSize: 14,
-                    fontWeight: FontWeight.w600, isTextCenter: false,
-                    textColor: textColor, fontFamily: AppFonts.semiBold,),
-                  SizedBox(height: height2,),
-                  InputField(
-                    inputController: nameC,
-                    hintText: "Full Name",
-                  ),
-                  SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "Phone Number", fontSize: 14,
-                    fontWeight: FontWeight.w600, isTextCenter: false,
-                    textColor: textColor, fontFamily: AppFonts.semiBold,),
-                  SizedBox(height: height2,),
-                  InputField(
-                    inputController: phoneC,
-                    hintText: "Phone Number",
-                  ),
-                  SizedBox(height: height1,),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextWidget(
-                        text: "Write Your Problem", fontSize: 14,
-                        fontWeight: FontWeight.w600, isTextCenter: false,
-                        textColor: textColor, fontFamily: AppFonts.semiBold,),
-                      TextWidget(
-                        text: "Max 250 words", fontSize: 12,
-                        fontWeight: FontWeight.w400, isTextCenter: false,
-                        textColor: textColor,),
-                    ],
-                  ),
-                  SizedBox(height: height2,),
-                  InputField(
-                    inputController: problemC,
-                    hintText: "Tell doctor about your problem....",
-                    maxLines: 5,
-                  ),
-                ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+               Header(text: languageP.translatedTexts["Contact Us"] ?? "Contact Us"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                     TextWidget(
+                      text: "Full Name", fontSize: 14,
+                      fontWeight: FontWeight.w600, isTextCenter: false,
+                      textColor: textColor, fontFamily: AppFonts.semiBold,),
+                    SizedBox(height: height2,),
+                    InputField(
+                      inputController: nameC,
+                      hintText: "Full Name",
+                    ),
+                    SizedBox(height: height1,),
+                    const TextWidget(
+                      text: "Phone Number", fontSize: 14,
+                      fontWeight: FontWeight.w600, isTextCenter: false,
+                      textColor: textColor, fontFamily: AppFonts.semiBold,),
+                    SizedBox(height: height2,),
+                    InputField(
+                      inputController: phoneC,
+                      hintText: "Phone Number",
+                    ),
+                    SizedBox(height: height1,),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextWidget(
+                          text: "Write Your Problem", fontSize: 14,
+                          fontWeight: FontWeight.w600, isTextCenter: false,
+                          textColor: textColor, fontFamily: AppFonts.semiBold,),
+                        TextWidget(
+                          text: "Max 250 words", fontSize: 12,
+                          fontWeight: FontWeight.w400, isTextCenter: false,
+                          textColor: textColor,),
+                      ],
+                    ),
+                    SizedBox(height: height2,),
+                    InputField(
+                      inputController: problemC,
+                      hintText: "Tell doctor about your problem....",
+                      maxLines: 5,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(20.0),
