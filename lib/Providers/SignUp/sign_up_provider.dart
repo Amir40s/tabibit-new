@@ -108,6 +108,7 @@ class SignUpProvider extends ChangeNotifier{
             "reviews": "0",
             "patients": "0",
             "userType": type,
+            "balance": "0.0",
             "accountType": "Custom",
             "password": passwordC.text.toString().trim(),
             "deviceToken": deviceToken ?? "",
