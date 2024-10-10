@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../constant.dart';
+import '../../global_provider.dart';
 import '../../model/data/appointment_model.dart';
 
 class MyAppointmentProvider extends ChangeNotifier{
@@ -23,6 +24,11 @@ class MyAppointmentProvider extends ChangeNotifier{
   }
 
   cancelAppointment(String id)async{
+    final patientNotificationProvider = GlobalProviderAccess.patientNotificationPro;
+    await patientNotificationProvider!.storeNotification(
+        title: "Appointment Cancel",
+        subTitle: "Your appointment has been cancelled",
+        type: "appointment");
     await fireStore.collection("appointment").doc(id).update({
       "status" : "cancel"
     });

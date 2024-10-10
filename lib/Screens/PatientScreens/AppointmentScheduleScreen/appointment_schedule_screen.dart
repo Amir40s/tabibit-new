@@ -315,9 +315,16 @@ class AppointmentScheduleScreen extends StatelessWidget {
                                 if(patientAppointmentP.appointmentDate == null){
                                   patientAppointmentP.setAppointmentDate(DateTime.now());
                                 }
-                                Get.to(()=> PatientDetailScreen(
-                                  image: image,
-                                ));
+
+                                if(patientAppointmentP.selectFee.isNotEmpty){
+                                  Get.to(()=> PatientDetailScreen(
+                                    image: image,
+                                  ));
+                                }else{
+                                  ToastMsg().toastMsg(languageP.translatedTexts["Select Fee Information"] ?? "Select Fee Information",toastColor: redColor);
+
+                                }
+
                               }else{
                                 ToastMsg().toastMsg(languageP.translatedTexts["Select Appointment Time!"] ?? "Select Appointment Time!",toastColor: redColor);
                               }

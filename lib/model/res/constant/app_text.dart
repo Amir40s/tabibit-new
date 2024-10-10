@@ -11,6 +11,7 @@ class AppText{
     "Choose Language",
     "Contact Us",
     "FAQ",
+    "Select Fee Information",
     "Terms",
     "Pending",
     "No Patients found",

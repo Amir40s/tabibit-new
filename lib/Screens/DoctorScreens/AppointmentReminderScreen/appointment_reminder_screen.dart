@@ -38,7 +38,7 @@ class AppointmentReminderScreen extends StatelessWidget {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No users found'));
+                    return const Center(child: Text('No Appointment Remainder Found'));
                   }
                   return ListView.separated(
                     shrinkWrap: true,
@@ -91,6 +91,7 @@ class AppointmentReminderScreen extends StatelessWidget {
                                   phone: reminder['patientPhone'],
                                   appointmentDate: reminder['appointmentDate'],
                                   appointmentTime: reminder['appointmentTime'],
+                                  deviceToken: reminder['deviceToken'] ?? "",
                                 ));
                                 log(reminder['patientPhone']);
                               },)

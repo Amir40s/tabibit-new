@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/PatientBottomNavBar/patient_bottom_nav_bar.dart';
 
 import '../../../constant.dart';
 import '../../../model/res/constant/app_assets.dart';
@@ -46,7 +47,7 @@ class CancelSuccessfulScreen extends StatelessWidget {
               SubmitButton(
                 title: "Okay!",
                 press: () {
-                  Get.back();
+                 Get.to(PatientBottomNavBar());
                 },),
               SizedBox(height: height2,),
             ],

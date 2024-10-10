@@ -213,6 +213,8 @@ class PaymentProvider with ChangeNotifier {
           image
         );
 
+         patientAppointmentP!.clearData();
+
         final fcm = FCMService();
         fcm.sendNotification(
           patientAppointmentP!.doctorDeviceToken.toString(),
@@ -234,10 +236,7 @@ class PaymentProvider with ChangeNotifier {
           await provider.startTrial(uid, "premium");
           Get.offAll(const DoctorBottomNavbar());
         }
-
       }
-
-
       log("payment done");
 
     }catch(e){

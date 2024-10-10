@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/ReminderScreen/reminder_screen.dart';
 import 'package:tabibinet_project/constant.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
 import 'package:tabibinet_project/model/res/widgets/header.dart';
@@ -29,11 +30,12 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
     required this.location,
     required this.appointmentDate,
     required this.appointmentTime,
+    required this.deviceToken,
   });
 
   final appUtils = AppUtils();
 
-  final String name,age,gender,time,location,email,phone,appointmentDate,appointmentTime;
+  final String name,age,gender,time,location,email,phone,appointmentDate,appointmentTime,deviceToken;
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +139,10 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
                       textColor: const Color(0xffF23A00),
                       bdColor: const Color(0xffF23A00),
                       press: () async{
+                        final fcm = FCMService();
+                      await  fcm.sendNotification(deviceToken, "Appointment Cancelled",
+                          "Your appointment has been cancelled", auth.currentUser?.uid.toString() ?? ""
+                      );
                         await fireStore.collection("appointmentReminder")
                             .doc(time)
                             .update({

@@ -299,4 +299,30 @@ class PatientAppointmentProvider with ChangeNotifier {
     }
   }
 
+  // clear all data in variables
+  void clearData() {
+    _doctorId = null;
+    _doctorName = null;
+    _doctorEmail = null;
+    _doctorRating = null;
+    _doctorDeviceToken = null;
+    _doctorLocation = null;
+    _fromTime = null;
+    _toTime = null;
+    _appointmentTime = null;
+    _appointmentDate = null;
+    _selectedGender = null;
+    _patientAge = null;
+    _selectFeeIndex = null;
+    _selectFeeType = "";
+    _selectFee = "";
+    _selectFeeId = "";
+    _selectFeeSubTitle = "";
+    _filteredTime = [];
+    _selectedFile = null;
+    _selectedFilePath = null;
+    _uploadedFileUrl = null;
+    notifyListeners();
+  }
+
 }

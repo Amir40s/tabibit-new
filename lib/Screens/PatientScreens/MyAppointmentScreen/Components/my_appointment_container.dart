@@ -140,6 +140,7 @@ class MyAppointmentContainer extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
+        if(appointmentStatusText != "Decline")
                 Container(
                   height: 35,
                   width: 35,
@@ -152,37 +153,42 @@ class MyAppointmentContainer extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(height: 20,),
-            Visibility(
-              visible: isPrimaryButtons!,
-              child: DottedLine(
-                color: greyColor,),
-            ),
-            const SizedBox(height: 20,),
-            Visibility(
-              visible: isPrimaryButtons!,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SubmitButton(
-                      width: 35.w,
-                      height: 40,
-                      title: leftButtonText,
-                      textColor: themeColor,
-                      bgColor: bgColor,
-                      bdRadius: 6,
-                      press: leftButtonTap
-                  ),
-                  SubmitButton(
-                      width: 35.w,
-                      height: 40,
-                      title: rightButtonText,
-                      bdRadius: 6,
-                      press: rightButtonTap
-                  ),
-                ],
+
+            if(appointmentStatusText != "Decline")...[
+              const SizedBox(height: 20,),
+              Visibility(
+                visible: isPrimaryButtons!,
+                child: DottedLine(
+                  color: greyColor,),
               ),
-            ),
+              const SizedBox(height: 20,),
+              Visibility(
+                visible: isPrimaryButtons!,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    SubmitButton(
+                        width: 35.w,
+                        height: 40,
+                        title: leftButtonText,
+                        textColor: themeColor,
+                        bgColor: bgColor,
+                        bdRadius: 6,
+                        press: leftButtonTap
+                    ),
+                    SubmitButton(
+                        width: 35.w,
+                        height: 40,
+                        title: rightButtonText,
+                        bdRadius: 6,
+                        press: rightButtonTap
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
           ],
         ),
       ),
