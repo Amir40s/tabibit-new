@@ -53,7 +53,7 @@ class SubscriptionProvider with ChangeNotifier {
       await FirebaseFirestore.instance.collection("users")
           .doc(uid).update({
         'trialStartDate': currentDate.toIso8601String(),
-        'memberShip ': membership,
+        'memberShip': membership,
       });
 
       _isTrialExpired = false;

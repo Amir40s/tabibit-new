@@ -138,7 +138,7 @@ class DoctorProfileScreen extends StatelessWidget {
                         Get.to(()=>LanguageScreen(isNextButton: false,));
                       },
                       minTileHeight: 70,
-                      title: const TextWidget(
+                      title:  TextWidget(
                         text: "Language", fontSize: 18,
                         fontWeight: FontWeight.w600, isTextCenter: false,
                         textColor: textColor, fontFamily: AppFonts.semiBold,),

@@ -36,13 +36,18 @@ class ScheduleContainer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextWidget(
-                  text: data, // Title
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  isTextCenter: false,
-                  textColor: textColor,
-                  fontFamily: AppFonts.semiBold,
+                SizedBox(
+                  width: 50.w,
+                  child: TextWidget(
+                    text: data, // Title
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    isTextCenter: false,
+                    maxLines: 2,
+                    textColor: textColor,
+                    overflow: TextOverflow.clip,
+                    fontFamily: AppFonts.semiBold,
+                  ),
                 ),
                 // TextWidget(
                 //   text: subtitle, // Subtitle
@@ -53,15 +58,19 @@ class ScheduleContainer extends StatelessWidget {
                 //   fontFamily: AppFonts.regular,
                 // ),
                 const Spacer(),
-                 TextWidget(
-                  text: subtitle,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  isTextCenter: false,
-                  maxLines: 2,
-                  textColor: textColor,
-                  fontFamily: AppFonts.regular,
-                ),
+                 SizedBox(
+                   width: 50.w,
+                   child: TextWidget(
+                    text: subtitle,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    isTextCenter: false,
+                    maxLines: 3,
+                    textColor: textColor,
+                    overflow: TextOverflow.clip,
+                    fontFamily: AppFonts.regular,
+                                   ),
+                 ),
               ],
             ),
           ),

@@ -67,7 +67,7 @@ class AccountTypeScreen extends StatelessWidget {
                         value.setUserType("Health Professional");
                       },
                       width: 24.w,
-                      title: "Health Professional",
+                      title: "Doctor",
                       image: AppAssets.female,
                       isIcon: value.userType == "Health Professional",
                       textColor: value.userType == "Health Professional" ? bgColor : textColor,

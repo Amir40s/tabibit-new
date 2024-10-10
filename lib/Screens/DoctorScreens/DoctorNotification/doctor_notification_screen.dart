@@ -34,7 +34,7 @@ class DoctorNotificationScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  const Row(
+                   Row(
                     children: [
                       TextWidget(
                         text: "Latest Update", fontSize: 20,

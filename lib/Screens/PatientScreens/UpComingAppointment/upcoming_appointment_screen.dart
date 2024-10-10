@@ -67,7 +67,7 @@ class UpComingAppointment extends StatelessWidget {
                       doctorName: appoint.doctorName,
                       appointmentStatusText: "Upcoming",
                       chatStatusText: appoint.feesType,
-                      image: appoint.image,
+                      image: appoint.doctorImage,
                       appointmentTimeText: appoint.appointmentTime,
                       ratingText: appoint.doctorRating,
                       leftButtonText: "Cancel",

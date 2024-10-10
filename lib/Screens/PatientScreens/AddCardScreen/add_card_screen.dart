@@ -42,7 +42,7 @@ class AddCardScreen extends StatelessWidget {
                   children: [
                     Image.asset(AppAssets.creditCard),
                     SizedBox(height: height1,),
-                    const TextWidget(
+                     TextWidget(
                       text: "Card Holder Name", fontSize: 14,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,
@@ -60,7 +60,7 @@ class AddCardScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: height1,),
-                    const TextWidget(
+                     TextWidget(
                       text: "Card Number", fontSize: 14,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,
@@ -78,7 +78,7 @@ class AddCardScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: height1,),
-                            const TextWidget(
+                             TextWidget(
                               text: "Exp Date", fontSize: 14,
                               fontWeight: FontWeight.w600, isTextCenter: false,
                               textColor: textColor, fontFamily: AppFonts.semiBold,
@@ -98,7 +98,7 @@ class AddCardScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: height1,),
-                            const TextWidget(
+                             TextWidget(
                               text: "CVV Code", fontSize: 14,
                               fontWeight: FontWeight.w600, isTextCenter: false,
                               textColor: textColor, fontFamily: AppFonts.semiBold,
@@ -117,7 +117,7 @@ class AddCardScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: height1,),
-                    const TextWidget(
+                     TextWidget(
                       text: "Country", fontSize: 14,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,
@@ -173,7 +173,7 @@ class AddCardScreen extends StatelessWidget {
 
                           },),
                         ),
-                        const TextWidget(
+                         TextWidget(
                             text: "Set as your default payment method", fontSize: 16,
                             fontWeight: FontWeight.w400, isTextCenter: false,
                             textColor: textColor)

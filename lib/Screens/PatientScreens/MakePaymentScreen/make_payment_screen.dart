@@ -18,7 +18,9 @@ import 'Components/payment_detail_section.dart';
 import 'Components/payment_method_section.dart';
 
 class MakePaymentScreen extends StatelessWidget {
-  const MakePaymentScreen({super.key});
+  const MakePaymentScreen({super.key, required this.image});
+
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,8 @@ class MakePaymentScreen extends StatelessWidget {
                         ActionProvider.startLoading();
                         await provider.initPaymentSheet(
                           amount: appointmentP.selectFee.toString(),
-                          name: appointmentP.nameC.text.toString()
+                          name: appointmentP.nameC.text.toString(),
+                          image: image
                         );
                       },),
                     SizedBox(height: height1),

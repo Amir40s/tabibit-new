@@ -161,6 +161,7 @@ class PaymentProvider with ChangeNotifier {
     required String amount,
     required String name,
     String type = "payment",
+    String image = "",
   }) async {
     log("message:: $amount");
     try {
@@ -168,7 +169,7 @@ class PaymentProvider with ChangeNotifier {
       final data = await createPaymentIntent(
         // convert string to double
           amount: (int.parse(amount)*100).toString(),
-          currency: "USD",
+          currency: "MAD",
           name: name,
           address: "Address",
           pin: "1234",
@@ -189,7 +190,7 @@ class PaymentProvider with ChangeNotifier {
         ),
       );
 
-      checkPaymentStatus(type);
+      checkPaymentStatus(type,image);
 
     } catch (e) {
       log("message:: ${e.toString()}");
@@ -198,7 +199,7 @@ class PaymentProvider with ChangeNotifier {
     }
   }
 
-  void checkPaymentStatus(String type) async{
+  void checkPaymentStatus(String type,String image) async{
     try{
       await Stripe.instance.presentPaymentSheet();
 
@@ -209,6 +210,7 @@ class PaymentProvider with ChangeNotifier {
           _models!.amount.toString(),
           _models!.clientSecret.toString(),
           _models!.amountReceived.toString(),
+          image
         );
 
         final fcm = FCMService();

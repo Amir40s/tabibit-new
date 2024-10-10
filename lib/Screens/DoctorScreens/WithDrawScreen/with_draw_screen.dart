@@ -32,7 +32,7 @@ class WithDrawScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     SizedBox(height: height1),
-                    const TextWidget(
+                     TextWidget(
                       text: "Payment Methods", fontSize: 20,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
@@ -110,7 +110,7 @@ class WithDrawScreen extends StatelessWidget {
                             child: const Icon(Icons.add_rounded,color: bgColor,),
                           ),
                           SizedBox(height: height2,),
-                          const TextWidget(
+                           TextWidget(
                             text: "Add new withdrawal account", fontSize: 16,
                             fontWeight: FontWeight.w400, isTextCenter: false,
                             textColor: themeColor, fontFamily: AppFonts.semiBold,),

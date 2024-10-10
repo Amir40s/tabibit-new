@@ -74,7 +74,7 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                     Consumer<SubscriptionProvider>(
                      builder: (context, provider, child){
                        provider.initialize();
-                       return const TextWidget(
+                       return  TextWidget(
                          text: "Quick Access", fontSize: 20,
                          fontWeight: FontWeight.w600, isTextCenter: false,
                          textColor: textColor,fontFamily: AppFonts.semiBold,);
@@ -86,7 +86,7 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const TextWidget(
+                         TextWidget(
                           text: "Appointments", fontSize: 20,
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: textColor,fontFamily: AppFonts.semiBold,),

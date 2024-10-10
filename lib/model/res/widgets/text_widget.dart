@@ -19,7 +19,8 @@ class TextWidget extends StatelessWidget {
         this.maxLines,
         this.fontFamily = "Regular",
         this.valueKey,
-        this.align
+        this.align,
+        this.overflow
       });
   final String text;
   final double fontSize;
@@ -29,6 +30,7 @@ class TextWidget extends StatelessWidget {
   final int? maxLines;
   final String fontFamily;
   final TextAlign? align;
+  final TextOverflow? overflow;
   final ValueKey<int>? valueKey;
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class TextWidget extends StatelessWidget {
       key: valueKey,
       provider.translatedTexts[text] ?? text,
       maxLines: maxLines,
-      overflow: TextOverflow.ellipsis,
+      overflow: overflow ?? TextOverflow.clip,
       textAlign: align ?? TextAlign.start,
       style: TextStyle(
           fontSize: fontSize,

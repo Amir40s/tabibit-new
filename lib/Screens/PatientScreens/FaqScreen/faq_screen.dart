@@ -24,6 +24,7 @@ class FaqScreen extends StatelessWidget {
 
 
     double height1 = 20;
+
     return const SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,

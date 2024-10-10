@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -32,103 +33,215 @@ class FaqSection extends StatelessWidget {
     faqController.fetchFaq();
 
 
-    return Obx(() {
-      if (faqController.isFaq.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      if (faqController.faqList.isEmpty) {
-        return const Center(child: Text('No specialties found'));
-      }
 
-      final specs = faqController.faqList;
 
-        if(translationController.faqList.isEmpty){
-          translationController.translateFaq(
-            specs.map((e) => e.question).toList() +
-                specs.map((e) => e.answer).toList(),
-          );
-        }
+    return Column(
+      children: [
 
-        return Consumer<FaqProvider>(
-          builder: (context, value, child) {
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-              shrinkWrap: true,
-              itemCount: specs.length,
-              itemBuilder: (context, index) {
-                final isSelected = value.selectFaq == index;
-                final faq = specs[index];
 
-                final question = translationController.faqList[faq.question] ?? faq.question;
-                final answer = translationController.faqList[faq.answer] ?? faq.answer;
 
-                return InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    value.setFaq(index);
-                    if(isSelected){
-                      value.setFaq(null);
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: isSelected ? greenColor
-                                : greyColor)
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+        // Obx(() {
+        //   if (faqController.isFaq.value) {
+        //     return const Center(child: CircularProgressIndicator());
+        //   }
+        //   if (faqController.faqList.isEmpty) {
+        //     return const Center(child: Text('No FAQ Found'));
+        //   }
+        //
+        //   final specs = faqController.faqList;
+        //
+        //     if(translationController.faqList.isEmpty){
+        //       translationController.translateFaq(
+        //         specs.map((e) => e.question).toList() +
+        //             specs.map((e) => e.answer).toList(),
+        //       );
+        //     }
+        //
+        //     return Consumer<FaqProvider>(
+        //       builder: (context, value, child) {
+        //         return ListView.separated(
+        //           padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+        //           shrinkWrap: true,
+        //           itemCount: specs.length,
+        //           itemBuilder: (context, index) {
+        //             final isSelected = value.selectFaq == index;
+        //             final faq = specs[index];
+        //
+        //             final question = translationController.faqList[faq.question] ?? faq.question;
+        //             final answer = translationController.faqList[faq.answer] ?? faq.answer;
+        //
+        //             return InkWell(
+        //               splashColor: Colors.transparent,
+        //               highlightColor: Colors.transparent,
+        //               onTap: () {
+        //                 value.setFaq(index);
+        //                 if(isSelected){
+        //                   value.setFaq(null);
+        //                 }
+        //               },
+        //               child: Container(
+        //                 padding: const EdgeInsets.all(20),
+        //                 decoration: BoxDecoration(
+        //                     color: bgColor,
+        //                     borderRadius: BorderRadius.circular(15),
+        //                     border: Border.all(
+        //                         color: isSelected ? greenColor
+        //                             : greyColor)
+        //                 ),
+        //                 child: Column(
+        //                   children: [
+        //                     Row(
+        //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //                       children: [
+        //                         SizedBox(
+        //                           width: 60.w,
+        //                           child: TextWidget(
+        //                             text: question, fontSize: 14,
+        //                             fontWeight: FontWeight.w600, isTextCenter: false,
+        //                             textColor: textColor, fontFamily: AppFonts.semiBold,),
+        //                         ),
+        //                         SvgPicture.asset(
+        //                           isSelected ? AppIcons.caretUpIcon
+        //                               : AppIcons.caretDownIcon,
+        //                           height: 3.h,
+        //                         )
+        //                       ],
+        //                     ),
+        //                     Visibility(
+        //                         visible: isSelected,
+        //                         child: SizedBox(height: height1,)),
+        //                     Visibility(
+        //                         visible: isSelected,
+        //                         child: const DottedLine(color: greyColor,)),
+        //                     Visibility(
+        //                         visible: isSelected,
+        //                         child: SizedBox(height: height1,)),
+        //                     Visibility(
+        //                       visible: isSelected,
+        //                       child: Text(
+        //                         answer,
+        //                        style:  TextStyle(
+        //                            fontSize: 16, fontWeight: FontWeight.w400,
+        //                            color: textColor
+        //                        ) ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               ),
+        //             );
+        //           },
+        //           separatorBuilder: (context, index) {
+        //             return SizedBox(height: height1,);
+        //           },
+        //         );
+        //       },);
+        //   },),
+
+
+
+        StreamBuilder<List<FaqModel>>(
+          stream: provider.fetchFaq(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No FAQ Found'));
+            }
+
+            final specs = snapshot.data!;
+
+            if (translationController.faqList.isEmpty) {
+              translationController.translateFaq(
+                specs.map((e) => e.question).toList() +
+                    specs.map((e) => e.answer).toList(),
+              );
+            }
+
+
+
+            return Consumer<FaqProvider>(
+              builder: (context, value, child) {
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                  shrinkWrap: true,
+                  itemCount: specs.length,
+                  itemBuilder: (context, index) {
+                    final isSelected = value.selectFaq == index;
+                    final faq = specs[index];
+
+                    final question = translationController.faqList[faq.question] ?? faq.question;
+                    final answer = translationController.faqList[faq.answer] ?? faq.answer;
+
+                    return InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        value.setFaq(index);
+                        if(isSelected){
+                          value.setFaq(null);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: bgColor,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                                color: isSelected ? greenColor
+                                    : greyColor)
+                        ),
+                        child: Column(
                           children: [
-                            SizedBox(
-                              width: 60.w,
-                              child: TextWidget(
-                                text: question, fontSize: 14, maxLines: 2,
-                                fontWeight: FontWeight.w600, isTextCenter: false,
-                                textColor: textColor, fontFamily: AppFonts.semiBold,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 70.w,
+                                  child: TextWidget(
+                                    text: question, fontSize: 14,
+                                    fontWeight: FontWeight.w600, isTextCenter: false,
+                                    textColor: textColor, fontFamily: AppFonts.semiBold,),
+                                ),
+                                SvgPicture.asset(
+                                  isSelected ? AppIcons.caretUpIcon
+                                      : AppIcons.caretDownIcon,
+                                  height: 3.h,
+                                )
+                              ],
                             ),
-                            SvgPicture.asset(
-                              isSelected ? AppIcons.caretUpIcon
-                                  : AppIcons.caretDownIcon,
-                              height: 3.h,
+                            Visibility(
+                                visible: isSelected,
+                                child: SizedBox(height: height1,)),
+                            Visibility(
+                                visible: isSelected,
+                                child: const DottedLine(color: greyColor,)),
+                            Visibility(
+                                visible: isSelected,
+                                child: SizedBox(height: height1,)),
+                            Visibility(
+                              visible: isSelected,
+                              child: Text(
+                                answer,
+                               style:  TextStyle(
+                                   fontSize: 16, fontWeight: FontWeight.w400,
+                                   color: textColor
+                               ) ),
                             )
                           ],
                         ),
-                        Visibility(
-                            visible: isSelected,
-                            child: SizedBox(height: height1,)),
-                        Visibility(
-                            visible: isSelected,
-                            child: const DottedLine(color: greyColor,)),
-                        Visibility(
-                            visible: isSelected,
-                            child: SizedBox(height: height1,)),
-                        Visibility(
-                          visible: isSelected,
-                          child: Text(
-                            answer,
-                              maxLines: 2,
-                           style:  TextStyle(
-                               fontSize: 16, fontWeight: FontWeight.w400,
-                               color: textColor
-                           ) ),
-                        )
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: height1,);
+                  },
                 );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(height: height1,);
-              },
-            );
-          },);
-      },);
+              },);
+          },),
+      ],
+    );
   }
 }
 

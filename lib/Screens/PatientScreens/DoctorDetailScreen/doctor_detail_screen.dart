@@ -61,6 +61,7 @@ class DoctorDetailScreen extends StatelessWidget {
                   ),
                   AboutSection(
                     doctorDetail: translationController.translations[doctorDetail] ?? doctorDetail,
+                    image: image,
                   ),
                 ],
               ),

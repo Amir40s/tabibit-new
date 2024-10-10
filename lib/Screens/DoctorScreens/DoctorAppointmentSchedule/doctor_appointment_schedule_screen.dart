@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/constant.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
 import 'package:tabibinet_project/model/res/widgets/header.dart';
 import 'package:tabibinet_project/model/res/widgets/no_found_card.dart';
@@ -69,7 +70,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                           DateTime currentMonth = dateProvider.selectedDate;
                           return Row(
                             children: [
-                              const TextWidget(
+                               TextWidget(
                                 text: "Schedules", fontSize: 20,
                                 fontWeight: FontWeight.w600, isTextCenter: false,
                                 textColor: textColor, fontFamily: AppFonts.semiBold,),
@@ -125,7 +126,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                         );
                       },),
                     SizedBox(height: height,),
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         children: [
@@ -212,7 +213,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                                     },
                                     statusTap: () {
                                       if(isPending){
-                                        updateStatus(patient.id);
+                                        updateStatus(patient.id,patient.deviceToken,patient.doctorName);
                                       }
                                     },
                                     patientName: patient.patientName,
@@ -241,7 +242,15 @@ class DoctorAppointmentSchedule extends StatelessWidget {
       ),
     );
   }
-  Future<void> updateStatus(id)async{
+  Future<void> updateStatus(id,deviceToken,doctorName)async{
+
+    final fcm = FCMService();
+    fcm.sendNotification(deviceToken,
+        "Your Appointment been updated",
+        "Dr $doctorName has changed your appointment status",
+        auth.currentUser?.uid.toString() ?? ""
+    );
+
     fireStore.collection("appointment").doc(id).update({
       "status" : "upcoming"
     });

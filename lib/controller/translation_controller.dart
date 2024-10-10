@@ -141,8 +141,10 @@ class TranslationController extends GetxController {
     try {
       var result = await _translationService.translateMultiple(texts);
       faqList.value = result;
+      update();
     } finally {
       isFaq.value = false;
+      update();
     }
   }
 

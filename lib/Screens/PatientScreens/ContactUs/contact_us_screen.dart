@@ -100,7 +100,7 @@ class ContactUsScreen extends StatelessWidget {
             Get.to(ChatScreen(
                 chatRoomId: chatRoomId,
                 patientEmail: "admin@tabibinet.com",
-                patientName: "Customer Support",
+                patientName: "Help Center",
                 profilePic: "https://res.cloudinary.com/dz0mfu819/image/upload/v1725947218/profile_xfxlfl.png",
               type: "support",
               deviceToken: "",

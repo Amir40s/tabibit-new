@@ -93,7 +93,7 @@ class PendingAppointmentScreen extends StatelessWidget {
                       doctorName: docName,
                       appointmentStatusText: "Pending",
                       chatStatusText: feeType,
-                      image: appoint.image,
+                      image: appoint.doctorImage,
                       appointmentTimeText: appoint.appointmentTime,
                       ratingText: appoint.doctorRating,
                       leftButtonText: "Cancel",

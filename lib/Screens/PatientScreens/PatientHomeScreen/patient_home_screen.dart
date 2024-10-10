@@ -65,7 +65,7 @@ class PatientHomeScreen extends StatelessWidget {
                         ),
                         const TextWidget(
                           text: "Let’s Find Your Doctor",
-                          fontSize: 24,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                           isTextCenter: false,
                           textColor: textColor,
@@ -129,7 +129,7 @@ class PatientHomeScreen extends StatelessWidget {
                         ),
                         const TextWidget(
                           text: "Upcoming Schedule",
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           isTextCenter: false,
                           textColor: textColor,
@@ -148,7 +148,7 @@ class PatientHomeScreen extends StatelessWidget {
                       children: [
                         const TextWidget(
                           text: "Doctor Speciality",
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           isTextCenter: false,
                           textColor: textColor,
@@ -180,7 +180,7 @@ class PatientHomeScreen extends StatelessWidget {
                       children: [
                         const TextWidget(
                           text: "Top Doctor",
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           isTextCenter: false,
                           textColor: textColor,

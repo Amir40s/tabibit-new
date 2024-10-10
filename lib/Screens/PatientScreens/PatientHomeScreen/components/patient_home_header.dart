@@ -52,7 +52,7 @@ class PatientHomeHeader extends StatelessWidget {
                     SizedBox(
                       width: 40.w,
                       child: TextWidget(
-                          text: "${languageP.translatedTexts['Hi'] ?? "Hi"}, ${value.name.toString()}!", fontSize: 20,
+                          text: "${languageP.translatedTexts['Hi'] ?? "Hi"}, ${getFirstName(value.name.toString())}!", fontSize: 20,
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: textColor),
                     ),

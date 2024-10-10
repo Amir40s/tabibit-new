@@ -138,7 +138,7 @@ class ProfileProvider extends ChangeNotifier{
   Future<void> updateProfile()async{
     _isLoading = true;
     notifyListeners();
-    await fireStore.collection("users").doc(auth.currentUser!.uid).update({
+    await fireStore.collection("users").doc(auth.currentUser?.uid).update({
       "name" : nameC.text,
       "birthDate" : _doctorDOB,
     })
@@ -214,6 +214,7 @@ class ProfileProvider extends ChangeNotifier{
   void setDate(DateTime date) {
     String format = DateFormat('yyyy-MM-dd').format(date);
     _doctorDOB = format;
+    log("Pick Date:: $_doctorDOB");
     notifyListeners();
   }
 

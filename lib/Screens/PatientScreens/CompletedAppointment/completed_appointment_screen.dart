@@ -60,7 +60,7 @@ class CompletedAppointmentScreen extends StatelessWidget {
                       doctorName: appoint.doctorName,
                       appointmentStatusText: "Accepted",
                       chatStatusText: appoint.feesType,
-                      image: appoint.image,
+                      image: appoint.doctorImage,
                       appointmentTimeText: appoint.appointmentTime,
                       ratingText: appoint.doctorRating,
                       leftButtonText: "Book Again",

@@ -31,6 +31,11 @@ String? getCurrentUid(){
   return email;
 }
 
+
+String getFirstName(String fullName) {
+  return fullName.split(' ').first;
+}
+
 String convertTimestamp(String timestampString) {
   DateTime parsedTimestamp = parseTimestamp(timestampString);
   final now = DateTime.now();

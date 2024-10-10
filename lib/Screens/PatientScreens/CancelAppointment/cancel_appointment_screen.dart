@@ -53,7 +53,7 @@ class CancelAppointmentScreen extends StatelessWidget {
                     return MyAppointmentContainer(
                       appointmentIcon: AppIcons.video,
                       doctorName: appoint.doctorName,
-                      image: appoint.image,
+                      image: appoint.doctorImage,
                       appointmentStatusText: "Decline",
                       chatStatusText: appoint.feesType,
                       appointmentTimeText: appoint.appointmentTime,

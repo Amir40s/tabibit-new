@@ -174,7 +174,7 @@ class PatientAppointmentProvider with ChangeNotifier {
     });
   }
 
-  Future<void> sendAppointment(paymentId,amount,clientSecret,amountReceived) async {
+  Future<void> sendAppointment(paymentId,amount,clientSecret,amountReceived,image) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
 
     String fileUrl = "";
@@ -194,6 +194,7 @@ class PatientAppointmentProvider with ChangeNotifier {
       "name": profileP!.name,
       "phone": profileP!.phoneNumber,
       "image": profileP!.profileUrl,
+      "doctorImage": image,
       "fees": _selectFee,
       "feesId": _selectFeeId,
       "feesType": _selectFeeType,

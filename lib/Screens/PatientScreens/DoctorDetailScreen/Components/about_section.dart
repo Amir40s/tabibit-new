@@ -12,10 +12,11 @@ import '../../AppointmentScheduleScreen/appointment_schedule_screen.dart';
 class AboutSection extends StatelessWidget {
   const AboutSection({
     super.key,
-    required this.doctorDetail
+    required this.doctorDetail,
+    required this.image
   });
 
-  final String doctorDetail;
+  final String doctorDetail,image;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,9 @@ class AboutSection extends StatelessWidget {
           SubmitButton(
             title: "Make an appointment",
             press: () {
-              Get.to(()=>AppointmentScheduleScreen());
+              Get.to(()=>AppointmentScheduleScreen(
+                image: image,
+              ));
             },)
         ],
       ),

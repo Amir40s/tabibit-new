@@ -66,14 +66,16 @@ class TopDoctorContainer extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(13),
+                     // padding: const EdgeInsets.all(13),
                       height: 72,
                       width: 72,
                       decoration: BoxDecoration(
                         color:  skyBlueColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: ImageLoaderWidget(imageUrl: imageUrl),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: ImageLoaderWidget(imageUrl: imageUrl)),
                     ),
                     Positioned(
                       right: -7.5,
@@ -99,7 +101,7 @@ class TopDoctorContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 35.w,
+                      width: 45.w,
                       child: TextWidget(
                         text: "${languageP.translatedTexts['Dr.']} $doctorName", fontSize: 16,
                         fontWeight: FontWeight.w600, isTextCenter: false,maxLines: 2,

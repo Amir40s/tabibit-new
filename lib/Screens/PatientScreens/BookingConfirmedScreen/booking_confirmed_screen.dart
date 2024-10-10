@@ -40,14 +40,17 @@ class BookingConfirmedScreen extends StatelessWidget {
                         height: 86.h,
                         child: Column(
                           children: [
-                            SizedBox(
+                            Container(
                               height: 50.h,
                               width: 100.w,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                              ),
                               child: Column(
                                 children: [
                                   const CircleIcon(icon: Icons.done_rounded),
                                   SizedBox(height: 20.sp,),
-                                  const TextWidget(
+                                   TextWidget(
                                       text: "Booking Confirmed",
                                       fontSize: 24, fontWeight: FontWeight.w600,
                                       isTextCenter: false, textColor: textColor),
@@ -55,6 +58,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       text: "Dr. ${appointmentP.doctorName} Wilson is a highly skilled cardiologist"
                                           " dedicated to providing exceptional cardiac care. With ",
                                       fontSize: 12, fontWeight: FontWeight.w400,
+                                      align: TextAlign.center,
                                       isTextCenter: true, textColor: textColor,maxLines: 2,),
                                 ],
                               ),
@@ -131,7 +135,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                           const SizedBox(height: 10,),
                                           SizedBox(
                                             width: 35.w,
-                                            child: const TextWidget(
+                                            child:  TextWidget(
                                               text: "Online", fontSize: 14,
                                               fontWeight: FontWeight.w400, isTextCenter: false,
                                               textColor: textColor, fontFamily: AppFonts.regular,),
@@ -148,7 +152,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                     child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const TextWidget(
+                                         TextWidget(
                                           text: "Name :",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
@@ -164,7 +168,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                     child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const TextWidget(
+                                         TextWidget(
                                           text: "Time :",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
@@ -180,7 +184,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                     child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const TextWidget(
+                                         TextWidget(
                                           text: "Date :",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
@@ -196,7 +200,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                     child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const TextWidget(
+                                         TextWidget(
                                           text: "Total",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),

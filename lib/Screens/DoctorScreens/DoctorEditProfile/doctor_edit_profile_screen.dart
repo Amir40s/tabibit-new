@@ -98,7 +98,7 @@ class DoctorEditProfileScreen extends StatelessWidget {
                       );
                     },),
                   SizedBox(height: height1,),
-                  const TextWidget(
+                   TextWidget(
                     text: "Full Name", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
@@ -111,7 +111,7 @@ class DoctorEditProfileScreen extends StatelessWidget {
                       );
                     },),
                   SizedBox(height: height1,),
-                  const TextWidget(
+                   TextWidget(
                     text: "Date of Birth", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),

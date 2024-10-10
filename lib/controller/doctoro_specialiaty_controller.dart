@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:tabibinet_project/Providers/FaqProvider/faq_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
@@ -50,7 +51,7 @@ class AppDataController extends GetxController {
     try {
       final data = await findDoctorProvider!.fetchSpeciality().first;
       specialties.value = data;
-      final languageProvider = Get.find<TranslationProvider>();
+      final languageProvider = Get.put(TranslationProvider());
       languageProvider.setSpecialties(data.map((e) => e.specialty).toList());
       update();
     } catch (e) {
@@ -66,7 +67,7 @@ class AppDataController extends GetxController {
     try {
       final data = await findDoctorProvider!.fetchDoctors().first;
       doctorsList.value = data;
-      final languageProvider = Get.find<TranslationProvider>();
+      final languageProvider = Get.put(TranslationProvider());
       languageProvider.setHomeDoctors(data.map((e) => e.name).toList());
       update();
     } catch (e) {
@@ -80,10 +81,19 @@ class AppDataController extends GetxController {
     final feesProvider = GlobalProviderAccess.patientAppointmentProvider;
     isFee(true);
     try {
-      final data = await feesProvider!.fetchFeeInfo().first;
-      feeList.value = data;
-      final languageProvider = Get.find<TranslationProvider>();
-      languageProvider.setFeesDoctors(data.map((e) => e.type).toList());
+      FirebaseFirestore.instance.collection('faq').snapshots().listen((event) {
+        faqList.clear();
+        for (var doc in event.docs) {
+          faqList.add(FaqModel.fromDocumentSnapshot(doc));
+        }
+        isFaq.value = false;
+        update();
+      });
+      // final data = await feesProvider!.fetchFeeInfo().first;
+      // feeList.value = data;
+
+      // final languageProvider = Get.put(TranslationProvider());
+      // languageProvider.setFeesDoctors(data.map((e) => e.type).toList());
     } catch (e) {
       log(e.toString());
     } finally {
@@ -101,8 +111,9 @@ class AppDataController extends GetxController {
     try {
       final data = await faqProvider.fetchFaq().first;
       faqList.value = data.cast<FaqModel>();
-      final languageProvider = Get.find<TranslationProvider>();
+      final languageProvider = Get.put(TranslationProvider());
       languageProvider.setFAQ(data.map((e) => e.question).toList());
+      update();
     } catch (e) {
       log(e.toString());
     } finally {

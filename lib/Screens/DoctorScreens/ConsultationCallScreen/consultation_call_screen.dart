@@ -59,12 +59,12 @@ class ConsultationCallScreen extends StatelessWidget {
               ),
               const Spacer(),
               const SizedBox(height: 20,),
-              const TextWidget(
+               TextWidget(
                 text: "Dr. Jonny Smith", fontSize: 20,
                 fontWeight: FontWeight.w600, isTextCenter: false,
                 textColor: bgColor, fontFamily: AppFonts.medium,),
               const SizedBox(height: 10,),
-              const TextWidget(
+               TextWidget(
                 text: "12:40 mins", fontSize: 16,
                 fontWeight: FontWeight.w400, isTextCenter: false,
                 textColor: bgColor, fontFamily: AppFonts.regular,),

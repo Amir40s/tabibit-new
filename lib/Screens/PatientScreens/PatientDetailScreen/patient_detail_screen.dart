@@ -19,10 +19,13 @@ import '../MakePaymentScreen/make_payment_screen.dart';
 import 'Components/age_section.dart';
 
 class PatientDetailScreen extends StatelessWidget {
-  PatientDetailScreen({super.key});
+  PatientDetailScreen({super.key, required this.image});
 
   final formKey = GlobalKey<FormState>();
   final String phonePattern = r'^\+?([1-9]{1}[0-9]{1,3})?([0-9]{10})$';
+
+
+  final String image;
 
 
   @override
@@ -150,7 +153,9 @@ class PatientDetailScreen extends StatelessWidget {
                           if(formKey.currentState!.validate()){
                             if(patientAppointmentP.selectedGender != null &&
                                 patientAppointmentP.selectPatientAge != null){
-                              Get.to(()=>const MakePaymentScreen());
+                              Get.to(()=> MakePaymentScreen(
+                                image : image
+                              ));
                             }else{
                               ToastMsg().toastMsg(languageP.translatedTexts["Gender or Age is Missing!"] ?? "Gender or Age is Missing!",toastColor: redColor);
                             }
