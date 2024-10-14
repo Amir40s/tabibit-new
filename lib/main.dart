@@ -35,6 +35,7 @@ import 'Providers/SignIn/sign_in_provider.dart';
 import 'Providers/SignUp/sign_up_provider.dart';
 
 import 'Providers/TwilioProvider/twilio_provider.dart';
+import 'Providers/bankDetails/bank_details_provider.dart';
 import 'Providers/subscription_provider.dart';
 import 'Providers/translation/translation_provider.dart';
 
@@ -136,6 +137,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => ProfileProvider(),),
             ChangeNotifierProvider(create: (context) => AppDataProvider(),),
             ChangeNotifierProvider(create: (context) => SubscriptionProvider(),),
+            ChangeNotifierProvider(create: (context) => BankDetailsProvider(),),
 
             ChangeNotifierProvider(create: (context) => TwilioProvider(
                 accountSid: BaseUrl.SID_TWILLO,

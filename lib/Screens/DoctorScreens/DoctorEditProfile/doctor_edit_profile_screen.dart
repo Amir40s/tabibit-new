@@ -120,10 +120,16 @@ class DoctorEditProfileScreen extends StatelessWidget {
                     builder: (context, value, child) {
                       return GestureDetector(
                         onTap: () async {
-                          DateTime? picked = await showDatePicker(
+                          DateTime? picked = await showDialog<DateTime>(
                               context: context,
-                              firstDate: DateTime(1980),
-                              lastDate: DateTime.now()
+                              builder: (BuildContext context){
+                                return DatePickerDialog(
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1980),
+                                  lastDate: DateTime.now(),
+                                );
+                              },
+
                           );
                           if (picked != null) {
                             // Update the selected date in the Provider

@@ -48,6 +48,7 @@ class ProfileProvider extends ChangeNotifier{
   String _latitude = "";
   String _longitude = "";
   String _accountType = "";
+  String _balance = "";
   File? _image;
   bool _isDataFetched = true;
   bool _isLoading = false;
@@ -78,6 +79,7 @@ class ProfileProvider extends ChangeNotifier{
   String get accountType => _accountType;
   bool get isLoading => _isLoading;
   String get doctorEmail => _doctorEmail;
+  String get balance => _balance;
   File? get image => _image;
   bool get isDataFetched => _isDataFetched;
 
@@ -95,7 +97,9 @@ class ProfileProvider extends ChangeNotifier{
         _imageUrl = value.get("profileUrl");
         nameC.text = _doctorName;
         _name = value.get("name");
+        _balance = value.get("balance") ?? "0.0";
         _phoneNumber = value.get("phoneNumber");
+        // _speciality = value.get("speciality ") ?? "";
         _country = value.get("country");
         _birthDate = value.get("birthDate");
         _email = value.get("email");

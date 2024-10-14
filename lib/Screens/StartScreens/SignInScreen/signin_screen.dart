@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -127,6 +129,7 @@ class SignInScreen extends StatelessWidget {
                   if(formKey.currentState!.validate()){
                     await value.signIn();
                   }
+
                   // if(signInP.userType == "Patient"){
                   //   Get.to(()=>PatientBottomNavBar());
                   // }else{

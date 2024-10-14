@@ -74,90 +74,106 @@ class SignUpProvider extends ChangeNotifier{
   }) async{
     _isLoading = true;
     notifyListeners();
-    auth.createUserWithEmailAndPassword(
-        email: emailC.text.toString(),
-        password: passwordC.text.toString()
-    )
-        .then((value) async {
-      final fcmService = FCMService();
-      String? deviceToken = await fcmService.getDeviceToken();
-      String? userUID = auth.currentUser!.uid;
-      await fireStore.collection("users").doc(userUID).set(
-          {
-            "creationDate": DateTime.now(),
-            "userUid": userUID,
-            "email": emailC.text.toString(),
-            "name": nameC.text,
-            "phoneNumber": phoneC.text,
-            "country": country,
-            "birthDate": "",
-            "memberShip": "No",
-            "profileUrl": "https://res.cloudinary.com/dz0mfu819/image/upload/v1725947218/profile_xfxlfl.png",
-            "rating": "0.0",
-            "isOnline": false,
-            "location": location,
-            "latitude": latitude,
-            "longitude": longitude,
-            "specialityId": specialityId ?? "",
-            "speciality": speciality,
-            "specialityDetail": specialityDetail,
-            "experience": yearsOfExperience,
-            "availabilityFrom": appointmentFrom ?? "",
-            "availabilityTo": appointmentTo ?? "",
-            "appointmentFee": appointmentFee,
-            "reviews": "0",
-            "patients": "0",
-            "userType": type,
-            "balance": "0.0",
-            "accountType": "Custom",
-            "password": passwordC.text.toString().trim(),
-            "deviceToken": deviceToken ?? "",
-          }
-      )
-          .whenComplete(() async {
-        if (type == "Patient") {
-          sendNotification();
-          await patientNotificationProvider!.storeNotification(
-              title: title,
-              subTitle: subTitle,
-              type: type);
-          await profileProvider!.getSelfInfo()
-              .whenComplete(() {
-            Get.offAll(()=>const PatientBottomNavBar());
+
+    final phones = fireStore.collection("users").
+    where("phoneNumber", isEqualTo: phoneC.text.toString())
+
+        .snapshots();
+    phones.listen((querySnapshot) {
+      final phones = querySnapshot.docs;
+      log("Length: ${phones.length}");
+      if(int.parse(phones.length.toString()) <= 0){
+        auth.createUserWithEmailAndPassword(
+            email: emailC.text.toString(),
+            password: passwordC.text.toString()
+        )
+            .then((value) async {
+          final fcmService = FCMService();
+          String? deviceToken = await fcmService.getDeviceToken();
+          String? userUID = auth.currentUser!.uid;
+          await fireStore.collection("users").doc(userUID).set(
+              {
+                "creationDate": DateTime.now(),
+                "userUid": userUID,
+                "email": emailC.text.toString(),
+                "name": nameC.text,
+                "phoneNumber": phoneC.text,
+                "country": country,
+                "birthDate": "",
+                "memberShip": "No",
+                "profileUrl": "https://res.cloudinary.com/dz0mfu819/image/upload/v1725947218/profile_xfxlfl.png",
+                "rating": "0.0",
+                "isOnline": false,
+                "location": location,
+                "latitude": latitude,
+                "longitude": longitude,
+                "specialityId": specialityId ?? "",
+                "speciality": speciality,
+                "specialityDetail": specialityDetail,
+                "experience": yearsOfExperience,
+                "availabilityFrom": appointmentFrom ?? "",
+                "availabilityTo": appointmentTo ?? "",
+                "appointmentFee": appointmentFee,
+                "reviews": "0",
+                "patients": "0",
+                "userType": type,
+                "balance": "0.0",
+                "accountType": "Custom",
+                "password": passwordC.text.toString().trim(),
+                "deviceToken": deviceToken ?? "",
+              }
+          )
+              .whenComplete(() async {
+            if (type == "Patient") {
+              sendNotification();
+              await patientNotificationProvider!.storeNotification(
+                  title: title,
+                  subTitle: subTitle,
+                  type: type);
+              await profileProvider!.getSelfInfo()
+                  .whenComplete(() {
+                Get.offAll(()=>const PatientBottomNavBar());
+              },);
+              // Get.off(() => const PatientBottomNavBar());
+            }
+            else if (type == "Health Professional") {
+              sendNotification();
+              await patientNotificationProvider!.storeNotification(
+                  title: title,
+                  subTitle: subTitle,
+                  type: type);
+              profileProvider!.getSelfInfo()
+                  .whenComplete(() {
+                Get.offAll(() => PaywallScreen());
+              },);
+              // Get.off(() => const DoctorBottomNavbar());
+            }
+            log("*********** Complete ************");
+            _isLoading = false;
+            notifyListeners();
+          },)
+              .onError((error, stackTrace) {
+            ToastMsg().toastMsg(error.toString());
+            log("*********** Error ************");
+            _isLoading = false;
+            log(error.toString());
+            notifyListeners();
           },);
-          // Get.off(() => const PatientBottomNavBar());
-        }
-        else if (type == "Health Professional") {
-          sendNotification();
-          await patientNotificationProvider!.storeNotification(
-              title: title,
-              subTitle: subTitle,
-              type: type);
-          profileProvider!.getSelfInfo()
-              .whenComplete(() {
-            Get.offAll(() => PaywallScreen());
-          },);
-          // Get.off(() => const DoctorBottomNavbar());
-        }
-        log("*********** Complete ************");
+        },)
+            .onError((error, stackTrace) {
+          ToastMsg().toastMsg(error.toString());
+          log("*********** Error ************");
+          _isLoading = false;
+          log(error.toString());
+          notifyListeners();
+        },);
+      }else{
         _isLoading = false;
+        ToastMsg().toastMsg("Phone Number already exists");
         notifyListeners();
-      },)
-          .onError((error, stackTrace) {
-        ToastMsg().toastMsg(error.toString());
-        log("*********** Error ************");
-        _isLoading = false;
-        log(error.toString());
-        notifyListeners();
-      },);
-    },)
-        .onError((error, stackTrace) {
-      ToastMsg().toastMsg(error.toString());
-      log("*********** Error ************");
-      _isLoading = false;
-      log(error.toString());
-      notifyListeners();
-    },);
+      }
+    });
+
   }
 
   sendNotification(){

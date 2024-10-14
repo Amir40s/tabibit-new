@@ -98,62 +98,70 @@ class _ChatScreenState extends State<ChatScreen> {
           type: "voice",
           otherEmail: widget.patientEmail,
         );
+        setState(() {
+          _isRecording = false;
+        });
         if (url.isNotEmpty) {
           setState(() {
             _audioUrl = url;
           });
 
-          var status = await Permission.microphone.status;
-          if (!status.isGranted) {
-            // Request the permission
-            status = await Permission.microphone.request();
-
-            if (status.isGranted) {
-              if (_isRecording) {
-                // Stop recording
-                await _recorder.stopRecording();
-                String? filePath = _recorder.filePath;
-
-                if (filePath != null) {
-                  String? url = await uploadAudioToFirebase(
-                      filePath, context); // Upload to Firebase
-                  final provider = Provider.of<ChatProvider>(
-                      context, listen: false);
-                  await provider.sendFileMessage(
-                    chatRoomId: widget.chatRoomId,
-                    fileUrl: url ?? "",
-                    type: "voice",
-                    otherEmail: widget.patientEmail,
-                  );
-                  if (url.isNotEmpty) {
-                    setState(() {
-                      _audioUrl = url;
-                    });
-                  }
-                }
-              } else {
-                // Start recording
-                await _recorder.startRecording();
-              }
-              setState(() {
-                _isRecording = !_isRecording;
-              });
-            } else if (status.isDenied) {
-              openAppSettings();
-            } else if (status.isPermanentlyDenied) {
-              openAppSettings();
-            }
-          }
-          else {
-            log("Microphone permission already granted.");
-          }
+          // var status = await Permission.microphone.status;
+          // if (!status.isGranted) {
+          //   // Request the permission
+          //   status = await Permission.microphone.request();
+          //
+          //   if (status.isGranted) {
+          //     if (_isRecording) {
+          //       // Stop recording
+          //       await _recorder.stopRecording();
+          //       String? filePath = _recorder.filePath;
+          //
+          //       if (filePath != null) {
+          //         String? url = await uploadAudioToFirebase(
+          //             filePath, context); // Upload to Firebase
+          //         final provider = Provider.of<ChatProvider>(
+          //             context, listen: false);
+          //         await provider.sendFileMessage(
+          //           chatRoomId: widget.chatRoomId,
+          //           fileUrl: url ?? "",
+          //           type: "voice",
+          //           otherEmail: widget.patientEmail,
+          //         );
+          //         if (url.isNotEmpty) {
+          //           setState(() {
+          //             _audioUrl = url;
+          //           });
+          //         }
+          //       }
+          //     } else {
+          //       // Start recording
+          //       await _recorder.startRecording();
+          //     }
+          //     setState(() {
+          //       _isRecording = !_isRecording;
+          //     });
+          //   }
+          //   else if (status.isDenied) {
+          //     openAppSettings();
+          //   } else if (status.isPermanentlyDenied) {
+          //     openAppSettings();
+          //   }
+          // }
+          // else {
+          //   log("Microphone permission already granted.");
+          //   // _recorder.startRecording();
+          //   // setState(() {
+          //   //   _isRecording = true;
+          //   // });
+          // }
         }
       }
     }
     else{
       // Start recording
       var status = await Permission.microphone.status;
-      if (!status.isGranted) {
+      if (status.isGranted) {
         // Request the permission
         status = await Permission.microphone.request();
 
@@ -168,9 +176,17 @@ class _ChatScreenState extends State<ChatScreen> {
           openAppSettings();
         }
       }
-      else {
-        log("Microphone permission already granted.");
-      }
+      // else {
+      //   log("Microphone permission already granted.");
+      //   // if(!_isRecording) {
+      //   //   if (status.isGranted) {
+      //   //     await _recorder.startRecording();
+      //   //     setState(() {
+      //   //       _isRecording = true;
+      //   //     });
+      //   //   }
+      //   // }
+      // }
     }
   }
 

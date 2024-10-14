@@ -302,7 +302,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                       child: SubmitButton(
                         title: "Update",
                         press: () {
-                          Get.to(()=> const SuccessScreen(
+                          Get.to(()=>  SuccessScreen(
                               title: "Prescription Updated Successfully!",
                               subTitle: "Prescription has been updated to the patient"
                           )

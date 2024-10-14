@@ -168,6 +168,7 @@ class SessionDetailScreen extends StatelessWidget {
         'appointmentTime': model.appointmentTime,
         'status': status,
         'id': timeStamp,
+        'deviceToken': model.deviceToken,
         'location': model.feesType,
         'userUid' : auth.currentUser?.uid.toString()
       }).whenComplete(() {

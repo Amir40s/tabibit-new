@@ -87,7 +87,7 @@ class AppUtils{
     try {
       await send(message, smtpServer);
       Get.snackbar("Reminder Send", "Reminder sent successfully");
-      Get.off(()=>const SuccessScreen(
+      Get.off(()=> SuccessScreen(
           title: "Reminder Sent Successfully!",
           subTitle: "Reminder has been sent to"
               " the patient about his appointment with you."));

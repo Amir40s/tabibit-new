@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Profile/profile_provider.dart';
+import 'package:tabibinet_project/Providers/bankDetails/bank_details_provider.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/widgets/submit_button.dart';
 
+import '../../../model/data/withdraw_request.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/widgets/text_widget.dart';
 import '../WithDrawScreen/with_draw_screen.dart';
@@ -16,10 +21,12 @@ class PaymentManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double height1 = 20.0;
     double height2 = 10.0;
+    final profileP = Provider.of<ProfileProvider>(context,listen: false);
+    profileP.getSelfInfo();
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
-        body: Column(
+        body: ListView(
           children: [
             Stack(
               alignment: Alignment.topCenter,
@@ -40,7 +47,7 @@ class PaymentManagementScreen extends StatelessWidget {
                           textColor: bgColor),
                       SizedBox(height: height2,),
                       TextWidget(
-                          text: "1340.56 dhs", fontSize: 24.sp,
+                          text: "${profileP.balance} MAD", fontSize: 24.sp,
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: bgColor),
                       SizedBox(height: height2,),
@@ -64,7 +71,7 @@ class PaymentManagementScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextWidget(
-                              text: "746.80 dhs", fontSize: 23.sp,
+                              text: "${profileP.balance} MAD", fontSize: 23.sp,
                               fontWeight: FontWeight.w600, isTextCenter: false,
                               textColor: textColor),
                           const SizedBox(width: 10,),
@@ -100,7 +107,7 @@ class PaymentManagementScreen extends StatelessWidget {
                           textColor: bgColor),
                       SizedBox(height: height2,),
                       TextWidget(
-                          text: "1340.56 dhs", fontSize: 24.sp,
+                          text: "${profileP.balance} MAD", fontSize: 24.sp,
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: bgColor),
                       SizedBox(height: height2,),
@@ -119,41 +126,37 @@ class PaymentManagementScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: height1,),
-            Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+        Consumer<BankDetailsProvider>(
+          builder: (context, provider, child) {
+            return StreamBuilder<List<WithdrawRequest>>(
+              stream: provider.getWithdrawRequests(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No withdrawal requests found'));
+                }
+
+                final requests = snapshot.data!;
+
+
+                return ListView.builder(
+                  itemCount: requests.length,
                   shrinkWrap: true,
-                  children: [
-                    Center(
-                      child: TextWidget(
-                          text: "Oct 26, 2022", fontSize: 16.sp,
-                          fontWeight: FontWeight.w600, isTextCenter: false,
-                          textColor: Colors.grey
-                      ),
-                    ),
-                    const PaymentTile(),
-                    SizedBox(height: height1,),
-                    Center(
-                      child: TextWidget(
-                          text: "Oct 26, 2022", fontSize: 16.sp,
-                          fontWeight: FontWeight.w600, isTextCenter: false,
-                          textColor: Colors.grey
-                      ),
-                    ),
-                    const PaymentTile(),
-                    SizedBox(height: height1,),
-                    Center(
-                      child: TextWidget(
-                          text: "Oct 26, 2022", fontSize: 16.sp,
-                          fontWeight: FontWeight.w600, isTextCenter: false,
-                          textColor: Colors.grey
-                      ),
-                    ),
-                    SizedBox(height: height1,),
-                    const PaymentTile(),
-                    SizedBox(height: height1,),
-                  ],
-            )),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final request = requests[index];
+                    return   PaymentTile(
+                      model: request,
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
           ],
         ),
       ),
@@ -162,11 +165,13 @@ class PaymentManagementScreen extends StatelessWidget {
 }
 
 class PaymentTile extends StatelessWidget {
-  const PaymentTile({super.key});
+  final WithdrawRequest model;
+  const PaymentTile({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
     double height = 10.0;
+    String formattedDate = DateFormat('MMM dd, yyyy').format(model.timestamp);
     return Column(
       children: [
         ListTile(
@@ -176,17 +181,19 @@ class PaymentTile extends StatelessWidget {
                 color: secondaryGreenColor,
                 borderRadius: BorderRadius.circular(10)
             ),
-            child: const Icon(CupertinoIcons.arrow_up_right,color: greenColor,size: 30,),
+            child:  Icon(
+              model.type == "approved" ?
+              CupertinoIcons.arrow_up_right : CupertinoIcons.arrow_down_left,color: greenColor,size: 30,),
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextWidget(
-                  text: "Adam Costa",
+                  text: model.type,
                   fontSize: 18.sp, fontWeight: FontWeight.w600,
                   isTextCenter: false, textColor: textColor),
               TextWidget(
-                  text: "5:02 PM",
+                  text: formattedDate,
                   fontSize: 12.sp, fontWeight: FontWeight.w400,
                   isTextCenter: false, textColor: Colors.grey),
             ],
@@ -195,50 +202,13 @@ class PaymentTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextWidget(
-                  text: "Standard Chartered Bank",
+                  text: "Amount Status: ${model.status}",
                   fontSize: 14.sp, fontWeight: FontWeight.w600,
                   isTextCenter: false, textColor: Colors.grey),
               TextWidget(
-                  text: "200 dhs",
+                  text: "${model.amount} MAD",
                   fontSize: 16.sp, fontWeight: FontWeight.w600,
                   isTextCenter: false, textColor: greenColor),
-            ],
-          ),
-        ),
-        SizedBox(height: height,),
-        ListTile(
-          leading: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: const Color(0xffFFF4CF),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: const Icon(CupertinoIcons.arrow_down_right,color: Color(0xffC39800),size: 30,),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextWidget(
-                  text: "Sarah Eric",
-                  fontSize: 18.sp, fontWeight: FontWeight.w600,
-                  isTextCenter: false, textColor: textColor),
-              TextWidget(
-                  text: "5:02 PM",
-                  fontSize: 12.sp, fontWeight: FontWeight.w400,
-                  isTextCenter: false, textColor: Colors.grey),
-            ],
-          ),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextWidget(
-                  text: "Payment Received",
-                  fontSize: 14.sp, fontWeight: FontWeight.w600,
-                  isTextCenter: false, textColor: Colors.grey),
-              TextWidget(
-                  text: "200 dhs",
-                  fontSize: 16.sp, fontWeight: FontWeight.w600,
-                  isTextCenter: false, textColor: const Color(0xffC39800)),
             ],
           ),
         ),
@@ -273,7 +243,7 @@ class PaymentHeader extends StatelessWidget {
           ),
           const SizedBox(width: 15,),
           TextWidget(
-            text: "Software Management", fontSize: 19.sp,
+            text: "Payment Management", fontSize: 19.sp,
             fontWeight: FontWeight.w600, isTextCenter: false,
             textColor: bgColor,fontFamily: AppFonts.semiBold,),
         ],

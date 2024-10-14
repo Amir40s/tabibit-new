@@ -24,7 +24,7 @@ class TwilioProvider with ChangeNotifier {
   Future<void> sendSmsReminder(String toPhoneNumber, String message) async {
     try {
       await _twilioService.sendSmsReminder(toPhoneNumber, message);
-      Get.off(()=>const SuccessScreen(
+      Get.off(()=> SuccessScreen(
           title: "Reminder Sent Successfully!",
           subTitle: "Reminder has been sent to"
               " the patient about his appointment with you."));      notifyListeners();

@@ -143,7 +143,7 @@ class PrescriptionCreationScreen extends StatelessWidget {
                     SubmitButton(
                       title: "Send Prescription",
                       press: () {
-                        Get.to(()=>const SuccessScreen(
+                        Get.to(()=> SuccessScreen(
                             title: "Prescription Sent Successfully!",
                             subTitle: "Prescription has been sent to the patient"
                         ));

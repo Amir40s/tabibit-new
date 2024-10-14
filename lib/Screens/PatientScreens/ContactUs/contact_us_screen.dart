@@ -21,6 +21,8 @@ class ContactUsScreen extends StatelessWidget {
   final phoneC = TextEditingController();
   final problemC = TextEditingController();
 
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
 
@@ -32,57 +34,60 @@ class ContactUsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: bgColor,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-               Header(text: languageP.translatedTexts["Contact Us"] ?? "Contact Us"),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     TextWidget(
-                      text: "Full Name", fontSize: 14,
-                      fontWeight: FontWeight.w600, isTextCenter: false,
-                      textColor: textColor, fontFamily: AppFonts.semiBold,),
-                    SizedBox(height: height2,),
-                    InputField(
-                      inputController: nameC,
-                      hintText: "Full Name",
-                    ),
-                    SizedBox(height: height1,),
-                    const TextWidget(
-                      text: "Phone Number", fontSize: 14,
-                      fontWeight: FontWeight.w600, isTextCenter: false,
-                      textColor: textColor, fontFamily: AppFonts.semiBold,),
-                    SizedBox(height: height2,),
-                    InputField(
-                      inputController: phoneC,
-                      hintText: "Phone Number",
-                    ),
-                    SizedBox(height: height1,),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextWidget(
-                          text: "Write Your Problem", fontSize: 14,
-                          fontWeight: FontWeight.w600, isTextCenter: false,
-                          textColor: textColor, fontFamily: AppFonts.semiBold,),
-                        TextWidget(
-                          text: "Max 250 words", fontSize: 12,
-                          fontWeight: FontWeight.w400, isTextCenter: false,
-                          textColor: textColor,),
-                      ],
-                    ),
-                    SizedBox(height: height2,),
-                    InputField(
-                      inputController: problemC,
-                      hintText: "Tell doctor about your problem....",
-                      maxLines: 5,
-                    ),
-                  ],
+          child: Form(
+            key: _key,
+            child: Column(
+              children: [
+                 Header(text: languageP.translatedTexts["Contact Us"] ?? "Contact Us"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                       TextWidget(
+                        text: "Full Name", fontSize: 14,
+                        fontWeight: FontWeight.w600, isTextCenter: false,
+                        textColor: textColor, fontFamily: AppFonts.semiBold,),
+                      SizedBox(height: height2,),
+                      InputField(
+                        inputController: nameC,
+                        hintText: "Full Name",
+                      ),
+                      SizedBox(height: height1,),
+                      const TextWidget(
+                        text: "Phone Number", fontSize: 14,
+                        fontWeight: FontWeight.w600, isTextCenter: false,
+                        textColor: textColor, fontFamily: AppFonts.semiBold,),
+                      SizedBox(height: height2,),
+                      InputField(
+                        inputController: phoneC,
+                        hintText: "Phone Number",
+                      ),
+                      SizedBox(height: height1,),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextWidget(
+                            text: "Write Your Problem", fontSize: 14,
+                            fontWeight: FontWeight.w600, isTextCenter: false,
+                            textColor: textColor, fontFamily: AppFonts.semiBold,),
+                          TextWidget(
+                            text: "Max 250 words", fontSize: 12,
+                            fontWeight: FontWeight.w400, isTextCenter: false,
+                            textColor: textColor,),
+                        ],
+                      ),
+                      SizedBox(height: height2,),
+                      InputField(
+                        inputController: problemC,
+                        hintText: "Tell doctor about your problem....",
+                        maxLines: 5,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Padding(
@@ -91,25 +96,26 @@ class ContactUsScreen extends StatelessWidget {
             title: "Send Massage",
             press: () async {
 
-              final chatP = GlobalProviderAccess.chatProvider;
+            if(_key.currentState!.validate()){
+              _key.currentState!.save();
 
+              final chatP = GlobalProviderAccess.chatProvider;
               final chatRoomId = await chatP!.createOrGetChatRoom(
-                  "admin@tabibinet.com", ""
+                  "admin@tabibinet.com", "admin"
               );
 
-            Get.to(ChatScreen(
+              Get.to(ChatScreen(
                 chatRoomId: chatRoomId,
                 patientEmail: "admin@tabibinet.com",
                 patientName: "Help Center",
                 profilePic: "https://res.cloudinary.com/dz0mfu819/image/upload/v1725947218/profile_xfxlfl.png",
-              type: "support",
-              deviceToken: "",
-              name: nameC.text.toString(),
-              phone: phoneC.text.toString(),
-              problem: problemC.text.toString(),
-            ));
-
-
+                type: "support",
+                deviceToken: "",
+                name: nameC.text.toString(),
+                phone: phoneC.text.toString(),
+                problem: problemC.text.toString(),
+              ));
+            }
           },),
         ),
       ),

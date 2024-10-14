@@ -29,7 +29,7 @@ class AppointmentReminderScreen extends StatelessWidget {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('appointmentReminder')
-                    .where("userUid" , isEqualTo: auth.currentUser!.uid.toString())
+                    .where("userUid" , isEqualTo: auth.currentUser?.uid.toString())
                     .where("status", isEqualTo: "upcoming")
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -71,7 +71,6 @@ class AppointmentReminderScreen extends StatelessWidget {
                                   text: "ID Number: ${reminder['id']}", fontSize: 14.sp,
                                   fontWeight: FontWeight.w400, isTextCenter: false,
                                   textColor: textColor, ),
-
                               ],
                             ),
                             SubmitButton(
@@ -94,7 +93,8 @@ class AppointmentReminderScreen extends StatelessWidget {
                                   deviceToken: reminder['deviceToken'] ?? "",
                                 ));
                                 log(reminder['patientPhone']);
-                              },)
+                              },
+                            )
                           ],
                         ),
                       );

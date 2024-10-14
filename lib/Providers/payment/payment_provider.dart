@@ -213,7 +213,7 @@ class PaymentProvider with ChangeNotifier {
           image
         );
 
-         patientAppointmentP!.clearData();
+       //  patientAppointmentP!.clearData();
 
         final fcm = FCMService();
         fcm.sendNotification(

@@ -83,7 +83,7 @@ class DoctorSection extends StatelessWidget {
                 likeTap: () {
                   provider.toggleFavorite(doc.userUid);
                 },
-                onTap: () {
+                onTap: () async{
                   appointmentScheduleP.setDoctorDetails(
                       doc.userUid,
                       doc.name,
@@ -92,10 +92,12 @@ class DoctorSection extends StatelessWidget {
                       doc.email,
                       doc.deviceToken
                   );
+                  log("Doctor Name: ${doc.name}");
                   appointmentScheduleP.setAvailabilityTime(
                       doc.availabilityFrom,
                       doc.availabilityTo
                   );
+                  log("Avability:: ${doc.availabilityFrom} : ${doc.availabilityTo}" );
                   Get.to(()=> DoctorDetailScreen(
                     doctorName: doc.name,
                     specialityName: doc.speciality,

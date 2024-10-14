@@ -218,6 +218,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                             SubmitButton(
                               title: "Done",
                               press: () async {
+                                appointmentP.clearData();
                                 Get.offAll(()=>PatientBottomNavBar());
                                 // await appointmentP.sendAppointment();
                             },),

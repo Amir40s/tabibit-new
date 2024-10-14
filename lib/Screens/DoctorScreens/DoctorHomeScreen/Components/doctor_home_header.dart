@@ -55,7 +55,7 @@ class DoctorHomeHeader extends StatelessWidget {
                     SizedBox(
                       width: 40.w,
                       child: TextWidget(
-                          text: "${langP.translatedTexts['Hi'] ?? "Hi"}, ${value.name}", fontSize: 20,
+                          text: "${langP.translatedTexts['Hi'] ?? "Hi"}, ${getFirstName(value.name)}", fontSize: 20,
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: textColor),
                     ),

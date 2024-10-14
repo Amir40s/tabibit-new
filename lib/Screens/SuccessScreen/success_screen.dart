@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Screens/DoctorScreens/DoctorBottomNavBar/doctor_bottom_navbar.dart';
 import 'package:tabibinet_project/Screens/StartScreens/PayWallScreens/paywall_screen.dart';
 
 import '../../../constant.dart';
@@ -11,7 +12,7 @@ import '../../../model/res/widgets/submit_button.dart';
 import '../../../model/res/widgets/text_widget.dart';
 
 class SuccessScreen extends StatelessWidget {
-  const SuccessScreen({
+   SuccessScreen({
     super.key,
     required this.title,
     required this.subTitle,
@@ -64,7 +65,10 @@ class SuccessScreen extends StatelessWidget {
                 press: () {
                   if(title == "Reset Successfully!"){
                     Get.to(()=>PaywallScreen());
-                  }else {
+                  }else if(title == "Transaction Successful"){
+                    Get.to(()=>DoctorBottomNavbar());
+                  }
+                  else {
                     Get.back();
                   }
                 },),

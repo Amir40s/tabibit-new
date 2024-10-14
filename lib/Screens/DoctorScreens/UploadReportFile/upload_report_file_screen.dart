@@ -101,8 +101,8 @@ class UploadReportFileScreen extends StatelessWidget {
                         press: () {
                           value.addFile(appointmentId)
                               .whenComplete(() {
-                            Get.off(()=>const SuccessScreen(
-                                title: "Document Sent Successfully!",
+                            Get.off(()=> SuccessScreen(
+                                title: "Document Sent Successfully",
                                 subTitle: "Document has been sent to the patient"));
                           },);
                         },);

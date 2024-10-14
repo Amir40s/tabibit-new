@@ -81,7 +81,7 @@ class ReminderScreen extends StatelessWidget {
                     SubmitButton(
                       title: "Send Reminder",
                       press: () {
-                        Get.to(()=>const SuccessScreen(
+                        Get.to(()=> SuccessScreen(
                             title: "Reminder Sent Successfully!",
                             subTitle: "Reminder has been sent to the patient"
                                 " about his appointment with you."
