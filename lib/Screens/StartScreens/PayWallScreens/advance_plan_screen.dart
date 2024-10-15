@@ -34,13 +34,13 @@ class AdvancePlanScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const TextWidget(
-            text: "550 dhs/Month", fontSize: 20, fontWeight: FontWeight.w500,
+            text: "550 MAD/Month", fontSize: 20, fontWeight: FontWeight.w500,
             isTextCenter: false, textColor: textColor,fontFamily: AppFonts.medium,),
           const TextWidget(
             text: "All Features from Basic Offer", fontSize: 20, fontWeight: FontWeight.w500,
             isTextCenter: false, textColor: themeColor,fontFamily: AppFonts.medium,),
           const SizedBox(height: 10,),
-          const PlanRow(tickColor: themeColor, text: "Comprehensive Access to Electronic Medical Records (EMR)"),
+          const PlanRow(tickColor: themeColor, text: "Comprehensive Access to Electronic Medical Records (EMR"),
           const PlanRow(tickColor: themeColor, text: "Unlimited Electronic Prescriptions"),
           const PlanRow(tickColor: themeColor, text: "Advanced Patient Management"),
           const PlanRow(tickColor: themeColor, text: "Detailed Reports & Analytics"),

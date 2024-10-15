@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:tabibinet_project/model/data/appointment_remainder_model.dart';
 
 import '../../constant.dart';
 import '../../model/data/specialize_model.dart';
@@ -38,6 +39,15 @@ class FindDoctorProvider extends ChangeNotifier{
         .orderBy("id",descending: true)
         .snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => SpecializeModel.fromDocumentSnapshot(doc)).toList();
+    });
+  }
+
+  Stream<List<AppointmentRemainderModel>> fetchAppointmentRemainder() {
+    return fireStore.collection('appointmentReminder')
+        .where("userUid" , isEqualTo: auth.currentUser?.uid.toString())
+        .where("status", isEqualTo: "upcoming")
+        .snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => AppointmentRemainderModel.fromDocumentSnapshot(doc)).toList();
     });
   }
 

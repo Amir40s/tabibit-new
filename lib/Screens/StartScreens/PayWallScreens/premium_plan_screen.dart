@@ -35,12 +35,13 @@ class PremiumPlanScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const TextWidget(
-          text: "350 dhs/Month", fontSize: 20, fontWeight: FontWeight.w500,
+          text: "350 MAD/Month", fontSize: 20, fontWeight: FontWeight.w500,
           isTextCenter: false, textColor: textColor,fontFamily: AppFonts.medium,),
         const TextWidget(
           text: "All Features from Free Offer", fontSize: 20, fontWeight: FontWeight.w500,
           isTextCenter: false, textColor: themeColor,fontFamily: AppFonts.medium,),
         const SizedBox(height: 10,),
+        const PlanRow(tickColor: themeColor, text: "All Features from Free Offer"),
         const PlanRow(tickColor: themeColor, text: "Smart Agenda"),
         const PlanRow(tickColor: themeColor, text: "Appointment Confirmation and Reminders"),
         const PlanRow(tickColor: themeColor, text: "Practice/Clinic Appointment Management"),

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/PatientNotification/patient_notification_provider.dart';
 import 'package:tabibinet_project/controller/notification_controller.dart';
 import 'package:tabibinet_project/model/data/notification_model.dart';
@@ -31,9 +32,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     final notificationP = Provider.of<PatientNotificationProvider>(context, listen: false);
-    final NotificationController notificationController = Get.put(NotificationController(notificationP));
-    final TranslationController translationController = Get.put(TranslationController());
-
 
     return SafeArea(
       child: Scaffold(
@@ -64,47 +62,54 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   const SizedBox(height: 20,),
 
-                  Obx((){
-                    if (notificationController.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (notificationController.notificationModel.isEmpty) {
-                      return const Center(child: Text('No notification found'));
-                    }
+                  Consumer<TranslationNewProvider>(
+                    builder: (context,provider,child){
+                      return StreamBuilder<List<NotificationModel>>(
+                          stream: notificationP.fetchNotifications(), // Assume this is the stream of specialties
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
 
-                    final specs = notificationController.notificationModel;
+                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text('No Notification found'));
+                            }
 
-                    // Translate the specialties only once when available
-                    if (translationController.notificationTranslationList.isEmpty) {
-                      translationController.translateNotification(
-                        specs.map((e) => e.title).toList() +
-                            specs.map((e) => e.subTitle).toList(),
-                      );
-                    }
+                            final specs = snapshot.data!;
 
-                    return  ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: specs.length,
-                      itemBuilder: (context, index) {
-                        final doc = specs[index];
-                        final title = translationController.notificationTranslationList[doc.title] ?? doc.title;
-                        final subtitle = translationController.notificationTranslationList[doc.subTitle] ?? doc.subTitle;
+                            // Translate the specialties only once when available
+                            if (provider.notificationTranslationList.isEmpty) {
+                              provider.translateNotification(
+                                specs.map((e) => e.title).toList() +
+                                    specs.map((e) => e.subTitle).toList(),
+                              );
+                            }
 
-                        return NotificationContainer(
-                            onTap: () {
+                            return  ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: specs.length,
+                              itemBuilder: (context, index) {
+                                final doc = specs[index];
+                                final title = provider.notificationTranslationList[doc.title] ?? doc.title;
+                                final subtitle = provider.notificationTranslationList[doc.subTitle] ?? doc.subTitle;
 
-                            },
-                            title: title,
-                            subTitle: subtitle,
-                            image: AppIcons.calenderIcon,
-                            iconColor: themeColor,
-                            boxColor: secondaryGreenColor,
-                            isButton: doc.read == "false"
-                        );
-                      },
-                    );
-                  }),
+                                return NotificationContainer(
+                                    onTap: () {
+
+                                    },
+                                    title: title,
+                                    subTitle: subtitle,
+                                    image: AppIcons.calenderIcon,
+                                    iconColor: themeColor,
+                                    boxColor: secondaryGreenColor,
+                                    isButton: doc.read == "false"
+                                );
+                              },
+                            );
+                          });
+                    },
+                  ),
 
 
                   // StreamBuilder<List<NotificationModel>>(

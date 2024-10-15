@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
 
 import '../../../constant.dart';
@@ -35,6 +37,7 @@ class AppointmentContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageP = Provider.of<TranslationProvider>(context);
     return InkWell(
       onTap: onTap ?? (){},
       child: Container(
@@ -57,19 +60,19 @@ class AppointmentContainer extends StatelessWidget {
                   fontWeight: FontWeight.w600, isTextCenter: false,
                   textColor: textColor, fontFamily: AppFonts.semiBold,),
                 TextWidget(
-                  text: "Phone Number:\n $patientPhone", fontSize: 12.sp,
+                  text: "${languageP.translatedTexts["Phone Number:"] ?? "Phone Number:"}\n $patientPhone", fontSize: 12.sp,
                   fontWeight: FontWeight.w400, isTextCenter: false,
                   textColor: textColor, fontFamily: AppFonts.regular,),
                 TextWidget(
-                  text: "Age: $patientAge", fontSize: 12.sp,
+                  text: "${languageP.translatedTexts["Age"] ?? "Age"}: $patientAge", fontSize: 12.sp,
                   fontWeight: FontWeight.w400, isTextCenter: false,
                   textColor: textColor, fontFamily: AppFonts.regular,),
                 TextWidget(
-                  text: "Gender: $patientGender", fontSize: 12.sp,
+                  text: "${languageP.translatedTexts["Gender"] ?? "Gender"}: $patientGender", fontSize: 12.sp,
                   fontWeight: FontWeight.w400, isTextCenter: false,
                   textColor: textColor, fontFamily: AppFonts.regular,),
                 TextWidget(
-                  text: "Complaint: Heart Burn", fontSize: 12.sp,
+                  text: languageP.translatedTexts["Complaint: Heart Burn"] ?? "Complaint: Heart Burn", fontSize: 12.sp,
                   fontWeight: FontWeight.w400, isTextCenter: false,
                   textColor: textColor, fontFamily: AppFonts.regular,),
               ],

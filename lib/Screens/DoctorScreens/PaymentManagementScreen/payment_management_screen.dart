@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/Profile/profile_provider.dart';
 import 'package:tabibinet_project/Providers/bankDetails/bank_details_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/widgets/submit_button.dart';
 
@@ -22,6 +24,7 @@ class PaymentManagementScreen extends StatelessWidget {
     double height1 = 20.0;
     double height2 = 10.0;
     final profileP = Provider.of<ProfileProvider>(context,listen: false);
+    final languageP = Provider.of<TranslationProvider>(context);
     profileP.getSelfInfo();
     return SafeArea(
       child: Scaffold(
@@ -126,8 +129,8 @@ class PaymentManagementScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: height1,),
-        Consumer<BankDetailsProvider>(
-          builder: (context, provider, child) {
+        Consumer2<BankDetailsProvider,TranslationNewProvider>(
+          builder: (context, provider,transP, child) {
             return StreamBuilder<List<WithdrawRequest>>(
               stream: provider.getWithdrawRequests(),
               builder: (context, snapshot) {
@@ -140,6 +143,14 @@ class PaymentManagementScreen extends StatelessWidget {
                 }
 
                 final requests = snapshot.data!;
+                if (transP.paymentCardList.isEmpty) {
+                  transP.translatePaymentCard(
+                    requests.map((e) => e.name).toList() +
+                        requests.map((e) => e.speciality).toList() +
+                        requests.map((e) => e.status).toList() +
+                        requests.map((e) => e.type).toList(),
+                  );
+                }
 
 
                 return ListView.builder(
@@ -172,6 +183,8 @@ class PaymentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = 10.0;
     String formattedDate = DateFormat('MMM dd, yyyy').format(model.timestamp);
+    final provider = Provider.of<TranslationNewProvider>(context);
+    final languageP = Provider.of<TranslationProvider>(context);
     return Column(
       children: [
         ListTile(
@@ -189,7 +202,7 @@ class PaymentTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextWidget(
-                  text: model.type,
+                  text: provider.paymentCardList[model.type] ?? model.type,
                   fontSize: 18.sp, fontWeight: FontWeight.w600,
                   isTextCenter: false, textColor: textColor),
               TextWidget(
@@ -202,7 +215,7 @@ class PaymentTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextWidget(
-                  text: "Amount Status: ${model.status}",
+                  text: "${languageP.translatedTexts["Amount Status:"] ?? "Amount Status:"} ${provider.paymentCardList[model.status] ?? model.status}",
                   fontSize: 14.sp, fontWeight: FontWeight.w600,
                   isTextCenter: false, textColor: Colors.grey),
               TextWidget(

@@ -5,9 +5,11 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/MyAppointment/my_appointment_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/model/data/appointment_model.dart';
 import 'package:tabibinet_project/model/res/constant/app_assets.dart';
 
+import '../../../Providers/Language/new/translation_new_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
@@ -30,6 +32,7 @@ class UpComingAppointment extends StatelessWidget {
       Duration.zero,
       () => Provider.of<MyAppointmentProvider>(context,listen: false).setAppointmentStatus("upcoming"),
     );
+    final languageP = Provider.of<TranslationProvider>(context);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -37,8 +40,8 @@ class UpComingAppointment extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        Consumer<MyAppointmentProvider>(
-          builder: (context, value, child) {
+        Consumer2<MyAppointmentProvider,TranslationNewProvider>(
+          builder: (context, value,provider, child) {
             return StreamBuilder<List<AppointmentModel>>(
               stream: value.filterValue.isNotEmpty ? value.fetchFilterAppointment() :
               value.fetchMyAppointment(),
@@ -55,6 +58,13 @@ class UpComingAppointment extends StatelessWidget {
                 }
 
                 final appoints = snapshot.data!;
+                if (provider.appointmentList.isEmpty) {
+                  provider.translateAppointment(
+                    appoints.map((e) => e.feesType).toList() +
+                        appoints.map((e) => e.doctorName).toList() +
+                        appoints.map((e) => e.feeSubTitle).toList(),
+                  );
+                }
 
                 return ListView.builder(
                   shrinkWrap: true,
@@ -62,16 +72,18 @@ class UpComingAppointment extends StatelessWidget {
                   itemCount: appoints.length,
                   itemBuilder: (context, index) {
                     final appoint = appoints[index];
+                    final doctorName = provider.appointmentList[appoint.doctorName] ?? appoint.doctorName;
+                    final feesType = provider.appointmentList[appoint.feesType] ?? appoint.feesType;
                     return MyAppointmentContainer(
                       appointmentIcon: AppIcons.phone,
-                      doctorName: appoint.doctorName,
+                      doctorName: doctorName,
                       appointmentStatusText: "Upcoming",
-                      chatStatusText: appoint.feesType,
+                      chatStatusText: feesType,
                       image: appoint.doctorImage,
                       appointmentTimeText: appoint.appointmentTime,
                       ratingText: appoint.doctorRating,
                       leftButtonText: "Cancel",
-                      rightButtonText: "Start",
+                      rightButtonText: languageP.translatedTexts["Start"] ?? "Start",
                       statusTextColor: purpleColor,
                       statusBoxColor: purpleColor.withOpacity(0.1),
                       onTap: () {},

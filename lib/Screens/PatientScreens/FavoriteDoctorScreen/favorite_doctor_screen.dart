@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/model/data/user_model.dart';
 import 'package:tabibinet_project/model/res/widgets/no_found_card.dart';
 import '../../../../constant.dart';
@@ -22,8 +23,6 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
     final appointmentScheduleP = Provider.of<PatientAppointmentProvider>(context, listen: false);
-
-    final TranslationController translationController = Get.put(TranslationController());
 
     return SafeArea(
       child: Scaffold(
@@ -56,8 +55,8 @@ class FavoriteScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Consumer<FavoritesProvider>(
-                      builder: (context, value, child) {
+                    Consumer2<FavoritesProvider,TranslationNewProvider>(
+                      builder: (context, value,provider, child) {
                         return StreamBuilder<List<UserModel>>(
                           stream: value.filterValue.isEmpty
                               ? favoritesProvider.favoriteDoctorDetailsStream()
@@ -74,8 +73,8 @@ class FavoriteScreen extends StatelessWidget {
                             final specs = snapshot.data!;
 
 
-                            if (translationController.translations.isEmpty) {
-                              translationController.translateHomeDoctor(
+                            if (provider.translations.isEmpty) {
+                              provider.translateHomeDoctor(
                                 specs.map((e) => e.name).toList() +
                                     specs.map((e) => e.speciality).toList() +
                                     specs.map((e) => e.specialityDetail).toList() +
@@ -92,9 +91,9 @@ class FavoriteScreen extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final doctor = specs[index];
 
-                                final name = translationController.translations[doctor.name] ?? doctor.name;
-                                final speciality = translationController.translations[doctor.speciality] ?? doctor.speciality;
-                                final specialityDetail = translationController.translations[doctor.specialityDetail] ?? doctor.specialityDetail;
+                                final name = provider.translations[doctor.name] ?? doctor.name;
+                                final speciality = provider.translations[doctor.speciality] ?? doctor.speciality;
+                                final specialityDetail = provider.translations[doctor.specialityDetail] ?? doctor.specialityDetail;
 
                                 return TopDoctorContainer(
                                   doctorName: name,

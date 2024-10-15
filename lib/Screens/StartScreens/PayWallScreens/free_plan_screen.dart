@@ -35,7 +35,7 @@ class FreePlanScreen extends StatelessWidget {
             isTextCenter: false, textColor: textColor,fontFamily: AppFonts.medium,),
           const SizedBox(height: 10,),
           const PlanRow(tickColor: textColor, text: "Personalized Dashboard"),
-          const PlanRow(tickColor: textColor, text: "Appointment Management (Limited to 30 Appointment/Month)"),
+          const PlanRow(tickColor: textColor, text: "Appointment Management (Limited to 15 Appointment/Month)"),
           const PlanRow(tickColor: textColor, text: "Secure Messaging (Limited to 50 Messages/Month)"),
           const PlanRow(tickColor: textColor, text: "Access to Medical Resources (Limited Selection)"),
           const PlanRow(tickColor: textColor, text: "Basic Notifications & Alerts"),

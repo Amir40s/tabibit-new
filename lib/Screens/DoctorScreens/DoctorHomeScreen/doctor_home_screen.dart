@@ -4,7 +4,9 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/DoctorHome/doctor_home_provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/subscription_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/model/res/widgets/submit_button.dart';
@@ -26,31 +28,12 @@ import 'Components/range_select_calendar.dart';
 class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
    const DoctorHomeScreen({super.key});
 
-  // final List<Map<String,dynamic>> appointmentStatus = [
-  //   {
-  //     "status" : "Pending",
-  //     "textColor" : purpleColor,
-  //     "boxColor" : purpleColor.withOpacity(0.1),
-  //   },
-  //   {
-  //     "status" : "Cancelled",
-  //     "textColor" : redColor,
-  //     "boxColor" : redColor.withOpacity(0.1),
-  //   },
-  //   {
-  //     "status" : "Completed",
-  //     "textColor" : themeColor,
-  //     "boxColor" : secondaryGreenColor,
-  //   },
-  // ];
-
-
-
   @override
   Widget build(BuildContext context) {
     Provider.of<ProfileProvider>(context,listen: false).getSelfInfo();
     Provider.of<DoctorHomeProvider>(context,listen: false).setNumberOfPatients();
     Provider.of<DoctorHomeProvider>(context,listen: false).setNumberOfReminders();
+    final languageP = Provider.of<TranslationProvider>(context);
     double height = 20;
     return SafeArea(
       child: Scaffold(
@@ -75,7 +58,7 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                      builder: (context, provider, child){
                        provider.initialize();
                        return  TextWidget(
-                         text: "Quick Access", fontSize: 20,
+                         text: "${languageP.translatedTexts["Quick Access"] ?? "Quick Access"}", fontSize: 20,
                          fontWeight: FontWeight.w600, isTextCenter: false,
                          textColor: textColor,fontFamily: AppFonts.semiBold,);
                      },
@@ -103,8 +86,8 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                       ],
                     ),
                     SizedBox(height: height,),
-                    Consumer<DoctorAppointmentProvider>(
-                      builder: (context, provider, child) {
+                    Consumer2<DoctorAppointmentProvider,TranslationNewProvider>(
+                      builder: (context, provider,transP, child) {
                         return StreamBuilder<List<AppointmentModel>>(
                           stream:  provider.fetchAllPatients(limit: 3),
                           builder: (context, snapshot) {
@@ -122,6 +105,17 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
 
                             // List of users
                             final patients = snapshot.data!;
+                            if (transP.doctorPatientList.isEmpty) {
+                              transP.translateDoctorPatient(
+                                patients.map((e) => e.name).toList() +
+                                    patients.map((e) => e.patientGender).toList() +
+                                    patients.map((e) => e.patientName).toList() +
+                                    patients.map((e) => e.patientAge).toList() +
+                                    patients.map((e) => e.patientPhone).toList() +
+                                    patients.map((e) => e.appointmentDate).toList() +
+                                    patients.map((e) => e.status).toList(),
+                              );
+                            }
 
                             return ListView.separated(
                               shrinkWrap: true,
@@ -130,6 +124,12 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                               itemBuilder: (context, index) {
                                 final patient = patients[index];
                                 final isPending = patient.status == "pending";
+                                final patientName = transP.doctorPatientList[patient.name] ?? patient.name;
+                                final patientGender = transP.doctorPatientList[patient.patientGender] ?? patient.patientGender;
+                                final patientAge = transP.doctorPatientList[patient.patientAge] ?? patient.patientAge;
+                                final patientPhone = transP.doctorPatientList[patient.patientPhone] ?? patient.patientPhone;
+                                final status = transP.doctorPatientList[patient.status] ?? patient.status;
+                                final appointmentDate = transP.doctorPatientList[patient.appointmentDate] ?? patient.appointmentDate;
                                 return AppointmentContainer(
                                     onTap : () {
                                       Get.to(() =>
@@ -145,13 +145,13 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                                         updateStatus(patient.id);
                                       }
                                     },
-                                    patientName: patient.patientName,
-                                    patientGender: patient.patientGender,
-                                    patientAge: patient.patientAge,
-                                    patientPhone: patient.patientPhone,
-                                    statusText: isPending ? "Accept" : patient.status,
+                                    patientName: patientName,
+                                    patientGender: patientGender,
+                                    patientAge: patientAge,
+                                    patientPhone: patientPhone,
+                                    statusText: isPending ? languageP.translatedTexts["Accept"] ?? "" : status,
                                     text1: "Appointment Date",
-                                    text2: patient.appointmentDate,
+                                    text2: appointmentDate,
                                     statusTextColor: isPending ? bgColor : themeColor,
                                     boxColor: isPending ? themeColor : secondaryGreenColor
                                 );

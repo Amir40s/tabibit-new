@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../Providers/Language/new/translation_new_provider.dart';
+import '../../../Providers/translation/translation_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/widgets/dotted_line.dart';
@@ -29,12 +32,14 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double height1 = 20.0;
     double height2 = 10.0;
+    final languageP = Provider.of<TranslationNewProvider>(context);
+    final provider = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
         body: Column(
           children: [
-            const Header(text: "Patient's Result"),
+             Header(text: provider.translatedTexts["Patient's Result"] ?? "Patient's Result"),
             Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -50,7 +55,7 @@ class ResultScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                    InfoTile(title: patientName),
+                    InfoTile(title: languageP.appointmentList[patientName] ?? patientName),
                     SizedBox(height: height1,),
                     TextWidget(
                       text: "Age", fontSize: 14.sp,
@@ -91,7 +96,7 @@ class ResultScreen extends StatelessWidget {
                           const DottedLine(color: greyColor,),
                           SizedBox(height: height1,),
                           TextWidget(
-                            text: userProblem, fontSize: 18.sp,
+                            text: languageP.appointmentList[userProblem] ?? userProblem, fontSize: 18.sp,
                             fontWeight: FontWeight.w400, isTextCenter: false,
                             textColor: textColor, fontFamily: AppFonts.regular,),
                         ],

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/EmrDetailScreen/Components/medication_list_section.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/PrescribeMedicineScreen/prescribe_medicine_screen.dart';
 
+import '../../../Providers/Language/new/translation_new_provider.dart';
+import '../../../Providers/translation/translation_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/widgets/dotted_line.dart';
@@ -30,12 +33,14 @@ class EmrDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double height1 = 20.0;
     double height2 = 10.0;
+    final languageP = Provider.of<TranslationNewProvider>(context);
+    final provider = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
         body: Column(
           children: [
-            const Header(text: "Electronic Medical Records"),
+             Header(text: provider.translatedTexts["Electronic Medical Records"] ?? "Electronic Medical Records"),
             Expanded(
                 child: ListView(
                   shrinkWrap: true,
@@ -51,7 +56,7 @@ class EmrDetailScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                     InfoTile(title: patientName),
+                     InfoTile(title: languageP.appointmentList[patientName] ?? patientName),
                     SizedBox(height: height1,),
                     TextWidget(
                       text: "Age", fontSize: 14.sp,
@@ -102,7 +107,7 @@ class EmrDetailScreen extends StatelessWidget {
                           const DottedLine(color: greyColor,),
                           SizedBox(height: height1,),
                           TextWidget(
-                            text: userProblem, fontSize: 18.sp,
+                            text: languageP.appointmentList[userProblem] ?? userProblem, fontSize: 18.sp,
                             fontWeight: FontWeight.w400, isTextCenter: false,
                             textColor: textColor, fontFamily: AppFonts.regular,),
                         ],

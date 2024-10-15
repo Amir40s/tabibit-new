@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:tabibinet_project/Providers/FindDoctor/find_doctor_provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/controller/doctor/appdata_provider.dart';
 import 'package:tabibinet_project/model/res/widgets/no_found_card.dart';
 
 import '../../../../Providers/Favorite/favorite_doctor_provider.dart';
@@ -23,97 +25,97 @@ class DoctorSection extends StatelessWidget {
     final appointmentScheduleP = Provider.of<PatientAppointmentProvider>(context, listen: false);
 
     final docp = Provider.of<FindDoctorProvider>(context,listen: false);
-    final AppDataController findDoctorController = Get.put(AppDataController(docp));
-    final docP = Provider.of<FindDoctorProvider>(context,listen: false);
 
-    final TranslationController translationController = Get.put(TranslationController());
+    return Consumer<TranslationNewProvider>(
+     builder: (context,provider,child){
+       return StreamBuilder<List<UserModel>>(
+           stream: docp.fetchDoctors(), // Assume this is the stream of specialties
+           builder: (context, snapshot) {
+             if (snapshot.connectionState == ConnectionState.waiting) {
+               return const Center(child: CircularProgressIndicator());
+             }
 
-    findDoctorController.fetchDoctors();
+             if (!snapshot.hasData || snapshot.data!.isEmpty) {
+               return const Center(child: Text('No Doctors found'));
+             }
 
-    return Obx((){
+             final specs = snapshot.data!;
 
-      if (findDoctorController.isDoctor.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      if (findDoctorController.doctorsList.isEmpty) {
-        return const Center(child: Text('No doctors found'));
-      }
+             log("List:: $specs");
 
-      final specs = findDoctorController.doctorsList;
+             if (provider.translations.isEmpty) {
+               provider.translateHomeDoctor(
+                 specs.map((e) => e.name).toList() +
+                     specs.map((e) => e.speciality).toList() +
+                     specs.map((e) => e.specialityDetail).toList() +
+                     specs.map((e) => e.availabilityFrom).toList() +
+                     specs.map((e) => e.availabilityTo).toList() +
+                     specs.map((e) => e.appointmentFee).toList(),
+               );
+             }
 
-      log("List:: $specs");
+             return ListView.builder(
+               padding: const EdgeInsets.symmetric(horizontal: 20),
+               shrinkWrap: true,
+               physics: const NeverScrollableScrollPhysics(),
+               itemCount: specs.length,
+               itemBuilder: (context, index) {
+                 final doc = specs[index];
+                 final name = provider.translations[doc.name] ?? doc.name;
+                 final speciality = provider.translations[doc.speciality] ?? doc.speciality;
+                 final specialityDetail = provider.translations[doc.specialityDetail] ?? doc.specialityDetail;
+                 log("Translated speciality: $speciality");
 
-      if (translationController.translations.isEmpty) {
-        translationController.translateHomeDoctor(
-          specs.map((e) => e.name).toList() +
-              specs.map((e) => e.speciality).toList() +
-              specs.map((e) => e.specialityDetail).toList() +
-              specs.map((e) => e.availabilityFrom).toList() +
-              specs.map((e) => e.availabilityTo).toList() +
-              specs.map((e) => e.appointmentFee).toList(),
-        );
-      }
-
-      return  ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: specs.length,
-        itemBuilder: (context, index) {
-          final doc = specs[index];
-          final name = translationController.translations[doc.name] ?? doc.name;
-          final speciality = translationController.translations[doc.speciality] ?? doc.speciality;
-          final specialityDetail = translationController.translations[doc.specialityDetail] ?? doc.specialityDetail;
-          log("Translated speciality: $speciality");
-
-          log("message:: $speciality");
-          return Consumer<FavoritesProvider>(
-            builder: (context, provider,value){
-              return TopDoctorContainer(
-                doctorName: name,
-                specialityName: speciality,
-                specialityDetail: specialityDetail,
-                availabilityFrom: doc.availabilityFrom,
-                availabilityTo: doc.availabilityTo,
-                appointmentFee: doc.appointmentFee,
-                imageUrl: doc.profileUrl,
-                rating: doc.rating,
-                isOnline: doc.isOnline,
-                isFav: provider.isFavorite(doc.userUid),
-                likeTap: () {
-                  provider.toggleFavorite(doc.userUid);
-                },
-                onTap: () async{
-                  appointmentScheduleP.setDoctorDetails(
-                      doc.userUid,
-                      doc.name,
-                      doc.location,
-                      doc.rating,
-                      doc.email,
-                      doc.deviceToken
-                  );
-                  log("Doctor Name: ${doc.name}");
-                  appointmentScheduleP.setAvailabilityTime(
-                      doc.availabilityFrom,
-                      doc.availabilityTo
-                  );
-                  log("Avability:: ${doc.availabilityFrom} : ${doc.availabilityTo}" );
-                  Get.to(()=> DoctorDetailScreen(
-                    doctorName: doc.name,
-                    specialityName: doc.speciality,
-                    doctorDetail: doc.specialityDetail,
-                    yearsOfExperience: doc.experience,
-                    patients: doc.patients,
-                    reviews: doc.reviews,
-                    image: doc.profileUrl,
-                  ));
-                },
-              );
-            },
-          );
-        },
-      );
-    });
+                 log("message:: $speciality");
+                 return Consumer<FavoritesProvider>(
+                   builder: (context, provider,value){
+                     return TopDoctorContainer(
+                       doctorName: name,
+                       specialityName: speciality,
+                       specialityDetail: specialityDetail,
+                       availabilityFrom: doc.availabilityFrom,
+                       availabilityTo: doc.availabilityTo,
+                       appointmentFee: doc.appointmentFee,
+                       imageUrl: doc.profileUrl,
+                       rating: doc.rating,
+                       isOnline: doc.isOnline,
+                       isFav: provider.isFavorite(doc.userUid),
+                       likeTap: () {
+                         provider.toggleFavorite(doc.userUid);
+                       },
+                       onTap: () async{
+                         appointmentScheduleP.setDoctorDetails(
+                             doc.userUid,
+                             doc.name,
+                             doc.location,
+                             doc.rating,
+                             doc.email,
+                             doc.deviceToken
+                         );
+                         log("Doctor Name: ${doc.name}");
+                         appointmentScheduleP.setAvailabilityTime(
+                             doc.availabilityFrom,
+                             doc.availabilityTo
+                         );
+                         log("Avability:: ${doc.availabilityFrom} : ${doc.availabilityTo}" );
+                         Get.to(()=> DoctorDetailScreen(
+                           doctorName: doc.name,
+                           specialityName: doc.speciality,
+                           doctorDetail: doc.specialityDetail,
+                           yearsOfExperience: doc.experience,
+                           patients: doc.patients,
+                           reviews: doc.reviews,
+                           image: doc.profileUrl,
+                         ));
+                       },
+                     );
+                   },
+                 );
+               },
+             );
+           });
+     },
+    );
 
 
     // return Consumer(

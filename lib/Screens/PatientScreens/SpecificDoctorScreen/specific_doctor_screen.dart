@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 
 import '../../../Providers/Favorite/favorite_doctor_provider.dart';
 import '../../../Providers/FindDoctor/find_doctor_provider.dart';
@@ -21,15 +22,16 @@ class SpecificDoctorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appointmentScheduleP = Provider.of<PatientAppointmentProvider>(context, listen: false);
     final findDoctorP = Provider.of<FindDoctorProvider>(context, listen: false);
+    final providerP = Provider.of<TranslationNewProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
         body: Column(
           children: [
-            Header(text: specialityName),
+            Header(text: providerP.translatedTexts[specialityName] ?? specialityName),
             Expanded(
-                child: Consumer<FindDoctorProvider>(
-                  builder: (context, findProvider, child) {
+                child: Consumer2<FindDoctorProvider,TranslationNewProvider>(
+                  builder: (context, findProvider,provider, child) {
                     return StreamBuilder<List<UserModel>>(
 
                       stream: findProvider.selectDoctorCategory == "All" ?
@@ -48,6 +50,16 @@ class SpecificDoctorScreen extends StatelessWidget {
                         }
                         // List of users
                         final docs = snapshot.data!;
+                        if (provider.translations.isEmpty) {
+                          provider.translateHomeDoctor(
+                            docs.map((e) => e.name).toList() +
+                                docs.map((e) => e.speciality).toList() +
+                                docs.map((e) => e.specialityDetail).toList() +
+                                docs.map((e) => e.availabilityFrom).toList() +
+                                docs.map((e) => e.availabilityTo).toList() +
+                                docs.map((e) => e.appointmentFee).toList(),
+                          );
+                        }
 
                         return Consumer<FavoritesProvider>(
                           builder: (context, favProvider, child) {
@@ -58,11 +70,14 @@ class SpecificDoctorScreen extends StatelessWidget {
                               itemCount: docs.length,
                               itemBuilder: (context, index) {
                                 final doc = docs[index];
+                                final name = provider.translations[doc.name] ?? doc.name;
+                                final speciality = provider.translations[doc.speciality] ?? doc.speciality;
+                                final specialityDetail = provider.translations[doc.specialityDetail] ?? doc.specialityDetail;
                                 // final doctorId = user.userUid;
                                 return TopDoctorContainer(
-                                  doctorName: doc.name,
-                                  specialityName: doc.speciality,
-                                  specialityDetail: doc.specialityDetail,
+                                  doctorName: name,
+                                  specialityName: speciality,
+                                  specialityDetail: specialityDetail,
                                   availabilityFrom: doc.availabilityFrom,
                                   availabilityTo: doc.availabilityTo,
                                   appointmentFee: doc.appointmentFee,

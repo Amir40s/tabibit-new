@@ -13,7 +13,9 @@ import 'package:tabibinet_project/model/res/widgets/header.dart';
 import 'package:tabibinet_project/model/res/widgets/submit_button.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
 
+import '../../../Providers/Language/new/translation_new_provider.dart';
 import '../../../Providers/TwilioProvider/twilio_provider.dart';
+import '../../../Providers/translation/translation_provider.dart';
 import '../../../model/res/constant/app_utils.dart';
 import '../../../model/res/widgets/info_tile.dart';
 import '../../../model/res/widgets/toast_msg.dart';
@@ -42,12 +44,15 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
     final twilioProvider = Provider.of<TwilioProvider>(context,listen: false);
     double height1 = 20;
     double height2 = 10;
+    final languageP = Provider.of<TranslationProvider>(context);
+    final transP = Provider.of<TranslationNewProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
         body: Column(
           children: [
-            const Header(text: "Appointments Reminders"),
+             Header(text: languageP.translatedTexts["Appointments Reminders"] ?? "Appointments Reminders"),
             Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -75,7 +80,7 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                    InfoTile(title: name.toString()),
+                    InfoTile(title: transP.appointmentRemainder[name.toString()] ?? name.toString()),
                     SizedBox(height: height1,),
                     TextWidget(
                       text: "Age", fontSize: 14.sp,
@@ -92,21 +97,21 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
                     InfoTile(title: gender.toString()),
                     SizedBox(height: height1,),
                     TextWidget(
-                      text: "Time of Appointment", fontSize: 14.sp,
+                      text: languageP.translatedTexts["Time of Appointment"] ?? "Time of Appointment", fontSize: 14.sp,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
                     InfoTile(title: time.toString(),),
                     SizedBox(height: height1,),
                     TextWidget(
-                      text: "Appointment Location", fontSize: 14.sp,
+                      text: languageP.translatedTexts["Appointment Location"] ?? "Appointment Location", fontSize: 14.sp,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                    InfoTile(title: location.toString()  ),
+                    InfoTile(title: transP.appointmentRemainder[location.toString()] ?? location.toString()),
                     const SizedBox(height: 30,),
                     SubmitButton(
-                      title: "Send Reminder",
+                      title: languageP.translatedTexts["Send Reminder"] ?? "Send Reminder",
                       bgColor: const Color(0xff04AD01).withOpacity(0.1),
                       textColor: const Color(0xff04AD01),
                       bdColor: const Color(0xff04AD01),
@@ -134,7 +139,7 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
                       },),
                     SizedBox(height: height1,),
                     SubmitButton(
-                      title: "Cancel Appointment",
+                      title: languageP.translatedTexts["Cancel Appointment"] ?? "Cancel Appointment",
                       bgColor: const Color(0xffF23A00).withOpacity(0.1),
                       textColor: const Color(0xffF23A00),
                       bdColor: const Color(0xffF23A00),

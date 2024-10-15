@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../constant.dart';
 import '../../../../model/res/widgets/header.dart';
+import '../../../Providers/Language/new/translation_new_provider.dart';
 import '../../../controller/translation_controller.dart';
 import 'Components/about_section.dart';
 import 'Components/info_section.dart';
@@ -30,7 +32,7 @@ class DoctorDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TranslationController translationController = Get.put(TranslationController());
+    final providerP = Provider.of<TranslationNewProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: secondaryGreenColor,
@@ -53,14 +55,14 @@ class DoctorDetailScreen extends StatelessWidget {
                     ),
                   ),
                   InfoSection(
-                    doctorName: translationController.translations[doctorName] ?? doctorName,
-                    specialityName: translationController.translatedTexts[specialityName] ?? specialityName,
+                    doctorName: providerP.translations[doctorName] ?? doctorName,
+                    specialityName: providerP.translatedTexts[specialityName] ?? specialityName,
                     yearsOfExperience: yearsOfExperience,
                     patients: patients,
                     reviews: reviews,
                   ),
                   AboutSection(
-                    doctorDetail: translationController.translations[doctorDetail] ?? doctorDetail,
+                    doctorDetail: providerP.translations[doctorDetail] ?? doctorDetail,
                     image: image,
                   ),
                 ],

@@ -21,5 +21,7 @@ class AppAssets{
   static const String onboard_5 = "assets/images/onboard_5.webp";
   static const String onboard_6 = "assets/images/onboard_6.webp";
   static const String onboard_7 = "assets/images/onboard_7.webp";
+  static const String maleNew = "assets/images/male_image.webp";
+  static const String femaleNew = "assets/images/female_image.webp";
 
 }

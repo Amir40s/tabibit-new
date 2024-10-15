@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/DoctorAppointment/doctor_appointment_provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 
 import '../../../Providers/PatientAppointment/patient_appointment_provider.dart';
 import '../../../constant.dart';
@@ -25,6 +27,7 @@ class PatientManagementDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final doctorAppointmentP = Provider.of<DoctorAppointmentProvider>(context,listen: false);
     double height1 = 20.0;
+    final languageP = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -52,80 +55,95 @@ class PatientManagementDataScreen extends StatelessWidget {
             // ),
             SizedBox(height: height1,),
             Expanded(
-                child: StreamBuilder<List<AppointmentModel>>(
-                  stream: doctorAppointmentP.fetchPatientsSingle(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No Patients found'));
-                    }
+                child: Consumer<TranslationNewProvider>(
+                 builder: (context, provider, child){
+                   return StreamBuilder<List<AppointmentModel>>(
+                     stream: doctorAppointmentP.fetchPatientsSingle(),
+                     builder: (context, snapshot) {
+                       if (snapshot.connectionState == ConnectionState.waiting) {
+                         return const Center(child: CircularProgressIndicator());
+                       }
+                       if (snapshot.hasError) {
+                         return Center(child: Text('Error: ${snapshot.error}'));
+                       }
+                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                         return const Center(child: Text('No Patients found'));
+                       }
 
-                    // List of users
-                    final users = snapshot.data!;
+                       // List of users
+                       final users = snapshot.data!;
+                       if (provider.appointmentList.isEmpty) {
+                         provider.translateAppointment(
+                           users.map((e) => e.feesType).toList() +
+                               users.map((e) => e.patientName).toList() +
+                               users.map((e) => e.patientProblem).toList() +
+                               users.map((e) => e.appointmentDate).toList() +
+                               users.map((e) => e.doctorName).toList() +
+                               users.map((e) => e.feeSubTitle).toList(),
+                         );
+                       }
 
-                    return ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        itemBuilder: (context, index) {
-                          final user = users[index];
-                          return Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                                color: bgColor,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                    color: greyColor
-                                )
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextWidget(
-                                      text: user.patientName, fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600, isTextCenter: false,
-                                      textColor: textColor, fontFamily: AppFonts.semiBold,),
-                                    const SizedBox(height: 10,),
-                                    TextWidget(
-                                      text: "ID Number: #${user.id}", fontSize: 14.sp,
-                                      fontWeight: FontWeight.w400, isTextCenter: false,
-                                      textColor: textColor, ),
-                                  ],
-                                ),
-                                SubmitButton(
-                                  width: 26.w,
-                                  height: 40,
-                                  title: "View Detail",
-                                  textColor: themeColor,
-                                  bgColor: themeColor.withOpacity(0.1),
-                                  press: () {
-                                    Get.to(()=> PatientManagementDetailScreen(
-                                      appointmentId : user.id,
-                                      patientName: user.patientName,
-                                      patientAge: user.patientAge,
-                                      patientGender: user.patientGender,
-                                        userProblem: user.patientProblem,
-                                      patientEmail: user.patientEmail,
-                                      doctorEmail: user.doctorEmail,
-                                      profilePic: user.image,
-                                    ));
-                                  },)
-                              ],
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(height: 15,);
-                        },
-                        itemCount: users.length
-                    );
-                  },
+                       return ListView.separated(
+                           padding: const EdgeInsets.symmetric(horizontal: 20),
+                           itemBuilder: (context, index) {
+                             final user = users[index];
+                             final patientName = provider.appointmentList[user.patientName] ?? user.patientName;
+                             return Container(
+                               padding: const EdgeInsets.all(15),
+                               decoration: BoxDecoration(
+                                   color: bgColor,
+                                   borderRadius: BorderRadius.circular(12),
+                                   border: Border.all(
+                                       color: greyColor
+                                   )
+                               ),
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                   Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+                                       TextWidget(
+                                         text: patientName, fontSize: 16.sp,
+                                         fontWeight: FontWeight.w600, isTextCenter: false,
+                                         textColor: textColor, fontFamily: AppFonts.semiBold,),
+                                       const SizedBox(height: 10,),
+                                       TextWidget(
+                                         text: "${languageP.translatedTexts["ID Number:"] ?? "ID Number:"} #${user.id}", fontSize: 14.sp,
+                                         fontWeight: FontWeight.w400, isTextCenter: false,
+                                         textColor: textColor, ),
+                                     ],
+                                   ),
+                                   SubmitButton(
+                                     width: 26.w,
+                                     height: 40,
+                                     title: "View Detail",
+                                     textColor: themeColor,
+                                     bgColor: themeColor.withOpacity(0.1),
+                                     press: () {
+                                       Get.to(()=> PatientManagementDetailScreen(
+                                         appointmentId : user.id,
+                                         patientName: user.patientName,
+                                         patientAge: user.patientAge,
+                                         patientGender: user.patientGender,
+                                         userProblem: user.patientProblem,
+                                         patientEmail: user.patientEmail,
+                                         doctorEmail: user.doctorEmail,
+                                         profilePic: user.image,
+                                       ));
+                                     },)
+                                 ],
+                               ),
+                             );
+                           },
+                           separatorBuilder: (context, index) {
+                             return const SizedBox(height: 15,);
+                           },
+                           itemCount: users.length
+                       );
+                     },
+                   );
+                 },
                 )
             ),
             SizedBox(height: height1,),

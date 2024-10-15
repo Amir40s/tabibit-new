@@ -8,6 +8,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/StartAppointmentScreen/start_appointment_screen.dart';
 
@@ -49,9 +50,7 @@ class AppointmentScheduleScreen extends StatelessWidget {
 
     final docp = Provider.of<FindDoctorProvider>(context,listen: false);
     final AppDataController findDoctorController = Get.put(AppDataController(docp));
-    final docP = Provider.of<FindDoctorProvider>(context,listen: false);
 
-    final TranslationController translationController = Get.put(TranslationController());
 
 
     findDoctorController.fetchFees();
@@ -208,54 +207,68 @@ class AppointmentScheduleScreen extends StatelessWidget {
                           // }),
 
 
-                          StreamBuilder<List<FeeInformationModel>>(
-                            stream: patientAppointmentP.fetchFeeInfo(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
-                              }
-                              if (snapshot.hasError) {
-                                return Center(child: Text('Error: ${snapshot.error}'));
-                              }
-                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                return const Center(child: Text('No Fees found'));
-                              }
+                          Consumer<TranslationNewProvider>(
+                           builder: (context,transP,child){
+                             return StreamBuilder<List<FeeInformationModel>>(
+                               stream: patientAppointmentP.fetchFeeInfo(),
+                               builder: (context, snapshot) {
+                                 if (snapshot.connectionState == ConnectionState.waiting) {
+                                   return const Center(child: CircularProgressIndicator());
+                                 }
+                                 if (snapshot.hasError) {
+                                   return Center(child: Text('Error: ${snapshot.error}'));
+                                 }
+                                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                   return const Center(child: Text('No Fees found'));
+                                 }
 
-                              // List of users
-                              final fees = snapshot.data!;
+                                 // List of users
+                                 final fees = snapshot.data!;
+                                 if (transP.feeList.isEmpty) {
+                                   transP.translateFees(
+                                     fees.map((e) => e.type).toList() +
+                                         fees.map((e) => e.subTitle).toList(),
+                                   );
+                                 }
 
-                              return Consumer<PatientAppointmentProvider>(
-                                builder: (context, provider, child) {
-                                  return ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: fees.length,
-                                    itemBuilder: (context, index) {
-                                      final isSelected = provider.selectFeeIndex == index;
-                                      final fee = fees[index];
-                                      return FeeContainer(
-                                        onTap: () {
-                                          provider.setSelectedFee(
-                                              index,
-                                              fee.type,
-                                              fee.fees,
-                                              fee.id,
-                                              fee.subTitle
-                                          );
-                                        },
-                                        title: fee.type,
-                                        fees: fee.fees,
-                                        subTitle: fee.subTitle,
-                                        borderColor: isSelected ? themeColor : greyColor,
-                                        icon: isSelected ? AppIcons.radioOnIcon : AppIcons.radioOffIcon,
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return SizedBox(height: height1,);
-                                    },
-                                  );
-                                },);
-                            },
+                                 return Consumer<PatientAppointmentProvider>(
+                                   builder: (context, provider, child) {
+                                     return ListView.separated(
+                                       shrinkWrap: true,
+                                       physics: const NeverScrollableScrollPhysics(),
+                                       itemCount: fees.length,
+                                       itemBuilder: (context, index) {
+                                         final isSelected = provider.selectFeeIndex == index;
+                                         final fee = fees[index];
+                                         final type = transP.feeList[fee.type] ?? fee.type;
+                                         final subTitle = transP.feeList[fee.subTitle] ?? fee.subTitle;
+                                         final doctorFee = transP.feeList[fee.fees] ?? fee.fees;
+                                         log("Translated speciality: $doctorFee");
+                                         return FeeContainer(
+                                           onTap: () {
+                                             provider.setSelectedFee(
+                                                 index,
+                                                 fee.type,
+                                                 fee.fees,
+                                                 fee.id,
+                                                 fee.subTitle
+                                             );
+                                           },
+                                           title: type,
+                                           fees: fee.fees,
+                                           subTitle: subTitle,
+                                           borderColor: isSelected ? themeColor : greyColor,
+                                           icon: isSelected ? AppIcons.radioOnIcon : AppIcons.radioOffIcon,
+                                         );
+                                       },
+                                       separatorBuilder: (context, index) {
+                                         return SizedBox(height: height1,);
+                                       },
+                                     );
+                                   },);
+                               },
+                             );
+                           },
                           ),
                           SizedBox(height: height1,),
                           TextWidget(

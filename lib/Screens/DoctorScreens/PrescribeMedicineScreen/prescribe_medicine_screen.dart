@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Screens/SuccessScreen/success_screen.dart';
 
+import '../../../Providers/Language/new/translation_new_provider.dart';
 import '../../../Providers/Medicine/medicine_provider.dart';
+import '../../../Providers/translation/translation_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/widgets/header.dart';
@@ -52,12 +54,14 @@ class PrescribeMedicineScreen extends StatelessWidget {
     final medP = Provider.of<MedicineProvider>(context,listen: false);
     double height1 = 20.0;
     double height2 = 10.0;
+    final languageP = Provider.of<TranslationNewProvider>(context);
+    final transP = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
         body: Column(
           children: [
-            const Header(text: "Prescribe Medicine"),
+             Header(text: transP.translatedTexts["Prescribe Medicine"] ?? "Prescribe Medicine"),
             Expanded(
                 child: ListView(
                   shrinkWrap: true,
@@ -65,7 +69,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: height1,),
                     TextWidget(
-                        text: "Tablet Name", fontSize: 16.sp,
+                        text: transP.translatedTexts["Tablet Name"] ?? "Tablet Name", fontSize: 16.sp,
                         fontWeight: FontWeight.w600, isTextCenter: false,
                         textColor: textColor),
                     SizedBox(height: height2,),
@@ -73,7 +77,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                       key: formKey,
                       child: InputField(
                         inputController: medP.tabletC,
-                        hintText: "medicine Name",
+                        hintText: transP.translatedTexts["medicine Name"] ?? "medicine Name",
                       ),
                     ),
                     SizedBox(height: height1,),
@@ -84,7 +88,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextWidget(
-                                text: "Dosage", fontSize: 16.sp,
+                                text: transP.translatedTexts["Dosage"] ?? "Dosage", fontSize: 16.sp,
                                 fontWeight: FontWeight.w600, isTextCenter: false,
                                 textColor: textColor),
                             SizedBox(height: height2,),
@@ -107,7 +111,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                                 Consumer<MedicineProvider>(
                                   builder: (context, value, child) {
                                     return TextWidget(
-                                      text: "${value.dosage} Tablet", fontSize: 16.sp,
+                                      text: "${value.dosage} ${transP.translatedTexts["tablets"] ?? "Tablet"}", fontSize: 16.sp,
                                       fontWeight: FontWeight.w500, isTextCenter: false,
                                       textColor: textColor, fontFamily: AppFonts.medium,);
                                   },),
@@ -156,7 +160,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                                 Consumer<MedicineProvider>(
                                   builder: (context, value, child) {
                                     return TextWidget(
-                                      text: "${value.duration} Week", fontSize: 16.sp,
+                                      text: "${value.duration} ${transP.translatedTexts["Week"] ?? "Week"}", fontSize: 16.sp,
                                       fontWeight: FontWeight.w500, isTextCenter: false,
                                       textColor: textColor, fontFamily: AppFonts.medium,);
                                   },),
@@ -204,7 +208,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                                   //  provider.selectRepeatButton(index);
                                   },
                                   child: SuggestionContainer2(
-                                      text: repeat[index],
+                                      text: transP.translatedTexts[repeat[index]] ?? repeat[index],
                                       isTick: isSelected,
                                       boxColor: isSelected ? themeColor : bgColor,
                                       textColor: isSelected ? bgColor : themeColor),
@@ -214,7 +218,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                     ),
                     SizedBox(height: height1,),
                     TextWidget(
-                        text: "Time of day", fontSize: 16.sp,
+                        text: transP.translatedTexts["Time of Day"] ?? "Time of day", fontSize: 16.sp,
                         fontWeight: FontWeight.w600, isTextCenter: false,
                         textColor: textColor),
                     SizedBox(height: height2,),
@@ -236,7 +240,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                                     //provider.selectDayButton(index);
                                   },
                                   child: SuggestionContainer2(
-                                      text: day[index],
+                                      text: transP.translatedTexts[day[index]] ?? day[index],
                                       isTick: isSelected,
                                       boxColor: isSelected ? themeColor : bgColor,
                                       textColor: isSelected ? bgColor : themeColor),
@@ -268,7 +272,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                                   //  provider.selectTakenButton(index);
                                   },
                                   child: SuggestionContainer2(
-                                      text: taken[index],
+                                      text: transP.translatedTexts[taken[index]] ?? taken[index],
                                       isTick: isSelected,
                                       boxColor: isSelected ? themeColor : bgColor,
                                       textColor: isSelected ? bgColor : themeColor),
@@ -289,7 +293,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                             ],
                           ) :
                           SubmitButton(
-                            title: "Prescribe Medicine ",
+                            title: transP.translatedTexts["Prescribe Medicine"] ?? "Prescribe Medicine",
                             press: () {
                               if(formKey.currentState!.validate()){
                                 value.sendPrescription(appointmentId);

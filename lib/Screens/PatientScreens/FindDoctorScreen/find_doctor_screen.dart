@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Favorite/favorite_doctor_provider.dart';
 import 'package:tabibinet_project/Providers/FindDoctor/find_doctor_provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/Providers/PatientHome/patient_home_provider.dart';
 
@@ -32,6 +34,7 @@ class FindDoctorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appointmentScheduleP = Provider.of<PatientAppointmentProvider>(context, listen: false);
     final findDoctorP = Provider.of<FindDoctorProvider>(context, listen: false);
+    final languageP = Provider.of<TranslationProvider>(context);
     findDoctorP.setNumberOfDoctors();
     return SafeArea(
       child: Scaffold(
@@ -93,44 +96,55 @@ class FindDoctorScreen extends StatelessWidget {
                     SizedBox(
                       height: 40,
                       width: 100.w,
-                      child: StreamBuilder<List<SpecializeModel>>(
-                        stream: findDoctorP.fetchSpeciality(),
-                        builder: (context, snapshot) {
+                      child: Consumer<TranslationNewProvider>(
+                        builder: (context, transP, child){
+                          return StreamBuilder<List<SpecializeModel>>(
+                            stream: findDoctorP.fetchSpeciality(),
+                            builder: (context, snapshot) {
 
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          if (snapshot.hasError) {
-                            return Center(child: Text('Error: ${snapshot.error}'));
-                          }
-                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return const Center(child: Text('No specialities found'));
-                          }
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasError) {
+                                return Center(child: Text('Error: ${snapshot.error}'));
+                              }
+                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                return  Center(child:
+                                Text(languageP.translatedTexts["No specialities found"] ?? "No specialities found")
+                                );
+                              }
 
-                          // List of users
-                          final specs = snapshot.data!;
+                              // List of users
+                              final specs = snapshot.data!;
+                              // Translate the specialties only once when available
+                              if (transP.translatedTexts.isEmpty) {
+                                transP.translateMultiple(specs.map((e) => e.specialty).toList());
+                              }
 
-                          return Consumer<FindDoctorProvider>(
-                            builder: (context, provider, child) {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                padding: const EdgeInsets.only(left: 20),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: specs.length,
-                                itemBuilder: (context, index) {
-                                  final spec = specs[index];
-                                  final isSelected = provider.selectedIndex == index;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      provider.setDoctorCategory(index,spec.id,spec.specialty);
-                                    },
-                                    child: SuggestionContainer(
-                                        text: spec.specialty,
-                                        boxColor: isSelected ? themeColor : bgColor,
-                                        textColor: isSelected ? bgColor : themeColor),
-                                  );
+                              return Consumer<FindDoctorProvider>(
+                                builder: (context, provider, child) {
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.only(left: 20),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: specs.length,
+                                    itemBuilder: (context, index) {
+                                      final spec = specs[index];
+                                      final isSelected = provider.selectedIndex == index;
+                                      final translatedText = transP.translatedTexts[spec.specialty] ?? spec.specialty;
+                                      return GestureDetector(
+                                        onTap: () {
+                                          provider.setDoctorCategory(index,spec.id,spec.specialty);
+                                        },
+                                        child: SuggestionContainer(
+                                            text: translatedText,
+                                            boxColor: isSelected ? themeColor : bgColor,
+                                            textColor: isSelected ? bgColor : themeColor),
+                                      );
+                                    },);
                                 },);
-                            },);
+                            },
+                          );
                         },
                       )
                     ),
@@ -142,7 +156,7 @@ class FindDoctorScreen extends StatelessWidget {
                           Consumer<FindDoctorProvider>(
                             builder: (context, value, child) {
                               return TextWidget(
-                                text: "${value.numberOfDoctors} Founds", fontSize: 20,
+                                text: "${value.numberOfDoctors} ${languageP.translatedTexts["Founds"] ?? "Founds"}", fontSize: 20,
                                 fontWeight: FontWeight.w600, isTextCenter: false,
                                 textColor: textColor, fontFamily: AppFonts.semiBold,);
                             },),
@@ -151,8 +165,8 @@ class FindDoctorScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20,),
-                    Consumer<FindDoctorProvider>(
-                      builder: (context, findProvider, child) {
+                    Consumer2<FindDoctorProvider,TranslationNewProvider>(
+                      builder: (context, findProvider,provider, child) {
                         return StreamBuilder<List<UserModel>>(
 
                           stream: findProvider.selectDoctorCategory == "All" ?
@@ -171,6 +185,16 @@ class FindDoctorScreen extends StatelessWidget {
                             }
                             // List of users
                             final docs = snapshot.data!;
+                            if (provider.translations.isEmpty) {
+                              provider.translateHomeDoctor(
+                                docs.map((e) => e.name).toList() +
+                                    docs.map((e) => e.speciality).toList() +
+                                    docs.map((e) => e.specialityDetail).toList() +
+                                    docs.map((e) => e.availabilityFrom).toList() +
+                                    docs.map((e) => e.availabilityTo).toList() +
+                                    docs.map((e) => e.appointmentFee).toList(),
+                              );
+                            }
 
                             return Consumer<FavoritesProvider>(
                               builder: (context, favProvider, child) {
@@ -182,10 +206,13 @@ class FindDoctorScreen extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     final doc = docs[index];
                                     // final doctorId = user.userUid;
+                                    final name = provider.translations[doc.name] ?? doc.name;
+                                    final speciality = provider.translations[doc.speciality] ?? doc.speciality;
+                                    final specialityDetail = provider.translations[doc.specialityDetail] ?? doc.specialityDetail;
                                     return TopDoctorContainer(
-                                      doctorName: doc.name,
-                                      specialityName: doc.speciality,
-                                      specialityDetail: doc.specialityDetail,
+                                      doctorName: name,
+                                      specialityName: speciality,
+                                      specialityDetail: specialityDetail,
                                       availabilityFrom: doc.availabilityFrom,
                                       availabilityTo: doc.availabilityTo,
                                       appointmentFee: doc.appointmentFee,

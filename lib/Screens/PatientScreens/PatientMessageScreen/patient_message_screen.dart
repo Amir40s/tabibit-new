@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Screens/ChatScreens/chat_screen.dart';
 import 'package:tabibinet_project/Screens/ChatScreens/search_controller.dart';
 import 'package:tabibinet_project/constant.dart';
@@ -20,7 +21,6 @@ class ChatListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ChatSearchController());
-    final transController = Get.put(TranslationController());
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -28,8 +28,8 @@ class ChatListScreen extends StatelessWidget {
           children: [
             const Header2(text: "Message"),
             Expanded(
-                child: Consumer<ChatProvider>(
-                  builder: (context, chatProvider, _) {
+                child: Consumer2<ChatProvider,TranslationNewProvider>(
+                  builder: (context, chatProvider,provider, _) {
                     return Obx(() {
                       final searchQuery = controller.searchQuery.value.toLowerCase();
                       return StreamBuilder<List<ChatRoomModel>>(
@@ -54,7 +54,7 @@ class ChatListScreen extends StatelessWidget {
                                   (user) => user.email == otherUserEmail,
                               orElse: () => UserchatModel(
                                 id: '',
-                                name: 'Support',
+                                name: 'Help Support',
                                 email: otherUserEmail,
                                 profileUrl: '',
                                 userUid: '',
@@ -69,6 +69,7 @@ class ChatListScreen extends StatelessWidget {
                               child: Text('No chats match the search criteria'),
                             );
                           }
+
 
                           return ListView.separated(
                             itemCount: chatRooms.length,
@@ -89,15 +90,13 @@ class ChatListScreen extends StatelessWidget {
                                     (user) => user.email == otherUserEmail,
                                 orElse: () => UserchatModel(
                                   id: '',
-                                  name: 'lp[',
+                                  name: 'Help Support',
                                   email: otherUserEmail,
                                   profileUrl: '',
                                   userUid: '',
                                   deviceToken: '',
                                 ),
                               );
-
-
 
                               return ListTile(
                                 leading: CircleAvatar(
@@ -107,7 +106,7 @@ class ChatListScreen extends StatelessWidget {
                                   ),
                                 ),
                                 title: TextWidget(
-                                  text: transController.translations[otherUser.name] ?? otherUser.name,
+                                  text: provider.translations[otherUser.name] ?? otherUser.name,
                                   fontSize: 14.0,
                                   textColor: Colors.black,
                                   fontWeight: FontWeight.bold,

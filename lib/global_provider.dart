@@ -8,6 +8,7 @@ import 'package:tabibinet_project/Providers/translation/translation_provider.dar
 import 'package:tabibinet_project/Providers/chatProvider/chat_provider.dart';
 import 'Providers/BottomNav/bottom_navbar_provider.dart';
 import 'Providers/FindDoctor/find_doctor_provider.dart';
+import 'Providers/Language/new/translation_new_provider.dart';
 import 'Providers/Medicine/medicine_provider.dart';
 import 'Providers/PatientAppointment/patient_appointment_provider.dart';
 import 'Providers/PatientNotification/patient_notification_provider.dart';
@@ -120,6 +121,14 @@ class GlobalProviderAccess {
     final context = navigatorKey.currentContext;
     if (context != null) {
       return Provider.of<SubscriptionProvider>(context, listen: false);
+    }
+    return null;
+  }
+
+  static TranslationNewProvider? get translationNewProvider {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      return Provider.of<TranslationNewProvider>(context, listen: false);
     }
     return null;
   }

@@ -8,6 +8,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/payment/payment_provider.dart';
 import 'package:tabibinet_project/Providers/schedule/schedule_provider.dart';
 import 'package:tabibinet_project/chart_screen.dart';
@@ -138,6 +139,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => AppDataProvider(),),
             ChangeNotifierProvider(create: (context) => SubscriptionProvider(),),
             ChangeNotifierProvider(create: (context) => BankDetailsProvider(),),
+            ChangeNotifierProvider(create: (context) => TranslationNewProvider(),),
+            ChangeNotifierProvider(create: (context) => AppDataProvider(),),
 
             ChangeNotifierProvider(create: (context) => TwilioProvider(
                 accountSid: BaseUrl.SID_TWILLO,

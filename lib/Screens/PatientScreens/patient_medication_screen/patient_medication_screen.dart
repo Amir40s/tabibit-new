@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 
+import '../../../Providers/Language/new/translation_new_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
@@ -40,6 +43,9 @@ class PatientMedicationScreen extends StatelessWidget {
     double height1 = 20;
     double height2 = 10;
 
+    final languageP = Provider.of<TranslationProvider>(context);
+    final languageNewP = Provider.of<TranslationNewProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -56,18 +62,19 @@ class PatientMedicationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: height1,),
                   TextWidget(
-                    text: "You have received the prescription From DR $doctorName",
+                    text: "${languageP.translatedTexts["You have received the prescription From DR"] ??
+                        "You have received the prescription From DR"} ${languageNewP.translations[doctorName] ?? doctorName}",
                     fontSize: 20,
                     fontWeight: FontWeight.w600, isTextCenter: true, maxLines: 3,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   const SizedBox(height: 40,),
-                  const TextWidget(
-                    text: "Prescription Information", fontSize: 20,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["Prescription Information"] ?? "Prescription Information"}", fontSize: 20,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "Medicine Name", fontSize: 14,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["Medicine Name"] ?? "Medicine Name"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -82,13 +89,13 @@ class PatientMedicationScreen extends StatelessWidget {
                         )
                     ),
                     child: TextWidget(
-                      text: medicineName, fontSize: 16,
+                      text: languageNewP.medicationList[medicineName] ?? medicineName, fontSize: 16,
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                   ),
                   SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "Dose", fontSize: 14,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["Dose"] ?? "Dose"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -108,8 +115,8 @@ class PatientMedicationScreen extends StatelessWidget {
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                   ),
                   SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "Duration", fontSize: 14,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["Duration"] ?? "Duration"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -129,8 +136,8 @@ class PatientMedicationScreen extends StatelessWidget {
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                   ),
                   SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "Repeat", fontSize: 14,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["Repeat"] ?? "Repeat"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -144,15 +151,15 @@ class PatientMedicationScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           // final item = repeat[index];
                           return SuggestionContainer(
-                              text: repeat[index],
+                              text: languageNewP.medicationList[repeat[index]] ?? repeat[index],
                               boxColor: themeColor,
                               textColor: bgColor
                           );
                         },)
                   ),
                   SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "Time of Day", fontSize: 14,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["Time of Day"] ?? "Time of Day"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -173,8 +180,8 @@ class PatientMedicationScreen extends StatelessWidget {
                         },)
                   ),
                   SizedBox(height: height1,),
-                  const TextWidget(
-                    text: "To be taken", fontSize: 14,
+                   TextWidget(
+                    text: "${languageP.translatedTexts["To be taken"] ?? "To be taken"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -200,14 +207,14 @@ class PatientMedicationScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SubmitButton(
-            title: "Continue",
-            press: () {
-              // Get.to(()=> const AppointmentVoiceCallScreen());
-            },),
-        ),
+        // bottomNavigationBar: Padding(
+        //   padding: const EdgeInsets.all(20.0),
+        //   child: SubmitButton(
+        //     title: "Continue",
+        //     press: () {
+        //       // Get.to(()=> const AppointmentVoiceCallScreen());
+        //     },),
+        // ),
       ),
     );
   }

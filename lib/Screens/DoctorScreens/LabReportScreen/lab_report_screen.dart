@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
 import 'package:tabibinet_project/model/res/widgets/header.dart';
@@ -37,6 +40,8 @@ class LabReportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double height1 = 20.0;
     double height2 = 10.0;
+    final languageP = Provider.of<TranslationNewProvider>(context);
+    final provider = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -56,7 +61,7 @@ class LabReportScreen extends StatelessWidget {
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: textColor, fontFamily: AppFonts.semiBold,),
                         TextWidget(
-                          text: "Date: $date", fontSize: 16.sp,
+                          text: "${provider.translatedTexts["Date"] ?? "Date"}: ${languageP.appointmentList[date] ?? date}", fontSize: 16.sp,
                           fontWeight: FontWeight.w500, isTextCenter: false,
                           textColor: textColor, fontFamily: AppFonts.medium,),
                       ],
@@ -67,7 +72,7 @@ class LabReportScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                    InfoTile(title: patientName),
+                    InfoTile(title: languageP.appointmentList[patientName] ?? patientName),
                     SizedBox(height: height1,),
                     TextWidget(
                       text: "Age", fontSize: 14.sp,
@@ -135,7 +140,7 @@ class LabReportScreen extends StatelessWidget {
                                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                                   const Spacer(),
                                   SubmitButton(
-                                    title: "view",
+                                    title: provider.translatedTexts["view"] ?? "view",
                                     width: 18.w,
                                     radius: 6,
                                     height: 30,
@@ -157,7 +162,7 @@ class LabReportScreen extends StatelessWidget {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(20.0),
           child: SubmitButton(
-            title: "Send Document to $patientName",
+            title: "${provider.translatedTexts["Send Document to"] ?? "Send Document to"} ${languageP.appointmentList[patientName] ?? patientName}",
             press: () {
               Get.to(()=>UploadReportFileScreen(
                 appointmentId: appointmentId,

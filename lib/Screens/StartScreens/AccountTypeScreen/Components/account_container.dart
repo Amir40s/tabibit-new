@@ -48,7 +48,7 @@ class AccountContainer extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SvgPicture.asset(image),
+              child: Image.asset(image),
             ),
             const SizedBox(height: 20,),
             Row(

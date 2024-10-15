@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:tabibinet_project/global_provider.dart';
 import 'package:tabibinet_project/model/api_services/api_services.dart';
 import 'package:tabibinet_project/model/api_services/url/baseurl.dart';
 import 'package:tabibinet_project/model/services/SharedPreference/shared_preference.dart';
@@ -13,8 +14,6 @@ class TranslationProvider with ChangeNotifier {
 
   int MAX_TEXTS_PER_REQUEST = 100;
   int MAX_CHARACTERS_PER_REQUEST = 5000;
-
-
 
   String _translatedText = "";
   String _currentLanguage = "en";
@@ -28,9 +27,14 @@ class TranslationProvider with ChangeNotifier {
   List<String> doctorsList = [];
   List<String> faqList = [];
   List<String> feeLists = [];
-
-
-  final TranslationController translationController = Get.find<TranslationController>();
+  List<String> notificationList = [];
+  List<String> patientPrecscription = [];
+  List<String> appointmentList = [];
+  List<String> medicationList = [];
+  List<String> chatRoomList = [];
+  List<String> doctorPatientList = [];
+  List<String> appointmentRemainder = [];
+  List<String> paymentCardList = [];
 
   final String _apiKey = BaseUrl.API_KEY;
 
@@ -44,12 +48,21 @@ class TranslationProvider with ChangeNotifier {
   Map<String, String> get languages => _languages;
 
   void changeLanguage(String language) {
+    final provider = GlobalProviderAccess.translationNewProvider;
     _currentLanguage = _languages[language] ?? 'en';
     notifyListeners();
-    translationController.updateTranslations(specialties, targetLanguage:  _currentLanguage);
-    translationController.updateDoctorTranslation(doctorsList, targetLanguage:  _currentLanguage);
-    translationController.updateDoctorFaq(faqList, targetLanguage:  _currentLanguage);
-    translationController.updateFees(feeLists, targetLanguage:  _currentLanguage);
+    provider!.updateTranslations(specialties, targetLanguage:  _currentLanguage);
+    provider.updateDoctorTranslation(doctorsList, targetLanguage:  _currentLanguage);
+    provider.updateDoctorFaq(faqList, targetLanguage:  _currentLanguage);
+    provider.updateFees(feeLists, targetLanguage:  _currentLanguage);
+    provider.updateNotification(notificationList, targetLanguage:  _currentLanguage);
+    provider.updatePatientPrescription(patientPrecscription, targetLanguage:  _currentLanguage);
+    provider.updateAppointment(appointmentList, targetLanguage:  _currentLanguage);
+    provider.updateMedication(medicationList, targetLanguage:  _currentLanguage);
+    provider.updateChatRoom(chatRoomList, targetLanguage:  _currentLanguage);
+    provider.updateDoctorPatient(doctorPatientList, targetLanguage:  _currentLanguage);
+    provider.updateAppointmentRemainder(appointmentRemainder, targetLanguage:  _currentLanguage);
+    provider.updatePaymentCard(paymentCardList, targetLanguage:  _currentLanguage);
   }
 
   void setSpecialties(List<String> specs) {
@@ -69,6 +82,16 @@ class TranslationProvider with ChangeNotifier {
 
   void setFAQ(List<String> faq) {
     doctorsList = faq;
+    notifyListeners();
+  }
+
+  void setNotification(List<String> notification) {
+    notificationList = notification;
+    notifyListeners();
+  }
+
+  void setPrescription(List<String> prescription) {
+    patientPrecscription = prescription;
     notifyListeners();
   }
 

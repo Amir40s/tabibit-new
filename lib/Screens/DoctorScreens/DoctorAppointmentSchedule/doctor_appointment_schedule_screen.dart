@@ -5,6 +5,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
@@ -53,6 +55,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final doctorAppointmentP = Provider.of<DoctorAppointmentProvider>(context,listen: false);
+    final languageP = Provider.of<TranslationProvider>(context);
     double height = 20.0;
     return SafeArea(
       child: Scaffold(
@@ -133,7 +136,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                           Row(
                             children: [
                               TextWidget(
-                                text: "Appointments ", fontSize: 20,
+                                text: "Appointment", fontSize: 20,
                                 fontWeight: FontWeight.w600, isTextCenter: false,
                                 textColor: textColor,fontFamily: AppFonts.semiBold,),
                               TextWidget(
@@ -171,8 +174,8 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                           },)
                     ),
                     SizedBox(height: height,),
-                    Consumer<DoctorAppointmentProvider>(
-                      builder: (context, provider, child) {
+                    Consumer2<DoctorAppointmentProvider,TranslationNewProvider>(
+                      builder: (context, provider,transP, child) {
                         return StreamBuilder<List<AppointmentModel>>(
                           stream: provider.selectedAppointmentStatus != "All"
                               ? provider.fetchPatients()
@@ -201,6 +204,12 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final patient = patients[index];
                                 final isPending = patient.status == "pending";
+                                final patientName = transP.doctorPatientList[patient.name] ?? patient.name;
+                                final patientGender = transP.doctorPatientList[patient.patientGender] ?? patient.patientGender;
+                                final patientAge = transP.doctorPatientList[patient.patientAge] ?? patient.patientAge;
+                                final patientPhone = transP.doctorPatientList[patient.patientPhone] ?? patient.patientPhone;
+                                final status = transP.doctorPatientList[patient.status] ?? patient.status;
+                                final appointmentDate = transP.doctorPatientList[patient.appointmentDate] ?? patient.appointmentDate;
                                 return AppointmentContainer(
                                     onTap : () {
                                       Get.to(() =>
@@ -216,13 +225,13 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                                         updateStatus(patient.id,patient.deviceToken,patient.doctorName);
                                       }
                                     },
-                                    patientName: patient.patientName,
-                                    patientGender: patient.patientGender,
+                                    patientName: patientName,
+                                    patientGender: patientGender,
                                     patientAge: patient.patientAge,
                                     patientPhone: patient.patientPhone,
-                                    statusText: isPending ? "Accept" : patient.status,
+                                    statusText: isPending ? languageP.translatedTexts['Accept'] ?? 'Accept' : status,
                                     text1: "Appointment Date",
-                                    text2: patient.appointmentDate,
+                                    text2: appointmentDate,
                                     statusTextColor: isPending ? bgColor : themeColor,
                                     boxColor: isPending ? themeColor : secondaryGreenColor
                                 );

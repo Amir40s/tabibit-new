@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/SpecificDoctorScreen/specific_doctor_screen.dart';
 
 import '../../../../../constant.dart';
@@ -71,95 +72,105 @@ class SpecialitySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final findDoctorP = Provider.of<FindDoctorProvider>(context, listen: false);
-    return StreamBuilder<List<SpecializeModel>>(
-      stream: findDoctorP.fetchSpeciality(),
-      builder: (context, snapshot) {
+    return Consumer<TranslationNewProvider>(
+     builder: (context, provider, child){
+       return  StreamBuilder<List<SpecializeModel>>(
+         stream: findDoctorP.fetchSpeciality(),
+         builder: (context, snapshot) {
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No specialities found'));
-        }
+           if (snapshot.connectionState == ConnectionState.waiting) {
+             return const Center(child: CircularProgressIndicator());
+           }
+           if (snapshot.hasError) {
+             return Center(child: Text('Error: ${snapshot.error}'));
+           }
+           if (!snapshot.hasData || snapshot.data!.isEmpty) {
+             return const Center(child: Text('No specialities found'));
+           }
 
-        // List of users
-        final specs = snapshot.data!;
+           // List of users
+           final specs = snapshot.data!;
 
-        return Consumer<FindDoctorProvider>(
-          builder: (context, value, child) {
-            return GridView.builder(
-              shrinkWrap:true,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisExtent: 160,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20
-              ),
-              itemCount: specs.length,
-              itemBuilder: (context, index) {
-                final spec = specs[index];
-                final isSelected = value.selectedIndex == index;
-                return GestureDetector(
-                  onTap: () {
-                    value.setDoctorCategory(index,spec.id,spec.specialty);
-                    Get.to(()=>SpecificDoctorScreen(specialityName: spec.specialty,));
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected ? themeColor : bgColor,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          color: isSelected ? themeColor : greyColor
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(13),
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              color: bgColor,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                  color: isSelected ? themeColor : greenColor
-                              )
-                          ),
-                          child: SvgPicture.asset(AppIcons.surgeonIcon),
-                        ),
-                        const SizedBox(height: 5,),
-                        TextWidget(
-                          text: spec.specialty, fontSize: 12,
-                          fontWeight: FontWeight.w600, isTextCenter: false,
-                          textColor: isSelected ? bgColor : textColor,
-                          fontFamily: AppFonts.semiBold,),
-                        const SizedBox(height: 5,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextWidget(
-                                text: "", fontSize: 12,
-                                fontWeight: FontWeight.w400, isTextCenter: false,
-                                textColor: isSelected ? greyColor : textColor),
-                            const SizedBox(width: 5,),
-                            Icon(Icons.arrow_forward_outlined,
-                              color: isSelected ? bgColor : textColor,size: 14,)
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },);
-      },);
+           // Translate the specialties only once when available
+           if (provider.translatedTexts.isEmpty) {
+             provider.translateMultiple(specs.map((e) => e.specialty).toList());
+           }
+
+           return Consumer<FindDoctorProvider>(
+             builder: (context, value, child) {
+               return GridView.builder(
+                 shrinkWrap:true,
+                 padding: const EdgeInsets.symmetric(vertical: 10),
+                 physics: const NeverScrollableScrollPhysics(),
+                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                     crossAxisCount: 2,
+                     mainAxisExtent: 160,
+                     crossAxisSpacing: 20,
+                     mainAxisSpacing: 20
+                 ),
+                 itemCount: specs.length,
+                 itemBuilder: (context, index) {
+                   final spec = specs[index];
+                   final isSelected = value.selectedIndex == index;
+                   final translatedText = provider.translatedTexts[spec.specialty] ?? spec.specialty;
+                   return GestureDetector(
+                     onTap: () {
+                       value.setDoctorCategory(index,spec.id,spec.specialty);
+                       Get.to(()=>SpecificDoctorScreen(specialityName: spec.specialty,));
+                     },
+                     child: Container(
+                       decoration: BoxDecoration(
+                         color: isSelected ? themeColor : bgColor,
+                         borderRadius: BorderRadius.circular(12),
+                         border: Border.all(
+                             color: isSelected ? themeColor : greyColor
+                         ),
+                       ),
+                       child: Column(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         crossAxisAlignment: CrossAxisAlignment.center,
+                         children: [
+                           Container(
+                             padding: const EdgeInsets.all(13),
+                             height: 60,
+                             width: 60,
+                             decoration: BoxDecoration(
+                                 color: bgColor,
+                                 borderRadius: BorderRadius.circular(8),
+                                 border: Border.all(
+                                     color: isSelected ? themeColor : greenColor
+                                 )
+                             ),
+                             child: SvgPicture.asset(AppIcons.surgeonIcon),
+                           ),
+                           const SizedBox(height: 5,),
+                           TextWidget(
+                             text: translatedText, fontSize: 12,
+                             fontWeight: FontWeight.w600, isTextCenter: false,
+                             textColor: isSelected ? bgColor : textColor,
+                             fontFamily: AppFonts.semiBold,),
+                           const SizedBox(height: 5,),
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: [
+                               TextWidget(
+                                   text: "", fontSize: 12,
+                                   fontWeight: FontWeight.w400, isTextCenter: false,
+                                   textColor: isSelected ? greyColor : textColor),
+                               const SizedBox(width: 5,),
+                               Icon(Icons.arrow_forward_outlined,
+                                 color: isSelected ? bgColor : textColor,size: 14,)
+                             ],
+                           )
+                         ],
+                       ),
+                     ),
+                   );
+                 },
+               );
+             },);
+         },);
+     },
+    );
   }
 }

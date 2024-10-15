@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/controller/doctoro_specialiaty_controller.dart';
 import 'package:tabibinet_project/model/res/widgets/app_bottom_sheet.dart';
@@ -30,13 +31,10 @@ class PendingAppointmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageP = Provider.of<TranslationProvider>(context);
-    TranslationController controller = Get.put(TranslationController());
-    AppDataController dataController = Get.put(AppDataController());
 
     Future.delayed(
       Duration.zero,
       () {
-        dataController.fetchFees();
         Provider.of<MyAppointmentProvider>(context,listen: false).setAppointmentStatus("pending");
       }
     );
@@ -47,8 +45,8 @@ class PendingAppointmentScreen extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        Consumer<MyAppointmentProvider>(
-          builder: (context, value, child) {
+        Consumer2<MyAppointmentProvider,TranslationNewProvider>(
+          builder: (context, value,provider, child) {
             return StreamBuilder<List<AppointmentModel>>(
               stream: value.filterValue.isNotEmpty ? value.fetchFilterAppointment() :
               value.fetchMyAppointment(),
@@ -65,18 +63,20 @@ class PendingAppointmentScreen extends StatelessWidget {
                   return const NoFoundCard();
                 }
 
-                final specs = dataController.feeList;
+                // final specs = snapshot.data;
 
-                log("List:: $specs");
+                // log("List:: $specs");
+                final appoints = snapshot.data!;
 
-                if (controller.feeList.isEmpty) {
-                  controller.translateFees(
-                    specs.map((e) => e.type).toList() +
-                        specs.map((e) => e.subTitle).toList(),
+                if (provider.appointmentList.isEmpty) {
+                  provider.translateAppointment(
+                    appoints.map((e) => e.feesType).toList() +
+                    appoints.map((e) => e.doctorName).toList() +
+                        appoints.map((e) => e.feeSubTitle).toList(),
                   );
                 }
 
-                final appoints = snapshot.data!;
+
 
                 return ListView.builder(
                   shrinkWrap: true,
@@ -85,8 +85,9 @@ class PendingAppointmentScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final appoint = appoints[index];
 
-                    final docName = controller.translations[appoint.doctorName] ?? appoint.doctorName;
-                    final feeType = controller.feeList[appoint.feesType] ?? appoint.feesType;
+                    final docName = provider.appointmentList[appoint.doctorName] ?? appoint.doctorName;
+                    final feeType = provider.appointmentList[appoint.feesType] ?? appoint.feesType;
+                    final feeSubtitle = provider.appointmentList[appoint.feeSubTitle] ?? appoint.feeSubTitle;
 
                     return MyAppointmentContainer(
                       appointmentIcon: AppIcons.phone,

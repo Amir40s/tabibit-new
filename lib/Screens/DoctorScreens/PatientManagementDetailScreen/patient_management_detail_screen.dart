@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/LabReportScreen/lab_report_screen.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/ResultScreen/result_screen.dart';
 
@@ -56,6 +57,7 @@ class PatientManagementDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double height1 = 20.0;
     double height2 = 10.0;
+    final languageP = Provider.of<TranslationNewProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -77,7 +79,7 @@ class PatientManagementDetailScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                    InfoTile(title: patientName),
+                    InfoTile(title: languageP.appointmentList[patientName] ?? patientName),
                     SizedBox(height: height1,),
                     TextWidget(
                       text: "Age", fontSize: 14.sp,
@@ -193,7 +195,7 @@ class PatientManagementDetailScreen extends StatelessWidget {
                           const DottedLine(color: greyColor,),
                           SizedBox(height: height1,),
                           TextWidget(
-                            text: userProblem, fontSize: 18.sp,
+                            text: languageP.appointmentList[userProblem] ?? userProblem, fontSize: 18.sp,
                             fontWeight: FontWeight.w400, isTextCenter: false,
                             textColor: textColor, fontFamily: AppFonts.regular,),
                         ],
