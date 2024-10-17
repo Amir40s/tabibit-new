@@ -27,7 +27,7 @@ class HelpAndSupportScreen extends StatelessWidget {
         backgroundColor: bgColor,
         body: Column(
           children: [
-             Header(text: "Help and Support"),
+             Header(text: "${languageP.translatedTexts["Help and Support"] ?? "Help and Support"}"),
             Container(
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.symmetric(horizontal: 20.0),

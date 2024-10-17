@@ -9,10 +9,12 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/agora/agora_provider.dart';
 import 'package:tabibinet_project/Providers/payment/payment_provider.dart';
 import 'package:tabibinet_project/Providers/schedule/schedule_provider.dart';
 import 'package:tabibinet_project/chart_screen.dart';
 import 'package:tabibinet_project/model/api_services/url/baseurl.dart';
+import 'package:tabibinet_project/sample_test_screen.dart';
 
 import 'Providers/AudioPlayerProvider/audio_player_provider.dart';
 import 'Providers/BottomNav/bottom_navbar_provider.dart';
@@ -141,6 +143,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => BankDetailsProvider(),),
             ChangeNotifierProvider(create: (context) => TranslationNewProvider(),),
             ChangeNotifierProvider(create: (context) => AppDataProvider(),),
+            ChangeNotifierProvider(create: (context) => AgoraProvider(),),
 
             ChangeNotifierProvider(create: (context) => TwilioProvider(
                 accountSid: BaseUrl.SID_TWILLO,
@@ -166,7 +169,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           // home: PatientStatusChart(),
-          home: const SplashScreen(),
+          home:  HomeScreen(),
           // home: const DoctorBottomNavbar(),
           // home: const PatientBottomNavBar(),
         ),

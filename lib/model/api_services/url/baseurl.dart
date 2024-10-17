@@ -19,5 +19,8 @@ class BaseUrl{
  static const ab_deviceToekn = "dQlXksEXS3ik5D7KxqZ63t:APA91bHLwSCZGuan9duS999-q6rr7yyTpuSGj6fN7f01BwSx021BPtulHfRecw1uwXL_gqYdmu0LeOUp6ROeN1ITQXz1WJaPaQVVmxAlxMIPVE_KWm-pEYGmB0MvrWvwNjKP_8aaQ09C";
 
 
+ static const AGORA_APPID = "520bb8e03dc644f993f85f83649130d1";
+ static const AGORA_APP_CERTIFICATE = "af7d48c1750a41b6b01dbd23650c50ab";
+
 
 }

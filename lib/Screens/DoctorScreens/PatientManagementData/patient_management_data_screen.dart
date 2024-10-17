@@ -108,10 +108,14 @@ class PatientManagementDataScreen extends StatelessWidget {
                                          fontWeight: FontWeight.w600, isTextCenter: false,
                                          textColor: textColor, fontFamily: AppFonts.semiBold,),
                                        const SizedBox(height: 10,),
-                                       TextWidget(
-                                         text: "${languageP.translatedTexts["ID Number:"] ?? "ID Number:"} #${user.id}", fontSize: 14.sp,
-                                         fontWeight: FontWeight.w400, isTextCenter: false,
-                                         textColor: textColor, ),
+                                       Container(
+                                         width: 40.w,
+                                         child: TextWidget(
+                                           overflow: TextOverflow.clip,
+                                           text: "${languageP.translatedTexts["ID Number:"] ?? "ID Number:"} #${user.id}", fontSize: 14.sp,
+                                           fontWeight: FontWeight.w400, isTextCenter: false,
+                                           textColor: textColor, ),
+                                       ),
                                      ],
                                    ),
                                    SubmitButton(

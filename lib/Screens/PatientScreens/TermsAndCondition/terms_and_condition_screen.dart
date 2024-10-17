@@ -50,18 +50,19 @@ class TermsAndConditionScreen extends StatelessWidget {
                             textColor: textColor, fontFamily: AppFonts.semiBold,),
                           SizedBox(height: height2,),
                            TextWidget(
-                            text: "Our Legal and Policies outline the terms"
-                                " and conditions governing the use of our services."
-                                " By accessing or using our platform, you agree to"
-                                " abide by these terms, which include but are not"
-                                " limited to, user responsibilities, intellectual"
-                                " property rights, privacy practices, and dispute"
-                                " resolution procedures. We reserve the right to"
-                                " update or modify these terms at any time, and your"
-                                " continued use of the platform constitutes acceptance"
-                                " of any changes. Please review our Legal and Policies"
-                                " regularly for updates.",
-                              fontSize: 14, fontWeight: FontWeight.w400,
+                            text: "${provider.translatedTexts["Our Legal and Policies outline the terms"] ?? "Our Legal and Policies outline the terms"}"
+                                "${provider.translatedTexts[" and conditions governing the use of our services."] ?? " and conditions governing the use of our services."}"
+                                "${provider.translatedTexts[" By accessing or using our platform, you agree to"] ?? " By accessing or using our platform, you agree to"}"
+                                "${provider.translatedTexts[" abide by these terms, which include but are not"] ?? " abide by these terms, which include but are not"}"
+                                "${provider.translatedTexts[" limited to, user responsibilities, intellectual"] ?? " limited to, user responsibilities, intellectual"}"
+                                "${provider.translatedTexts[" property rights, privacy practices, and dispute"] ?? " property rights, privacy practices, and dispute"}"
+                                "${provider.translatedTexts[" resolution procedures. We reserve the right to"] ?? " resolution procedures. We reserve the right to"}"
+                                "${provider.translatedTexts[" update or modify these terms at any time, and your"] ?? " update or modify these terms at any time, and your"}"
+                                "${provider.translatedTexts[" continued use of the platform constitutes acceptance"] ?? " continued use of the platform constitutes acceptance"}"
+                                "${provider.translatedTexts[" of any changes. Please review our Legal and Policies"] ?? " of any changes. Please review our Legal and Policies"}"
+                                "${provider.translatedTexts[" regularly for updates."] ?? " regularly for updates."}",
+
+                             fontSize: 14, fontWeight: FontWeight.w400,
                               isTextCenter: false, textColor: textColor, maxLines: 100,),
                           SizedBox(height: height1,),
                           TextWidget(
@@ -69,25 +70,26 @@ class TermsAndConditionScreen extends StatelessWidget {
                             fontWeight: FontWeight.w600, isTextCenter: false,
                             textColor: textColor, fontFamily: AppFonts.semiBold,),
                           SizedBox(height: height2,),
-                          const TextWidget(
-                            text: "Changes to the Service and/or Terms refers"
-                                " to our commitment to continuously improve and"
-                                " update our platform to enhance user experience"
-                                " and comply with legal requirements. We reserve"
-                                " the right to modify or discontinue any aspect of"
-                                " the service, including features, functionalities,"
-                                " and access levels, at any time without prior notice."
-                                " Additionally, we may revise these terms of service"
-                                " to reflect changes in our business practices, industry"
-                                " standards, or regulatory obligations. Any updates to the"
-                                " terms will be effective immediately upon posting on our"
-                                " website or app, and your continued use of the service"
-                                " constitutes acceptance of the revised terms.\n\n We encourage"
-                                " users to review the terms regularly to stay informed"
-                                " about any changes. If you do not agree with the updated"
-                                " terms, you may discontinue using the service. However,"
-                                " continued use of the service following updates indicates"
-                                " your acceptance of the modifications.",
+                           TextWidget(
+                            text: "${provider.translatedTexts["Changes to the Service and/or Terms refers"] ?? "Changes to the Service and/or Terms refers"}"
+                                "${provider.translatedTexts[" to our commitment to continuously improve and"] ?? " to our commitment to continuously improve and"}"
+                                "${provider.translatedTexts[" update our platform to enhance user experience"] ?? " update our platform to enhance user experience"}"
+                                "${provider.translatedTexts[" and comply with legal requirements. We reserve"] ?? " and comply with legal requirements. We reserve"}"
+                                "${provider.translatedTexts[" the right to modify or discontinue any aspect of"] ?? " the right to modify or discontinue any aspect of"}"
+                                "${provider.translatedTexts[" the service, including features, functionalities,"] ?? " the service, including features, functionalities,"}"
+                                "${provider.translatedTexts[" and access levels, at any time without prior notice."] ?? " and access levels, at any time without prior notice."}"
+                                "${provider.translatedTexts[" Additionally, we may revise these terms of service"] ?? " Additionally, we may revise these terms of service"}"
+                                "${provider.translatedTexts[" to reflect changes in our business practices, industry"] ?? " to reflect changes in our business practices, industry"}"
+                                "${provider.translatedTexts[" standards, or regulatory obligations. Any updates to the"] ?? " standards, or regulatory obligations. Any updates to the"}"
+                                "${provider.translatedTexts[" terms will be effective immediately upon posting on our"] ?? " terms will be effective immediately upon posting on our"}"
+                                "${provider.translatedTexts[" website or app, and your continued use of the service"] ?? " website or app, and your continued use of the service"}"
+                                "${provider.translatedTexts[" constitutes acceptance of the revised terms. We encourage"] ?? " constitutes acceptance of the revised terms. We encourage"}"
+                                "${provider.translatedTexts[" users to review the terms regularly to stay informed"] ?? " users to review the terms regularly to stay informed"}"
+                                "${provider.translatedTexts[" about any changes. If you do not agree with the updated"] ?? " about any changes. If you do not agree with the updated"}"
+                                "${provider.translatedTexts[" terms, you may discontinue using the service. However,"] ?? " terms, you may discontinue using the service. However,"}"
+                                "${provider.translatedTexts[" continued use of the service following updates indicates"] ?? " continued use of the service following updates indicates"}"
+                                "${provider.translatedTexts[" your acceptance of the modifications."] ?? " your acceptance of the modifications."}",
+
                             fontSize: 14, fontWeight: FontWeight.w400,
                             isTextCenter: false, textColor: textColor, maxLines: 100,),
                           const SizedBox(height: 100,),

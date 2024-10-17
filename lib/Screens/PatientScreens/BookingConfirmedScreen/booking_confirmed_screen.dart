@@ -24,6 +24,7 @@ class BookingConfirmedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appointmentP = Provider.of<PatientAppointmentProvider>(context,listen: false);
+    final languageP = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: secondaryGreenColor,
@@ -55,8 +56,9 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       fontSize: 24, fontWeight: FontWeight.w600,
                                       isTextCenter: false, textColor: textColor),
                                    TextWidget(
-                                      text: "Dr. ${appointmentP.doctorName} Wilson is a highly skilled cardiologist"
-                                          " dedicated to providing exceptional cardiac care. With ",
+                                      text: "Dr. ${appointmentP.doctorName} ${languageP.translatedTexts["Wilson is a highly skilled cardiologist"
+                                          " dedicated to providing exceptional cardiac care. With "] ?? "Wilson is a highly skilled cardiologist"
+                                          " dedicated to providing exceptional cardiac care. With "}",
                                       fontSize: 12, fontWeight: FontWeight.w400,
                                       align: TextAlign.center,
                                       isTextCenter: true, textColor: textColor,maxLines: 2,),
@@ -153,7 +155,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                          TextWidget(
-                                          text: "Name :",
+                                          text: "${languageP.translatedTexts["Name"] ?? "Name"} :",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
                                         TextWidget(
@@ -169,7 +171,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                          TextWidget(
-                                          text: "Time :",
+                                          text: "${languageP.translatedTexts["Time:"] ?? 'Time:'}",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
                                         TextWidget(
@@ -185,7 +187,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                          TextWidget(
-                                          text: "Date :",
+                                          text: "${languageP.translatedTexts["Date:"] ?? 'Date:'}",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
                                         TextWidget(

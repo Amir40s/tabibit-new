@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,7 +8,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/agora/agora_provider.dart';
 import 'package:tabibinet_project/model/api_services/url/baseurl.dart';
+import 'package:tabibinet_project/sample_test_screen.dart';
+import 'package:tabibinet_project/test_call_screen.dart';
 
 import '../../../Providers/Profile/profile_provider.dart';
 import '../../../Providers/translation/translation_provider.dart';
@@ -159,13 +164,23 @@ class PatientProfileScreen extends StatelessWidget {
                     ListTile(
                       onTap: () async{
                         // Get.to(()=>const PaymentScreen());
-                        final fcmService =  FCMService();
-                        await fcmService.sendNotification(
-                            BaseUrl.ab_deviceToekn,
-                            "title",
-                            "body",
-                            "senderId"
+                        // final fcmService =  FCMService();
+                        // await fcmService.sendNotification(
+                        //     BaseUrl.ab_deviceToekn,
+                        //     "title",
+                        //     "body",
+                        //     "senderId"
+                        // );
+                        // videoCallProvider.initializeAgora();
+                        // videoCallProvider.joinChannel('testChannel', 0);
+                        log("Clicked");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
                         );
+                        // Get.to(()=> VideoCallScreen());
                       },
                       minTileHeight: 70,
                       title: const TextWidget(
