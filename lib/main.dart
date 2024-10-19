@@ -145,7 +145,6 @@ class MyApp extends StatelessWidget {
             ),),
 
             ChangeNotifierProvider(create: (context) => TranslationProvider(),),
-
             ChangeNotifierProvider(create: (context) => AudioPlayerProvider(),),
             ChangeNotifierProvider(create: (context) => PaymentProvider(),),
             ChangeNotifierProvider(create: (context) => ScheduleProvider(),),
@@ -156,8 +155,6 @@ class MyApp extends StatelessWidget {
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'TabibiNet',
-          // locale: DevicePreview.locale(context),
-          // builder: DevicePreview.appBuilder,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: themeColor,primary: themeColor),
             useMaterial3: true,

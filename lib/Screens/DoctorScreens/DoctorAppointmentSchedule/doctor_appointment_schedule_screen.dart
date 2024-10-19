@@ -22,6 +22,7 @@ import '../../../model/res/widgets/appointment_container.dart';
 import '../../../model/res/widgets/text_widget.dart';
 import '../../PatientScreens/FilterScreen/Components/calender_section.dart';
 import '../../PatientScreens/FindDoctorScreen/Components/suggestion_container.dart';
+import '../ConsultationScreen/consultation_screen.dart';
 import '../ReminderScreen/reminder_screen.dart';
 import '../SessionDetailScreen/session_detail_screen.dart';
 import 'Components/doctor_appointment_button.dart';
@@ -128,6 +129,18 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                           firstDate: DateTime.now(),
                         );
                       },),
+                    SizedBox(height: height,),
+                     Padding(
+                      padding:  const EdgeInsets.symmetric(horizontal: 20.0),
+                      child:  DoctorAppointmentButton(
+                        onTap: () {
+                          ConsultationScreen();
+                        },
+                          title: "Smart Agenda",
+                          icon: AppIcons.agendaIcon,
+                          buttonColor: Color(0xff45D0EE)
+                      ),
+                    ),
                     SizedBox(height: height,),
                      Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
