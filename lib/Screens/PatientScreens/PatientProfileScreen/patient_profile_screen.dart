@@ -177,7 +177,7 @@ class PatientProfileScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
+                            builder: (context) => CallScreen(),
                           ),
                         );
                         // Get.to(()=> VideoCallScreen());

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/agora/agora_provider.dart';
+import 'package:tabibinet_project/Providers/agora/webrtc_provider.dart';
 import 'package:tabibinet_project/Providers/payment/payment_provider.dart';
 import 'package:tabibinet_project/Providers/schedule/schedule_provider.dart';
 import 'package:tabibinet_project/chart_screen.dart';
@@ -81,15 +82,7 @@ void main() async {
   // await dotenv.load(fileName: ".env").whenComplete((){
   //   log("ENV Loaded");
   // });
-  
-  // FirebaseMessaging.onBackgroundMessage(handler)
 
-
-
-  // StripePayment.setOptions(StripeOptions(
-  //   publishableKey: "YOUR_PUBLISHABLE_KEY", // Replace with your publishable key
-  //   androidPayMode: 'test', // Set to 'production' in a live environment
-  // ));
 
   runApp(const MyApp());
 
@@ -143,7 +136,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => BankDetailsProvider(),),
             ChangeNotifierProvider(create: (context) => TranslationNewProvider(),),
             ChangeNotifierProvider(create: (context) => AppDataProvider(),),
-            ChangeNotifierProvider(create: (context) => AgoraProvider(),),
+            // ChangeNotifierProvider(create: (context) => AgoraProvider(),),
 
             ChangeNotifierProvider(create: (context) => TwilioProvider(
                 accountSid: BaseUrl.SID_TWILLO,
@@ -156,6 +149,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => AudioPlayerProvider(),),
             ChangeNotifierProvider(create: (context) => PaymentProvider(),),
             ChangeNotifierProvider(create: (context) => ScheduleProvider(),),
+            ChangeNotifierProvider(create: (context) => CallProvider(),),
 
           ],
         child: GetMaterialApp(
@@ -169,7 +163,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           // home: PatientStatusChart(),
-          home:  HomeScreen(),
+          home:  SplashScreen(),
           // home: const DoctorBottomNavbar(),
           // home: const PatientBottomNavBar(),
         ),

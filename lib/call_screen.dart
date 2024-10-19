@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/VideoCall/video_call_accept_screen.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/VideoCall/video_call_screen.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
@@ -47,10 +49,11 @@ class CallScreen extends StatelessWidget {
                       return ListTile(
                         onTap: () {
                           if(call.status == "Incoming"){
-                            // Get.to(()=>CallInvitationPage(
-                            //   callID: call.id,
-                            //   isVideoCall: call.isVideo,
-                            // ));
+                            Get.to(()=>VideoCallAcceptScreen(
+                              callID: call.webrtcId,
+                              doctorName: call.patientName,
+                              doctorImage: "",
+                            ));
                           }
                         },
                         title: TextWidget(

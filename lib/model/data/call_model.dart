@@ -7,6 +7,7 @@ class CallModel{
   final String patientId;
   final String patientName;
   final String status;
+  final String webrtcId;
   final bool isVideo;
 
 
@@ -17,6 +18,7 @@ class CallModel{
     required this.patientId,
     required this.patientName,
     required this.status,
+    required this.webrtcId,
     required this.isVideo,
   });
 
@@ -30,6 +32,7 @@ class CallModel{
       patientId: data['patientId'] ?? '',
       patientName: data['patientName'] ?? '',
       status: data['status'] ?? '',
+      webrtcId: data['webrtcId'] ?? '',
       isVideo: data['isVideo'] ?? false,
     );
   }

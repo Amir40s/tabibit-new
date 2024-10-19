@@ -108,6 +108,7 @@ class UpComingAppointment extends StatelessWidget {
                       rightButtonTap: () {
                         Get.to(()=>StartAppointmentScreen(
                           doctorName: appoint.doctorName,
+                          doctorImage: appoint.doctorImage,
                           doctorDeviceToken: appoint.deviceToken,
                           doctorId: appoint.doctorId,
                           appointmentTime: appoint.appointmentTime,

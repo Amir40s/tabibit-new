@@ -5,11 +5,15 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/PatientAppointment/patient_appointment_provider.dart';
 import 'package:tabibinet_project/Providers/Profile/profile_provider.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/VideoCall/video_call_screen.dart';
 import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
+import 'package:tabibinet_project/model/res/appUtils/appUtils.dart';
 
+import '../../../Providers/agora/webrtc_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
+import '../../../model/res/constant/app_utils.dart';
 import '../../../model/res/widgets/header.dart';
 import '../../../model/res/widgets/submit_button.dart';
 import '../../../model/res/widgets/text_widget.dart';
@@ -19,6 +23,7 @@ class StartAppointmentScreen extends StatelessWidget {
   StartAppointmentScreen({
     super.key,
     required this.doctorName,
+    required this.doctorImage,
     required this.doctorId,
     required this.doctorDeviceToken,
     required this.appointmentTime,
@@ -28,6 +33,7 @@ class StartAppointmentScreen extends StatelessWidget {
   });
 
   final String doctorName;
+  final String doctorImage;
   final String doctorId;
   final String doctorDeviceToken;
   final String appointmentTime;
@@ -42,6 +48,7 @@ class StartAppointmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProfileProvider>(context);
+    final callProvider = Provider.of<CallProvider>(context);
     double height1 = 20;
     double height2 = 10;
 
@@ -161,14 +168,15 @@ class StartAppointmentScreen extends StatelessWidget {
                                       doctorDeviceToken,
                                       provider.name,
                                       "Incoming Audio Call",
-                                      "xyz"
+                                      "xyz",
+                                    doctorName
                                   );
                                 },),
                               SubmitButton(
                                 width: 30.w,
                                 title: "Video",
                                 press: () async {
-                                  await storeCallId(
+                                   storeCallId(
                                       context,
                                       doctorId,
                                       provider.name,
@@ -176,7 +184,8 @@ class StartAppointmentScreen extends StatelessWidget {
                                       doctorDeviceToken,
                                       provider.name,
                                       "Incoming Video Call",
-                                      "xyz"
+                                      "xyz",
+                                       doctorName
                                   );
                                 },),
                             ],
@@ -204,8 +213,12 @@ class StartAppointmentScreen extends StatelessWidget {
     );
   }
 
-  Future<void> storeCallId(context,doctorId,patientName,isVideo,token,title,body,senderId)async{
+  Future<void> storeCallId(
+      context,doctorId,patientName,isVideo,token,title,body,senderId,
+      docName
+      )async{
     String id = DateTime.now().millisecondsSinceEpoch.toString();
+    String callID = AppUtils().generateUniqueNumber().toString();
     await fireStore.collection("calls").doc(id).set({
       "id": id,
       "callId": id,
@@ -214,16 +227,21 @@ class StartAppointmentScreen extends StatelessWidget {
       "doctorId": doctorId,
       "isVideo": isVideo,
       "status": "Incoming",
+      "webrtcId": callID,
     });
     // final String callID = DateTime.now().millisecondsSinceEpoch.toString();
     final fcm = FCMService();
     fcm.sendNotification(token, title, body, senderId);
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => CallInvitationPage(callID: id, isVideoCall: isVideo),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoCallScreen(
+          callID: callID,
+          doctorName: doctorName,
+          doctorImage: doctorImage,
+        ),
+      ),
+    );
   }
 
 }

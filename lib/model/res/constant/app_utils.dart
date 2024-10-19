@@ -10,8 +10,16 @@ import 'package:tabibinet_project/Providers/SignUp/sign_up_provider.dart';
 import 'package:tabibinet_project/Screens/SuccessScreen/success_screen.dart';
 
 import '../../../Screens/StartScreens/OtpScreen/otp_screen.dart';
+import '../../../global_provider.dart';
 
 class AppUtils{
+
+  final provider = GlobalProviderAccess.profilePro;
+  String? getCurrentUserEmail(){
+
+    String email = provider!.doctorEmail;
+    return email;
+  }
 
   int generateUniqueNumber() {
     // Generate a random 4-digit number
