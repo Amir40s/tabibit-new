@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -134,7 +136,8 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                       padding:  const EdgeInsets.symmetric(horizontal: 20.0),
                       child:  DoctorAppointmentButton(
                         onTap: () {
-                          ConsultationScreen();
+                          log('message ::enter');
+                          Get.to(ConsultationScreen());
                         },
                           title: "Smart Agenda",
                           icon: AppIcons.agendaIcon,

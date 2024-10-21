@@ -40,6 +40,7 @@ import 'Providers/SignUp/sign_up_provider.dart';
 
 import 'Providers/TwilioProvider/twilio_provider.dart';
 import 'Providers/bankDetails/bank_details_provider.dart';
+import 'Providers/smartAgenda/smartAgendaProvider.dart';
 import 'Providers/subscription_provider.dart';
 import 'Providers/translation/translation_provider.dart';
 
@@ -149,6 +150,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => PaymentProvider(),),
             ChangeNotifierProvider(create: (context) => ScheduleProvider(),),
             ChangeNotifierProvider(create: (context) => CallProvider(),),
+            ChangeNotifierProvider(create: (context) => SmartAgendaProvider(),),
 
           ],
         child: GetMaterialApp(
