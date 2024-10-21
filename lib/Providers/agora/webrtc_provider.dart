@@ -7,8 +7,6 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart' as getX;
 import 'package:get/get_core/src/get_main.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/DoctorBottomNavBar/doctor_bottom_navbar.dart';
-import 'package:tabibinet_project/Screens/PatientScreens/ReviewScreen/appointment_review_screen.dart';
-import 'package:tabibinet_project/Screens/PatientScreens/StartAppointmentScreen/start_appointment_screen.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/VoiceCallEndedScreen/appointment_voice_call_ended_screen.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/global_provider.dart';
@@ -68,11 +66,11 @@ class CallProvider with ChangeNotifier {
         }
       };
 
-      localStream = await _getUserMedia();
-      // if (!audioOnly) {
-      //   localRenderer.srcObject = localStream;
-      // }
-      localRenderer.srcObject = localStream;
+      localStream = await _getUserMedia(audioOnly: audioOnly);
+      if (!audioOnly) {
+        localRenderer.srcObject = localStream;
+      }
+      // localRenderer.srcObject = localStream;
 
       localStream?.getTracks().forEach((track) {
         _peerConnection?.addTrack(track, localStream!);
@@ -132,7 +130,7 @@ class CallProvider with ChangeNotifier {
   void _startCallTimer() {
     _callStartTime = DateTime.now();
     isTimerRunning = true;
-    _callTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _callTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final now = DateTime.now();
       final duration = now.difference(_callStartTime!);
       final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -150,8 +148,9 @@ class CallProvider with ChangeNotifier {
     }
   }
 
-  Future<void> joinCall(String callId) async {
+  Future<void> joinCall(String callId,{bool audioOnly = false}) async {
     try {
+      isAudioCall = audioOnly;
       final callDoc = _firestore.collection('calls').doc(callId);
       _peerConnection = await _createPeerConnection();
 
@@ -172,14 +171,14 @@ class CallProvider with ChangeNotifier {
       };
 
       localStream = await _getUserMedia();
-      // if (!isAudioCall) {
-      //   localRenderer.srcObject = localStream;
-      // }
+      if (!isAudioCall) {
+        localRenderer.srcObject = localStream;
+      }
 
       localStream?.getTracks().forEach((track) {
         _peerConnection?.addTrack(track, localStream!);
       });
-      localRenderer.srcObject = localStream;
+      // localRenderer.srcObject = localStream;
 
       var offerSnapshot = await callDoc.get();
       if (offerSnapshot.exists) {

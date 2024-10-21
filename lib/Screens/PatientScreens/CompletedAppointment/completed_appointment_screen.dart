@@ -91,7 +91,6 @@ class CompletedAppointmentScreen extends StatelessWidget {
                         Get.back();
                       },
                       rightButtonTap: () async{
-
                         if(appoint.isReview == "false"){
                           callDataP.setLoading(false);
                           callDataP.setAppointments(appoint, false);

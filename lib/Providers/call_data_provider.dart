@@ -97,7 +97,7 @@ class CallDataProvider extends ChangeNotifier{
     await fireStore.collection("users").doc(doctorId)
         .collection("reviews").add(
         {
-          "rating" : _starsRating,
+          "rating" : _starsRating.toString(),
           "name" : _appointments[0].patientName,
           "uid" : _appointments[0].patientId,
           "appointmentId" : _appointments[0].id,
@@ -107,7 +107,7 @@ class CallDataProvider extends ChangeNotifier{
     await fireStore.collection("users").doc(auth.currentUser?.uid.toString())
         .collection("reviews").add(
         {
-          "rating" : _starsRating,
+          "rating" : _starsRating.toString(),
           "name" : _appointments[0].doctorName,
           "uid" : _appointments[0].patientId,
           "appointmentId" : _appointments[0].id,
