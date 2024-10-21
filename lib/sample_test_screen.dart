@@ -56,7 +56,7 @@ class _CallScreenState extends State<CallScreen> {
                 SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {
-                    callProvider.endCall();
+                    callProvider.endCall(_callIdController.text.trim());
                   },
                   child: Text('End Call'),
                 ),

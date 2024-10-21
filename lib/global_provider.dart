@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tabibinet_project/Providers/FaqProvider/faq_provider.dart';
 import 'package:tabibinet_project/Providers/Language/language_provider.dart';
 import 'package:tabibinet_project/Providers/agora/webrtc_provider.dart';
+import 'package:tabibinet_project/Providers/call_data_provider.dart';
 import 'package:tabibinet_project/Providers/payment/payment_provider.dart';
 
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
@@ -138,6 +139,14 @@ class GlobalProviderAccess {
     final context = navigatorKey.currentContext;
     if (context != null) {
       return Provider.of<CallProvider>(context, listen: false);
+    }
+    return null;
+  }
+
+  static CallDataProvider? get callDataProvider {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      return Provider.of<CallDataProvider>(context, listen: false);
     }
     return null;
   }

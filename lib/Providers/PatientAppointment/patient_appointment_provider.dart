@@ -237,6 +237,7 @@ class PatientAppointmentProvider with ChangeNotifier {
       "applyDate" : DateTime.now(),
       "paymentId" : paymentId,
       "amount" : amount,
+      "isReview" : "false",
       "clientSecret" : clientSecret,
       "amountReceived" : amountReceived,
     })

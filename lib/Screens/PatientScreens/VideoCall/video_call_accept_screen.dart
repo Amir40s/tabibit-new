@@ -11,11 +11,12 @@ import 'package:tabibinet_project/sample_test_screen.dart';
 import '../../../Providers/agora/webrtc_provider.dart';
 
 class VideoCallAcceptScreen extends StatefulWidget {
- final String callID,doctorName,doctorImage;
+ final String callID,doctorName,doctorImage,id;
+ final bool isVideo;
  VideoCallAcceptScreen({super.key,
      required this.callID,
      required this.doctorName,
-     required this.doctorImage
+     required this.doctorImage, required this.isVideo, required this.id,
    });
 
   @override
@@ -45,13 +46,14 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
             builder: (context,provider, child){
               return Stack(
                 children: [
+                  if(widget.isVideo)
                   Flexible(
                     child: Container(
                       color: Colors.black,
                       child: RTCVideoView(provider.remoteRenderer),
                     ),
                   ),
-
+                  if(widget.isVideo)
                   Positioned(
                       top: 10.w,
                       right: 5.w,
@@ -72,7 +74,12 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
                       )
                   ),
 
-
+                  if(!widget.isVideo)
+                  Container(
+                    width: 100.w,
+                    height: 100.h,
+                    color: themeColor,
+                  ),
 
                   Positioned(
                       bottom: 10.w,
@@ -98,7 +105,13 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: (){
-                                    provider.endCall();
+                                    provider.endCall(
+                                        widget.callID,
+                                        remoteEnd: true,
+                                        type: "doctor",
+                                      id: widget.id,
+                                      userJoined: provider.isUserJoined
+                                    );
                                   },
                                   child: Container(
                                     width: 50.0,

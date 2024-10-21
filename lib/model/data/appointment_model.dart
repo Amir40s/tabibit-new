@@ -26,6 +26,7 @@ class AppointmentModel {
   final String name;
   final String phone;
   final String status;
+  final String isReview;
   final String deviceToken;
 
 
@@ -55,6 +56,7 @@ class AppointmentModel {
     required this.phone,
     required this.status,
     required this.deviceToken,
+    required this.isReview,
     required this.doctorImage,
   });
 
@@ -85,6 +87,7 @@ class AppointmentModel {
       feesId: data['feesId'] ?? '',
       feesTitle: data['feesTitle'] ?? '',
       feeSubTitle: data['feeSubTitle'] ?? '',
+      isReview: data['isReview'] ?? '',
       feesType: data['feesType'] ?? '',
       deviceToken: data['deviceToken'] ?? '',
       doctorImage: data['doctorImage'] ?? '',

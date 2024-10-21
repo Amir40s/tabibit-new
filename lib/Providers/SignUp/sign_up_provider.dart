@@ -103,6 +103,7 @@ class SignUpProvider extends ChangeNotifier{
                 "memberShip": "No",
                 "profileUrl": "https://res.cloudinary.com/dz0mfu819/image/upload/v1725947218/profile_xfxlfl.png",
                 "rating": "0.0",
+                "totalRating": "0.0",
                 "isOnline": false,
                 "location": location,
                 "latitude": latitude,

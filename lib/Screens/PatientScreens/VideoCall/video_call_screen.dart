@@ -12,10 +12,11 @@ import '../../../Providers/agora/webrtc_provider.dart';
 
 class VideoCallScreen extends StatefulWidget {
  final String callID,doctorName,doctorImage;
+ final bool isVideo;
    VideoCallScreen({super.key,
      required this.callID,
      required this.doctorName,
-     required this.doctorImage
+     required this.doctorImage, required this.isVideo
    });
 
   @override
@@ -32,7 +33,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     // TODO: implement initState
     super.initState();
     if(callProvider !=null){
-      callProvider!.startCall(widget.callID);
+      callProvider!.startCall(widget.callID,audioOnly: widget.isVideo);
     }
   }
 
@@ -52,6 +53,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                  ),
 
                  if(provider.isUserJoined)...[
+                   if(widget.isVideo)
                    Flexible(
                      child: Container(
                        color: Colors.black,
@@ -61,6 +63,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                      ),
                    ),
 
+                   if(widget.isVideo)
                    Positioned(
                      top: 10.w,
                        right: 5.w,
@@ -101,7 +104,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                              textColor: Colors.white,
                            ),
                            SizedBox(height: 3.h,),
-                           if(provider.isUserJoined)
+                           if(!provider.isUserJoined)
                              TextWidget(
                                text: "Ringing",
                                fontSize: 16.0,
@@ -118,6 +121,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                        width: 100.w,
                        child: Column(
                          children: [
+                           if(provider.isUserJoined)
                            TextWidget(
                              text: "Dr. ${widget.doctorName}",
                              fontSize: 16.0,
@@ -136,7 +140,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                              children: [
                                GestureDetector(
                                  onTap: (){
-                                   provider.endCall();
+                                   provider.endCall(
+                                       widget.callID,remoteEnd: true,userJoined: provider.isUserJoined);
                                  },
                                  child: Container(
                                    width: 50.0,

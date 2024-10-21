@@ -6,6 +6,9 @@ class CallModel{
   final String doctorId;
   final String patientId;
   final String patientName;
+  final String doctorImage;
+  final String doctorName;
+  final String appointmentId;
   final String status;
   final String webrtcId;
   final bool isVideo;
@@ -16,6 +19,9 @@ class CallModel{
     required this.callId,
     required this.doctorId,
     required this.patientId,
+    required this.doctorImage,
+    required this.doctorName,
+    required this.appointmentId,
     required this.patientName,
     required this.status,
     required this.webrtcId,
@@ -29,6 +35,9 @@ class CallModel{
       id: doc.id,
       callId: data['callId'] ?? '',
       doctorId: data['doctorId'] ?? '',
+      doctorImage: data['doctorImage'] ?? '',
+      doctorName: data['doctorName'] ?? '',
+      appointmentId: data['appointmentId'] ?? '',
       patientId: data['patientId'] ?? '',
       patientName: data['patientName'] ?? '',
       status: data['status'] ?? '',

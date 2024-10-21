@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/call_data_provider.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
 import 'package:tabibinet_project/model/res/widgets/dotted_line.dart';
@@ -17,12 +21,15 @@ import '../../../model/res/widgets/text_widget.dart';
 import '../PatientBottomNavBar/patient_bottom_nav_bar.dart';
 
 class AppointmentReviewScreen extends StatelessWidget {
-  AppointmentReviewScreen({super.key});
+
+  AppointmentReviewScreen({super.key,});
 
   final descriptionC = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<CallDataProvider>(context,listen: false);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -40,24 +47,52 @@ class AppointmentReviewScreen extends StatelessWidget {
                     color: Colors.grey,
                     shape: BoxShape.circle,
                   ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.w),
+                        child: Image.network(provider.appointments[0].doctorImage),
+                      ),
                 ),
                     SizedBox(height: 20.sp,),
-                    const TextWidget(
-                  text: "How was your experience with\nDr. Dianne Johnson",
+                     TextWidget(
+                  text: "How was your experience with\nDr. ${provider.appointments[0].doctorName}",
                   fontSize: 20, maxLines: 2,
                   fontWeight: FontWeight.w600, isTextCenter: true,
                   textColor: textColor, fontFamily: AppFonts.medium,),
                 SizedBox(height: 10.sp,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.star_rounded,color: themeColor,size: 24.sp,),
-                    Icon(Icons.star_rounded,color: themeColor,size: 24.sp,),
-                    Icon(Icons.star_rounded,color: themeColor,size: 24.sp,),
-                    Icon(Icons.star_outline_rounded,color: themeColor,size: 24.sp,),
-                    Icon(Icons.star_outline_rounded,color: themeColor,size: 24.sp,),
-                  ],
+                Consumer<CallDataProvider>(
+                builder: (context,provider, child){
+                  return RatingStars(
+                    value: provider.starsRating,
+                    onValueChanged: (onChange){
+                      log("on Value  Changed: ${onChange}");
+                      provider.setStarsRating(onChange);
+                    },
+                    starBuilder: (index, color) => Icon(
+                      Icons.star,
+                      color: color,
+                      size: 30.0,
+                    ),
+                    starCount: 5,
+                    starSize: 30,
+                    valueLabelColor: const Color(0xff9b9b9b),
+                    maxValue: 5,
+                    starSpacing: 2,
+                    animationDuration: Duration(milliseconds: 1000),
+                    starOffColor: const Color(0xffe7e8ea),
+                    starColor: Colors.yellow,
+                  );
+                },
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Icon(Icons.star_rounded,color: themeColor,size: 24.sp,),
+                //     Icon(Icons.star_rounded,color: themeColor,size: 24.sp,),
+                //     Icon(Icons.star_rounded,color: themeColor,size: 24.sp,),
+                //     Icon(Icons.star_outline_rounded,color: themeColor,size: 24.sp,),
+                //     Icon(Icons.star_outline_rounded,color: themeColor,size: 24.sp,),
+                //   ],
+                // ),
                 SizedBox(height: 20.sp,),
                 const DottedLine(color: greyColor, height: 1.5,),
                 SizedBox(height: 20.sp,),
@@ -65,7 +100,7 @@ class AppointmentReviewScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextWidget(
-                      text: "Write Your Problem", fontSize: 16,
+                      text: "Write Your Review", fontSize: 16,
                       fontWeight: FontWeight.w500, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.medium,
                     ),
@@ -79,12 +114,12 @@ class AppointmentReviewScreen extends StatelessWidget {
                 SizedBox(height: 10.sp,),
                 InputField(
                   inputController: descriptionC,
-                  hintText: "Tell doctor about your problem",
+                  hintText: "Tell us about doctor feedback",
                   maxLines: 5,
                 ),
                 SizedBox(height: 10.sp,),
-                const TextWidget(
-                  text: "Would you recommended Dr. Marvin to your friends", fontSize: 16,
+                 TextWidget(
+                  text: "Would you recommended Dr. ${provider.appointments[0].doctorName} to your friends", fontSize: 16,
                   fontWeight: FontWeight.w500, isTextCenter: false, maxLines: 2,
                   textColor: textColor, fontFamily: AppFonts.medium,
                 ),
@@ -126,11 +161,25 @@ class AppointmentReviewScreen extends StatelessWidget {
         ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: SubmitButton(
-            title: "Submit",
-            press: () {
-              Get.offAll(()=>const PatientBottomNavBar());
-            },),
+          child: Consumer<CallDataProvider>(
+           builder: (context,loadingP,child){
+             return loadingP.isLoading ?
+             Container(
+                 width: 50.w,
+                 height: 50.0,
+                 child: Center(child: CircularProgressIndicator(color: themeColor)))
+             : SubmitButton(
+               title: "Submit",
+               press: () async{
+                 await provider.saveRating(
+                     doctorId: provider.appointments[0].doctorId,
+                     appointID: provider.appointments[0].id,
+                     comment: descriptionC.text.toString()
+                 );
+                 Get.offAll(()=>const PatientBottomNavBar());
+               },);
+           },
+          ),
         ),
       ),
     );

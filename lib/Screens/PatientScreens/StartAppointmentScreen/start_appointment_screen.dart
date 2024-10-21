@@ -6,11 +6,13 @@ import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/PatientAppointment/patient_appointment_provider.dart';
 import 'package:tabibinet_project/Providers/Profile/profile_provider.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/VideoCall/video_call_screen.dart';
+import 'package:tabibinet_project/global_provider.dart';
 import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/appUtils/appUtils.dart';
 
 import '../../../Providers/agora/webrtc_provider.dart';
 import '../../../constant.dart';
+import '../../../model/data/appointment_model.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
 import '../../../model/res/constant/app_utils.dart';
@@ -30,6 +32,7 @@ class StartAppointmentScreen extends StatelessWidget {
     required this.consultancyType,
     required this.consultancyFee,
     required this.consultancySubTitle,
+    required this.model,
   });
 
   final String doctorName;
@@ -40,6 +43,7 @@ class StartAppointmentScreen extends StatelessWidget {
   final String consultancyType;
   final String consultancyFee;
   final String consultancySubTitle;
+  final AppointmentModel model;
 
   final timeC = TextEditingController();
 
@@ -169,7 +173,8 @@ class StartAppointmentScreen extends StatelessWidget {
                                       provider.name,
                                       "Incoming Audio Call",
                                       "xyz",
-                                    doctorName
+                                    doctorName,
+                                    model
                                   );
                                 },),
                               SubmitButton(
@@ -180,12 +185,13 @@ class StartAppointmentScreen extends StatelessWidget {
                                       context,
                                       doctorId,
                                       provider.name,
-                                      false,
+                                      true,
                                       doctorDeviceToken,
                                       provider.name,
                                       "Incoming Video Call",
                                       "xyz",
-                                       doctorName
+                                       doctorName,
+                                     model
                                   );
                                 },),
                             ],
@@ -195,18 +201,6 @@ class StartAppointmentScreen extends StatelessWidget {
                     ),
                   );
                 },);
-              // await ZegoUIKitSignalingPlugin().sendInvitation(
-              //   pushConfig: ZegoSignalingPluginPushConfig(),
-              //   invitees: [doctorId],
-              //   timeout: 60,  // Optional extra information to include with the invitation
-              // );
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => CallInvitationPage(callID: callID, isVideoCall: false),
-              //   ),
-              // );
-              // Get.to(()=> const AppointmentVoiceCallScreen());
             },),
         ),
       ),
@@ -215,18 +209,27 @@ class StartAppointmentScreen extends StatelessWidget {
 
   Future<void> storeCallId(
       context,doctorId,patientName,isVideo,token,title,body,senderId,
-      docName
+      docName,model
       )async{
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     String callID = AppUtils().generateUniqueNumber().toString();
+
+
+    final callData = GlobalProviderAccess.callDataProvider;
+
+    callData!.setAppointments(model,isVideo);
+
     await fireStore.collection("calls").doc(id).set({
       "id": id,
       "callId": id,
       "patientId": auth.currentUser!.uid,
       "patientName": patientName,
       "doctorId": doctorId,
+      "doctorName": model.doctorName,
+      "doctorImage": model.doctorImage,
       "isVideo": isVideo,
       "status": "Incoming",
+      "appointmentId" : model.id,
       "webrtcId": callID,
     });
     // final String callID = DateTime.now().millisecondsSinceEpoch.toString();
@@ -239,28 +242,10 @@ class StartAppointmentScreen extends StatelessWidget {
           callID: callID,
           doctorName: doctorName,
           doctorImage: doctorImage,
+          isVideo: isVideo,
         ),
       ),
     );
   }
 
 }
-
-
-//Consumer<PatientHomeProvider>(
-//                     builder: (context, provider, child) {
-//                     return ReusableDropdown(
-//                       width: 100.w,
-//                       verticalPad: 5.0,
-//                       borderRadius: 15,
-//                       fontSize: 16,
-//                       selectedValue: provider.selectedAppointmentType,
-//                       items: _dropdownItems,
-//                       fontFamily: AppFonts.semiBold,
-//                       borderColor: themeColor,
-//
-//                       hintText: "All",
-//                       onChanged: (value) {
-//                         provider.setAppointmentType(value!);
-//                     },);
-//                   },),

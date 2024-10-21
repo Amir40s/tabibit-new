@@ -115,6 +115,7 @@ class UpComingAppointment extends StatelessWidget {
                           consultancyFee: appoint.fees,
                           consultancyType: appoint.feesType,
                           consultancySubTitle: appoint.feeSubTitle,
+                          model: appoint,
                         ));
                       },
                     );

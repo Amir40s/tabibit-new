@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -49,10 +51,13 @@ class CallScreen extends StatelessWidget {
                       return ListTile(
                         onTap: () {
                           if(call.status == "Incoming"){
+                            log("call id: ${call.id}");
                             Get.to(()=>VideoCallAcceptScreen(
                               callID: call.webrtcId,
                               doctorName: call.patientName,
                               doctorImage: "",
+                              isVideo: call.isVideo,
+                              id: call.id,
                             ));
                           }
                         },

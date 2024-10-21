@@ -4,6 +4,15 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:get/get.dart' as getX;
+import 'package:get/get_core/src/get_main.dart';
+import 'package:tabibinet_project/Screens/DoctorScreens/DoctorBottomNavBar/doctor_bottom_navbar.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/ReviewScreen/appointment_review_screen.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/StartAppointmentScreen/start_appointment_screen.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/VoiceCallEndedScreen/appointment_voice_call_ended_screen.dart';
+import 'package:tabibinet_project/constant.dart';
+import 'package:tabibinet_project/global_provider.dart';
+import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 
 class CallProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,6 +24,7 @@ class CallProvider with ChangeNotifier {
   bool inCall = false;
   bool isFrontCamera = true;
   bool isUserJoined = false;
+  bool isAudioCall = false;
 
   // PiP variables
   bool isPiPMode = false; // Track whether PiP mode is active
@@ -36,8 +46,9 @@ class CallProvider with ChangeNotifier {
     await remoteRenderer.initialize();
   }
 
-  Future<void> startCall(String callId) async {
+  Future<void> startCall(String callId,{bool audioOnly = false}) async {
     try {
+      isAudioCall = audioOnly;
       final callDoc = _firestore.collection('calls').doc(callId);
       _peerConnection = await _createPeerConnection();
 
@@ -50,7 +61,7 @@ class CallProvider with ChangeNotifier {
       };
 
       _peerConnection!.onTrack = (RTCTrackEvent event) {
-        if (event.track.kind == 'video') {
+        if (event.track.kind == 'audio' || (!audioOnly && event.track.kind == 'video')) {
           remoteRenderer.srcObject = event.streams[0];
           isUserJoined = true;
           notifyListeners();
@@ -58,6 +69,9 @@ class CallProvider with ChangeNotifier {
       };
 
       localStream = await _getUserMedia();
+      // if (!audioOnly) {
+      //   localRenderer.srcObject = localStream;
+      // }
       localRenderer.srcObject = localStream;
 
       localStream?.getTracks().forEach((track) {
@@ -93,6 +107,7 @@ class CallProvider with ChangeNotifier {
       });
 
 
+      // initCallListener(callId);
 
       callDoc.collection('candidates').snapshots().listen((snapshot) {
         for (var change in snapshot.docChanges) {
@@ -149,7 +164,7 @@ class CallProvider with ChangeNotifier {
       };
 
       _peerConnection!.onTrack = (RTCTrackEvent event) {
-        if (event.track.kind == 'video') {
+        if (event.track.kind == 'audio' || (!isAudioCall && event.track.kind == 'video')) {
           remoteRenderer.srcObject = event.streams[0];
           isUserJoined = true;
           notifyListeners();
@@ -157,6 +172,10 @@ class CallProvider with ChangeNotifier {
       };
 
       localStream = await _getUserMedia();
+      // if (!isAudioCall) {
+      //   localRenderer.srcObject = localStream;
+      // }
+
       localStream?.getTracks().forEach((track) {
         _peerConnection?.addTrack(track, localStream!);
       });
@@ -185,6 +204,8 @@ class CallProvider with ChangeNotifier {
         }
       }
 
+      // initCallListener(callId);
+
       callDoc.collection('candidates').snapshots().listen((snapshot) {
         for (var change in snapshot.docChanges) {
           if (change.type == DocumentChangeType.added) {
@@ -200,22 +221,87 @@ class CallProvider with ChangeNotifier {
       inCall = true;
       notifyListeners();
     } catch (e) {
-      print("Error joining call: $e");
+      log("Error joining call: $e");
     }
   }
 
-  Future<void> endCall() async {
-    _stopCallTimer();
-    _peerConnection?.close();
-    _peerConnection = null;
-    localStream?.dispose();
-    callDuration = "00:00";
-    remoteRenderer.srcObject = null;
-    localRenderer.srcObject = null;
-    inCall = false;
-    isMuted = false;
-    isUserJoined = false;
-    notifyListeners();
+  // Future<void> endCall() async {
+  //   _stopCallTimer();
+  //   _peerConnection?.close();
+  //   _peerConnection = null;
+  //   localStream?.dispose();
+  //   callDuration = "00:00";
+  //   remoteRenderer.srcObject = null;
+  //   localRenderer.srcObject = null;
+  //   inCall = false;
+  //   isMuted = false;
+  //   isUserJoined = false;
+  //   notifyListeners();
+  // }
+
+
+  // End call function
+  Future<void> endCall(String callId,
+      {
+        bool remoteEnd = false,
+        String type = "patient",
+        bool userJoined = false,
+        String id = ""
+      }) async {
+    try {
+      if (!remoteEnd) {
+        await _firestore.collection('calls').doc(callId).update({
+          'status': 'ended',
+        });
+      }
+      _stopCallTimer();
+      _peerConnection?.close();
+      _peerConnection = null;
+      localStream?.dispose();
+      callDuration = "00:00";
+      remoteRenderer.srcObject = null;
+      localRenderer.srcObject = null;
+      inCall = false;
+      isMuted = false;
+      isUserJoined = false;
+      notifyListeners();
+
+      ToastMsg().toastMsg("Call Ended");
+
+      final callData = GlobalProviderAccess.callDataProvider;
+
+      if(type == "patient" && userJoined) {
+        // Get.off(AppointmentReviewScreen(
+        //   doctorId: doctorId,
+        //   patientId: patientId,
+        //   doctorImage: ,
+        //   doctorName: ,
+        //   appointmentId: ,
+        // ));
+        callData!.updateCallStatus(callData.appointments[0].id);
+        callData.setCallData(callDuration);
+        Get.off(const AppointmentVoiceCallEndedScreen());
+
+      }else if(type == "doctor"){
+        if(userJoined){
+          await fireStore.collection("calls")
+              .doc(id).update({
+            "status " : "complete"
+          });
+        }
+        log("call ID: $id");
+        Get.off(const DoctorBottomNavbar());
+      }else{
+        Get.back();
+      }
+
+
+
+
+
+    } catch (e) {
+      log('Error ending the call: $e');
+    }
   }
 
   Future<RTCPeerConnection> _createPeerConnection() async {
@@ -228,10 +314,14 @@ class CallProvider with ChangeNotifier {
     return pc;
   }
 
-  Future<MediaStream> _getUserMedia() async {
+
+
+  Future<MediaStream> _getUserMedia({bool audioOnly = false}) async {
     final Map<String, dynamic> mediaConstraints = {
       'audio': true,
-      'video': {
+      'video': audioOnly
+          ? false
+          : {
         'facingMode': 'user',
       },
     };
@@ -246,6 +336,25 @@ class CallProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // // Switch audio output to earpiece or loudspeaker
+  // Future<void> switchToEarpiece() async {
+  //   try {
+  //     // Set the audio output to the earpiece
+  //     await Helper.setAudioOutput(RTCAudioOutputType.earpiece);
+  //   } catch (e) {
+  //     print("Error switching to earpiece: $e");
+  //   }
+  // }
+  //
+  // Future<void> switchToLoudspeaker() async {
+  //   try {
+  //     // Set the audio output to the loudspeaker
+  //     await Helper.setAudioOutput(RTCAudioOutputType.speaker);
+  //   } catch (e) {
+  //     print("Error switching to loudspeaker: $e");
+  //   }
+  // }
 
   Future<void> switchCamera() async {
     if (localStream != null) {
@@ -355,6 +464,12 @@ class CallProvider with ChangeNotifier {
           } else {
             log('Peer connection is null.');
           }
+        }
+        // Detect if the call has ended
+        if (data != null && data['status'] == 'ended') {
+          log('Call has ended');
+          ToastMsg().toastMsg("Call Ended");
+          endCall(callId, remoteEnd: true); // Automatically end call on this side
         }
       } else {
         log('Call document does not exist.');
