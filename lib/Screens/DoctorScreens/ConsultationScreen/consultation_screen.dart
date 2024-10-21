@@ -61,57 +61,6 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
           child: Column(
             children: [
               const Header(text: "Smart Agenda"),
-              // Padding(
-              //   padding:  EdgeInsets.symmetric(horizontal: 4.w),
-              //   child: Container(
-              //     padding: const EdgeInsets.all(15),
-              //     width: 100.w,
-              //     decoration: BoxDecoration(
-              //         color: themeColor,
-              //         borderRadius: BorderRadius.circular(15)
-              //     ),
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         TextWidget(
-              //             text: "Upcoming Appointments", fontSize: 18.sp,
-              //             fontWeight: FontWeight.w600, isTextCenter: false,
-              //             textColor: bgColor),
-              //         SizedBox(height: height,),
-              //         Row(
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: [
-              //             // Pie Chart
-              //             SizedBox(
-              //               height: 100,
-              //               width: 30.w,
-              //               child: PieChart(
-              //                 PieChartData(
-              //                   sections: showingSections(),
-              //                   centerSpaceRadius: 40,
-              //                   sectionsSpace: 4,
-              //                 ),
-              //               ),
-              //             ),
-              //             const SizedBox(width: 20),
-              //             // Details
-              //             Column(
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               children: [
-              //                 buildDetailItem(context,Colors.lightBlueAccent, "In Office", "00"),
-              //                 buildDetailItem(context,Colors.red, "Clinic/Home visit", "00"),
-              //                 buildDetailItem(context,Colors.yellow, "Teleconsultations", "00"),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //         SizedBox(height: height,),
-              //
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(height: height,),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: Container(
@@ -317,62 +266,10 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                     ),
 
                     SizedBox(height: height,),
-                    // SectionTitle(title: "Home Visits"),
-                    // StreamBuilder<QuerySnapshot>(
-                    //   stream: FirebaseFirestore.instance.collection('appointment')
-                    //       .where('feesType', isEqualTo: 'Home Visit Consultation')
-                    //       .snapshots(),
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return Center(child: CircularProgressIndicator());
-                    //     } else if (snapshot.hasError) {
-                    //       return Center(child: Text('Error: ${snapshot.error}'));
-                    //     } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    //       return Center(child: Text('No appointments available.'));
-                    //     } else {
-                    //       var appointments = snapshot.data!.docs.map((doc) {
-                    //         return SmartAppointment.fromFirestore(doc.data() as Map<String, dynamic>);
-                    //       }).toList();
-                    //
-                    //       return ListView.builder(
-                    //         shrinkWrap: true,
-                    //         itemCount: appointments.length,
-                    //         itemBuilder: (context, index) {
-                    //           SmartAppointment appointment = appointments[index];
-                    //           return AppointmentCard(
-                    //             title: appointment.feesType,
-                    //             patientId: appointment.feesId,
-                    //             time: appointment.appointmentTime,
-                    //             color: Colors.green,
-                    //           );
-                    //         },
-                    //       );
-                    //     }
-                    //   },
-                    // ),
-
-                    SizedBox(height: height,),
 
                   ],
                 ),
               ),
-
-              // Expanded(
-              //     child: ListView(
-              //       shrinkWrap: true,
-              //       children: [
-              //         SizedBox(height: height,),
-              //         VideoConsultationSection(),
-              //         SizedBox(height: height,),
-              //         HomeVisitSection(),
-              //         SizedBox(height: height,),
-              //         InOfficeSection(),
-              //         SizedBox(height: height,),
-              //         AtClinicSection(),
-              //         SizedBox(height: height,),
-              //       ],
-              //     )
-              // )
             ],
           ),
         ),
