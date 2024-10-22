@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart' as getX;
 import 'package:get/get_core/src/get_main.dart';
@@ -45,8 +46,8 @@ class CallProvider with ChangeNotifier {
   }
 
   Future<void> startCall(String callId,{bool audioOnly = false}) async {
+    isAudioCall = audioOnly; // Set the call type
     try {
-      isAudioCall = audioOnly;
       final callDoc = _firestore.collection('calls').doc(callId);
       _peerConnection = await _createPeerConnection();
 
@@ -59,16 +60,19 @@ class CallProvider with ChangeNotifier {
       };
 
       _peerConnection!.onTrack = (RTCTrackEvent event) {
-        if (event.track.kind == 'audio' || (!audioOnly && event.track.kind == 'video')) {
+        if (event.track.kind == (isAudioCall ? 'audio' : 'video')) {
           remoteRenderer.srcObject = event.streams[0];
           isUserJoined = true;
           notifyListeners();
         }
       };
 
-      localStream = await _getUserMedia(audioOnly: audioOnly);
-      if (!audioOnly) {
-        localRenderer.srcObject = localStream;
+      localStream = await _getUserMedia(audioOnly: isAudioCall);
+      if (!isAudioCall) {
+        localRenderer.srcObject = localStream; // Only set for video calls
+      }
+      if (isAudioCall) {
+        await AudioOutputManager.setAudioOutput("earpiece");
       }
       // localRenderer.srcObject = localStream;
 
@@ -149,8 +153,9 @@ class CallProvider with ChangeNotifier {
   }
 
   Future<void> joinCall(String callId,{bool audioOnly = false}) async {
+    isAudioCall = audioOnly; // Set the call type
     try {
-      isAudioCall = audioOnly;
+
       final callDoc = _firestore.collection('calls').doc(callId);
       _peerConnection = await _createPeerConnection();
 
@@ -163,18 +168,20 @@ class CallProvider with ChangeNotifier {
       };
 
       _peerConnection!.onTrack = (RTCTrackEvent event) {
-        if (event.track.kind == 'audio' || (!isAudioCall && event.track.kind == 'video')) {
+        if (event.track.kind == (isAudioCall ? 'audio' : 'video')) {
           remoteRenderer.srcObject = event.streams[0];
           isUserJoined = true;
           notifyListeners();
         }
       };
 
-      localStream = await _getUserMedia();
+      localStream = await _getUserMedia(audioOnly: isAudioCall);
       if (!isAudioCall) {
-        localRenderer.srcObject = localStream;
+        localRenderer.srcObject = localStream; // Only set for video calls
       }
-
+      if (isAudioCall) {
+        await AudioOutputManager.setAudioOutput("earpiece");
+      }
       localStream?.getTracks().forEach((track) {
         _peerConnection?.addTrack(track, localStream!);
       });
@@ -285,7 +292,7 @@ class CallProvider with ChangeNotifier {
         if(userJoined){
           await fireStore.collection("calls")
               .doc(id).update({
-            "status " : "complete"
+            "status" : "complete"
           });
         }
         log("call ID: $id");
@@ -474,6 +481,32 @@ class CallProvider with ChangeNotifier {
         log('Call document does not exist.');
       }
     });
+  }
+
+  // Future<void> switchAudioOutput(RTCAudioOutputType type) async {
+  //
+  //   try {
+  //
+  //     await navigator.mediaDevices.setAudioOutput(type);
+  //
+  //   } catch (e) {
+  //
+  //     print("Error switching audio output: $e");
+  //
+  //   }
+  //
+  // }
+
+}
+class AudioOutputManager {
+  static const MethodChannel _channel = MethodChannel('audio_output');
+  static Future<void> setAudioOutput(String type) async {
+    try {
+      await _channel.invokeMethod('setAudioOutput', {'type': type});
+    } on PlatformException catch (e) {
+      log("Failed to set audio output: '${e.message}'.");
+    }
+
   }
 
 }

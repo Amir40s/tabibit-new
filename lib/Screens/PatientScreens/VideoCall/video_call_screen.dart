@@ -33,7 +33,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     // TODO: implement initState
     super.initState();
     if(callProvider !=null){
-      callProvider!.startCall(widget.callID,audioOnly: widget.isVideo);
+      callProvider!.startCall(widget.callID,audioOnly: !widget.isVideo);
     }
   }
 
@@ -54,30 +54,27 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 
                  if(provider.isUserJoined)...[
                    if(widget.isVideo)
-                   Flexible(
-                     child: Container(
-                       color: Colors.black,
-                       child: RTCVideoView(
-                           mirror: false,
-                           provider.remoteRenderer),
-                     ),
+                   Container(
+                     color: Colors.black,
+                     child: RTCVideoView(
+                         mirror: false,
+                         provider.remoteRenderer),
                    ),
 
                    if(widget.isVideo)
                    Positioned(
                      top: 10.w,
                        right: 5.w,
-                       child: Container(
+                       child: SizedBox(
                          width: 40.w,
                      height: 60.w,
                      child:  ClipRRect(
                        borderRadius: BorderRadius.circular(5.w),
-                       child: Flexible(
-                         child: Container(
-                           color: Colors.black,
-                           child: RTCVideoView(
-                               mirror: true,
-                               provider.localRenderer),
+                       child: Container(
+                         color: Colors.black,
+                         child: RTCVideoView(
+                             mirror: true,
+                             provider.localRenderer
                          ),
                        ),
                      ),

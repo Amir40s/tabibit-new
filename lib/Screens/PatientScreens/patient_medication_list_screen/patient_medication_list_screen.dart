@@ -45,7 +45,7 @@ class PatientMedicationListScreen extends StatelessWidget {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         }
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(child: Text('No Prescription found'));
+                          return  Center(child: Text(languageP.translatedTexts["No Prescription found"] ?? "No Prescription found"));
                         }
 
                         // List of users

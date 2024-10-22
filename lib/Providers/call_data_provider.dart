@@ -5,6 +5,8 @@ import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/data/appointment_model.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 
+import '../global_provider.dart';
+
 class CallDataProvider extends ChangeNotifier{
 
 
@@ -48,6 +50,13 @@ class CallDataProvider extends ChangeNotifier{
    await fireStore.collection("appointment")
        .doc(appointID).update(
       {"status" : "complete"});
+
+   final patientNotificationProvider = GlobalProviderAccess.patientNotificationPro;
+
+   patientNotificationProvider!.storeNotification(
+       title: "Appointment Completed",
+       subTitle: "You have completed the appointment",
+       type: "appointment");
   }
 
   void setStarsRating(double starsRating){
@@ -113,6 +122,13 @@ class CallDataProvider extends ChangeNotifier{
           "appointmentId" : _appointments[0].id,
           "comment" : comment,
         });
+
+    final patientNotificationProvider = GlobalProviderAccess.patientNotificationPro;
+
+    patientNotificationProvider!.storeNotification(
+        title: "${_appointments[0].patientName} send feedback",
+        subTitle: "You have one more feedback from client",
+        type: "feedback");
 
     await fireStore.collection("appointment")
         .doc(_appointments[0].id).update({

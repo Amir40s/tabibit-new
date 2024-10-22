@@ -161,49 +161,49 @@ class PatientProfileScreen extends StatelessWidget {
                       ),
                       trailing: const Icon(CupertinoIcons.forward,color: textColor,),
                     ),
-                    ListTile(
-                      onTap: () async{
-                        // Get.to(()=>const PaymentScreen());
-                        // final fcmService =  FCMService();
-                        // await fcmService.sendNotification(
-                        //     BaseUrl.ab_deviceToekn,
-                        //     "title",
-                        //     "body",
-                        //     "senderId"
-                        // );
-                        // videoCallProvider.initializeAgora();
-                        // videoCallProvider.joinChannel('testChannel', 0);
-                        log("Clicked");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CallScreen(),
-                          ),
-                        );
-                        // Get.to(()=> VideoCallScreen());
-                      },
-                      minTileHeight: 70,
-                      title: const TextWidget(
-                        text: "Payment", fontSize: 18,
-                        fontWeight: FontWeight.w600, isTextCenter: false,
-                        textColor: textColor, fontFamily: AppFonts.semiBold,),
-                      leading: Container(
-                        height: 50,
-                        width: 50,
-                        padding: const EdgeInsets.all(12),
-                        decoration: const BoxDecoration(
-                            color: secondaryGreenColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: SvgPicture.asset(
-                            AppIcons.walletIcon,
-                            colorFilter: const ColorFilter.mode(
-                            themeColor,
-                            BlendMode.srcIn
-                        )),
-                      ),
-                      trailing: const Icon(CupertinoIcons.forward,color: textColor,),
-                    ),
+                    // ListTile(
+                    //   onTap: () async{
+                    //     Get.to(()=>const PaymentScreen());
+                    //     // final fcmService =  FCMService();
+                    //     // await fcmService.sendNotification(
+                    //     //     BaseUrl.ab_deviceToekn,
+                    //     //     "title",
+                    //     //     "body",
+                    //     //     "senderId"
+                    //     // );
+                    //     // videoCallProvider.initializeAgora();
+                    //     // videoCallProvider.joinChannel('testChannel', 0);
+                    //     log("Clicked");
+                    //     // Navigator.push(
+                    //     //   context,
+                    //     //   MaterialPageRoute(
+                    //     //     builder: (context) => CallScreen(),
+                    //     //   ),
+                    //     // );
+                    //     // Get.to(()=> VideoCallScreen());
+                    //   },
+                    //   minTileHeight: 70,
+                    //   title: const TextWidget(
+                    //     text: "Payment", fontSize: 18,
+                    //     fontWeight: FontWeight.w600, isTextCenter: false,
+                    //     textColor: textColor, fontFamily: AppFonts.semiBold,),
+                    //   leading: Container(
+                    //     height: 50,
+                    //     width: 50,
+                    //     padding: const EdgeInsets.all(12),
+                    //     decoration: const BoxDecoration(
+                    //         color: secondaryGreenColor,
+                    //         shape: BoxShape.circle
+                    //     ),
+                    //     child: SvgPicture.asset(
+                    //         AppIcons.walletIcon,
+                    //         colorFilter: const ColorFilter.mode(
+                    //         themeColor,
+                    //         BlendMode.srcIn
+                    //     )),
+                    //   ),
+                    //   trailing: const Icon(CupertinoIcons.forward,color: textColor,),
+                    // ),
                     ListTile(
                       onTap: () {
                         Get.to(()=>LanguageScreen(isNextButton: false,));

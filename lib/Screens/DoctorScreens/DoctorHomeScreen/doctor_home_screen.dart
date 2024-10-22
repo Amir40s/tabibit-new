@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -8,6 +10,7 @@ import 'package:tabibinet_project/Providers/Language/new/translation_new_provide
 import 'package:tabibinet_project/Providers/subscription_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/constant.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/model/res/widgets/submit_button.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
@@ -142,7 +145,12 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                                     },
                                     statusTap: () {
                                       if(isPending){
-                                        updateStatus(patient.id);
+                                        updateStatus(
+                                            patient.id,
+                                            patient.patientToken,
+                                            patient.doctorName
+                                        );
+                                        log("Patient Notification: ${patient.patientToken}");
                                       }
                                     },
                                     patientName: patientName,
@@ -171,9 +179,15 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
       ),
     );
   }
-   Future<void> updateStatus(id)async{
+   Future<void> updateStatus(id,deviceToken,doctorName)async{
+    final fcm = FCMService();
      fireStore.collection("appointment").doc(id).update({
        "status" : "upcoming"
      });
+    fcm.sendNotification(deviceToken,
+        "Your Appointment been updated",
+        "Dr $doctorName has changed your appointment status",
+        auth.currentUser?.uid.toString() ?? ""
+    );
    }
 }

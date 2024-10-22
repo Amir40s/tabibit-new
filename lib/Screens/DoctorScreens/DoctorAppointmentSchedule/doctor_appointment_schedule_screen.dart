@@ -238,7 +238,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                                     },
                                     statusTap: () {
                                       if(isPending){
-                                        updateStatus(patient.id,patient.deviceToken,patient.doctorName);
+                                        updateStatus(patient.id,patient.patientToken,patient.doctorName);
                                       }
                                     },
                                     patientName: patientName,

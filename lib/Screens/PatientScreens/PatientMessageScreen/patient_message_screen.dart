@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
 import 'package:tabibinet_project/Screens/ChatScreens/chat_screen.dart';
 import 'package:tabibinet_project/Screens/ChatScreens/search_controller.dart';
 import 'package:tabibinet_project/constant.dart';
@@ -21,6 +22,7 @@ class ChatListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ChatSearchController());
+    final transP = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -42,7 +44,7 @@ class ChatListScreen extends StatelessWidget {
                           }
                           if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return Center(
-                              child: Text('No chats available'.tr),
+                              child: Text(transP.translatedTexts['No chats available'] ?? "No chats available"),
                             );
                           }
 

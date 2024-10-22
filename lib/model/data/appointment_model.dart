@@ -28,6 +28,7 @@ class AppointmentModel {
   final String status;
   final String isReview;
   final String deviceToken;
+  final String patientToken;
 
 
   AppointmentModel( {
@@ -58,6 +59,7 @@ class AppointmentModel {
     required this.deviceToken,
     required this.isReview,
     required this.doctorImage,
+    required this.patientToken,
   });
 
   // Factory method to create a UserModel from FireStore data
@@ -91,6 +93,7 @@ class AppointmentModel {
       feesType: data['feesType'] ?? '',
       deviceToken: data['deviceToken'] ?? '',
       doctorImage: data['doctorImage'] ?? '',
+      patientToken: data['patientToken'] ?? '',
     );
   }
 }

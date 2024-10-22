@@ -42,6 +42,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
   @override
   Widget build(BuildContext context) {
     final smart = Provider.of<SmartAgendaProvider>(context);
+    final transP = Provider.of<TranslationProvider>(context);
     double height = 20.0;
     List<PieChartSectionData>   pieSections = _showingSections(smart.feesTypeCounts);
     String inOfficeCount = smart.feesTypeCounts['In Office']?.toString() ?? "0";
@@ -74,7 +75,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextWidget(
-                        text: "Upcoming Appointments",
+                        text: transP.translatedTexts["Upcoming Appointments"] ?? "Upcoming Appointments",
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
                         isTextCenter: false,
@@ -124,21 +125,21 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ScheduleCard(
-                      title: "In Office",
+                      title: transP.translatedTexts["In Office"] ?? "In Office",
                       totalAppointments:  inOfficeCount,
                       time: inOfficeTime,
                       backgroundColor: Colors.lightBlueAccent,
                     ),
                     SizedBox(height: 16),
                     ScheduleCard(
-                      title: "Clinic/Home Visit",
+                      title: transP.translatedTexts["Clinic/Home Visit"] ?? "Clinic/Home Visit",
                       totalAppointments:  homeVisitCount,
                       time: homeVisitTime,
                       backgroundColor: Colors.deepOrangeAccent,
                     ),
                     SizedBox(height: 16),
                     ScheduleCard(
-                      title: "Teleconsultation",
+                      title: transP.translatedTexts["Video Consultation"] ?? "Video Consultation",
                       totalAppointments: teleconsultCount,
                       time: teleconsultTime,
                       backgroundColor: Colors.amberAccent,
@@ -156,7 +157,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                       });
                     }),
                     SizedBox(height: height,),
-                    SectionTitle(title: "In Office Appointments"),
+                    SectionTitle(title: transP.translatedTexts["In Office Appointments"] ?? "In Office Appointments"),
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance.collection('appointment')
                           .where('feesType', isEqualTo: 'In Office')
@@ -169,7 +170,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                         } else if (snapshot.hasError) {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text('No appointments available.'));
+                          return Center(child: Text(transP.translatedTexts["No appointments available"] ?? "No appointments available"));
                         } else {
                           var appointments = snapshot.data!.docs.map((doc) {
                             return SmartAppointment.fromFirestore(doc.data() as Map<String, dynamic>);
@@ -192,7 +193,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                       },
                     ),
                     SizedBox(height: height,),
-                    SectionTitle(title: "Video Consultations"),
+                    SectionTitle(title: transP.translatedTexts["Video Consultations"] ?? "Video Consultations"),
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance.collection('appointment')
                           .where('feesType', isEqualTo: 'Video Consultation')
@@ -205,7 +206,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                         } else if (snapshot.hasError) {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text('No appointments available.'));
+                          return Center(child: Text(transP.translatedTexts["No appointments available."] ?? "No appointments available."));
                         } else {
                           var appointments = snapshot.data!.docs.map((doc) {
                             return SmartAppointment.fromFirestore(doc.data() as Map<String, dynamic>);
@@ -229,7 +230,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                     ),
 
                     SizedBox(height: height,),
-                    SectionTitle(title: "At Clinic/Home"),
+                    SectionTitle(title: transP.translatedTexts["At Clinic/Home"] ?? "At Clinic/Home"),
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance.collection('appointment')
                           .where('feesType', isEqualTo: 'Home Visit Consultation')
@@ -242,7 +243,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
                         } else if (snapshot.hasError) {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text('No appointments available.'));
+                          return Center(child: Text(transP.translatedTexts["No appointments available."] ?? "No appointments available."));
                         } else {
                           var appointments = snapshot.data!.docs.map((doc) {
                             return SmartAppointment.fromFirestore(doc.data() as Map<String, dynamic>);
@@ -311,6 +312,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
   }
 
   Widget buildDetailItem(BuildContext context, Color color, String title, String value) {
+    final transP = Provider.of<TranslationProvider>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: SizedBox(
@@ -325,7 +327,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
             SizedBox(
               width: 28.w, // Adjust this width as needed
               child: Text(
-                title,
+                transP.translatedTexts[title] ?? title,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14.sp, // Adjust the font size as needed
@@ -381,7 +383,7 @@ class ScheduleCard extends StatelessWidget {
           textColor: bgColor),
               SizedBox(height: 8),
               TextWidget(
-                  text: "Total Appointments: $totalAppointments", fontSize: 14.sp,
+                  text: " $totalAppointments", fontSize: 14.sp,
                   fontWeight: FontWeight.w600, isTextCenter: false,
                   textColor: bgColor),
             ],
@@ -444,12 +446,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
           calendarStyle: CalendarStyle(
             selectedDecoration: BoxDecoration(
               color: Colors.blue,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(8),
+
             ),
             todayDecoration: BoxDecoration(
               color: Colors.grey.withOpacity(0.2),
-              shape: BoxShape.circle,
+              // shape: BoxShape.circle,
             ),
           ),
           headerStyle: HeaderStyle(

@@ -209,7 +209,7 @@ class StartAppointmentScreen extends StatelessWidget {
 
   Future<void> storeCallId(
       context,doctorId,patientName,isVideo,token,title,body,senderId,
-      docName,model
+      docName, AppointmentModel model
       )async{
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     String callID = AppUtils().generateUniqueNumber().toString();
@@ -230,6 +230,7 @@ class StartAppointmentScreen extends StatelessWidget {
       "isVideo": isVideo,
       "status": "Incoming",
       "appointmentId" : model.id,
+      "patientToken" : model.patientToken,
       "webrtcId": callID,
     });
     // final String callID = DateTime.now().millisecondsSinceEpoch.toString();

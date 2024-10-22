@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/VideoCall/video_call_accept_screen.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/VideoCall/video_call_screen.dart';
 import 'package:tabibinet_project/constant.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
 import 'package:tabibinet_project/model/res/widgets/header.dart';
@@ -52,12 +53,20 @@ class CallScreen extends StatelessWidget {
                         onTap: () {
                           if(call.status == "Incoming"){
                             log("call id: ${call.id}");
+                            final fcm  = FCMService();
+                            fcm.sendNotification(
+                                call.patientToken,
+                                "Dr. ${call.doctorName} has accept your call",
+                                "Your ${call.isVideo ? "Video" : "Audio"} call are joining",
+                                auth.currentUser?.uid.toString() ?? ""
+                            );
                             Get.to(()=>VideoCallAcceptScreen(
                               callID: call.webrtcId,
                               doctorName: call.patientName,
                               doctorImage: "",
                               isVideo: call.isVideo,
                               id: call.id,
+                              patientToken: call.patientToken,
                             ));
                           }
                         },

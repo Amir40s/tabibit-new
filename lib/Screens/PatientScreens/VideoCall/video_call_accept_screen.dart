@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -5,18 +7,19 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/global_provider.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
 import 'package:tabibinet_project/sample_test_screen.dart';
 
 import '../../../Providers/agora/webrtc_provider.dart';
 
 class VideoCallAcceptScreen extends StatefulWidget {
- final String callID,doctorName,doctorImage,id;
+ final String callID,doctorName,doctorImage,id,patientToken;
  final bool isVideo;
- VideoCallAcceptScreen({super.key,
+ const VideoCallAcceptScreen({super.key,
      required this.callID,
      required this.doctorName,
-     required this.doctorImage, required this.isVideo, required this.id,
+     required this.doctorImage, required this.isVideo, required this.id, required this.patientToken,
    });
 
   @override
@@ -33,7 +36,8 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
     // TODO: implement initState
     super.initState();
     if(callProvider !=null){
-      callProvider!.joinCall(widget.callID);
+      log("Is Video: ${widget.isVideo}");
+      callProvider!.joinCall(widget.callID,audioOnly: !widget.isVideo);
     }
   }
 
@@ -47,28 +51,24 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
               return Stack(
                 children: [
                   if(widget.isVideo)
-                  Flexible(
-                    child: Container(
-                      color: Colors.black,
-                      child: RTCVideoView(provider.remoteRenderer),
-                    ),
+                  Container(
+                    color: Colors.black,
+                    child: RTCVideoView(provider.remoteRenderer),
                   ),
                   if(widget.isVideo)
                   Positioned(
                       top: 10.w,
                       right: 5.w,
-                      child: Container(
+                      child: SizedBox(
                         width: 40.w,
                         height: 60.w,
                         child:  ClipRRect(
                           borderRadius: BorderRadius.circular(5.w),
-                          child: Flexible(
-                            child: Container(
-                              color: Colors.black,
-                              child: RTCVideoView(
-                                  mirror: true,
-                                  provider.localRenderer),
-                            ),
+                          child: Container(
+                            color: Colors.black,
+                            child: RTCVideoView(
+                                mirror: true,
+                                provider.localRenderer),
                           ),
                         ),
                       )
@@ -83,18 +83,18 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
 
                   Positioned(
                       bottom: 10.w,
-                      child: Container(
+                      child: SizedBox(
                         width: 100.w,
                         child: Column(
                           children: [
                             TextWidget(
-                              text: "${widget.doctorName}",
+                              text: widget.doctorName,
                               fontSize: 16.0,
                               textColor: Colors.white,
                             ),
                             SizedBox(height: 3.h,),
                             TextWidget(
-                              text: "${provider.callDuration}",
+                              text: provider.callDuration,
                               fontSize: 16.0,
                               textColor: Colors.white,
                             ),
@@ -105,6 +105,13 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: (){
+                                    final fcm = FCMService();
+                                    fcm.sendNotification(
+                                        widget.patientToken,
+                                        "Dr. ${widget.doctorName} has ended your call",
+                                        "Your ${widget.isVideo ? "Video" : "Audio"} call are ended",
+                                        auth.currentUser?.uid.toString() ?? ""
+                                    );
                                     provider.endCall(
                                         widget.callID,
                                         remoteEnd: true,
@@ -120,7 +127,7 @@ class _VideoCallScreenState extends State<VideoCallAcceptScreen> {
                                       color: Colors.red,
                                       borderRadius: BorderRadius.circular(50.w),
                                     ),
-                                    child: Center(child: Icon(Icons.call_end, color: Colors.white)),
+                                    child: const Center(child: Icon(Icons.call_end, color: Colors.white)),
                                   ),
                                 ),
 

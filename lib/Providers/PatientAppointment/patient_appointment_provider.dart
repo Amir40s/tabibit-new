@@ -8,6 +8,7 @@ import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/global_provider.dart';
 import 'package:tabibinet_project/model/data/fee_information_model.dart';
 import 'package:tabibinet_project/model/data/appointment_model.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 
 import '../../Screens/PatientScreens/StartAppointmentScreen/start_appointment_screen.dart';
@@ -206,6 +207,10 @@ class PatientAppointmentProvider with ChangeNotifier {
       fileUrl  = await uploadPdfFile() ?? "";
     }
 
+    final fcm = FCMService();
+    String? token = await fcm.getDeviceToken();
+
+
     await fireStore.collection("appointment").doc(id).set({
       "id" : id,
       "patientId" : auth.currentUser!.uid,
@@ -215,6 +220,7 @@ class PatientAppointmentProvider with ChangeNotifier {
       "doctorRating" : _doctorRating,
       "doctorLocation" : _doctorLocation,
       "deviceToken" : _doctorDeviceToken,
+      "patientToken" : token.toString(),
       "name": profileP!.name,
       "phone": profileP!.phoneNumber,
       "image": profileP!.profileUrl,

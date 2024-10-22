@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -6,6 +8,7 @@ import 'package:tabibinet_project/Screens/DoctorScreens/AppointmentReminderScree
 import 'package:tabibinet_project/Screens/DoctorScreens/ConsultationScreen/consultation_screen.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/DoctorHomeScreen/Components/quick_access_container.dart';
 import 'package:tabibinet_project/chart_screen.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 
 import '../../../../call_screen.dart';
 import '../../../../constant.dart';
@@ -21,7 +24,10 @@ class QuickAccessSection extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         QuickAccessContainer(
-          onTap: (){
+          onTap: () async{
+            // final fcm = FCMService();
+            // String? deviceToken = await fcm.getDeviceToken();
+            // log("DeviceToken: $deviceToken");
             Get.to(()=> AppointmentReminderScreen());
           },
           text: 'Appointment\nReminders',
