@@ -98,6 +98,8 @@ class DoctorAppointmentProvider extends ChangeNotifier{
         }).toList();
       }
 
+      appointments.sort((a, b) => a.patientName.compareTo(b.patientName));
+
       return appointments;
     });
   }

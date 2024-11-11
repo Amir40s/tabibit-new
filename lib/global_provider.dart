@@ -13,6 +13,7 @@ import 'Providers/FindDoctor/find_doctor_provider.dart';
 import 'Providers/Language/new/translation_new_provider.dart';
 import 'Providers/Medicine/medicine_provider.dart';
 import 'Providers/PatientAppointment/patient_appointment_provider.dart';
+import 'Providers/PatientHome/patient_home_provider.dart';
 import 'Providers/PatientNotification/patient_notification_provider.dart';
 import 'Providers/Profile/profile_provider.dart';
 import 'Providers/SignIn/sign_in_provider.dart';
@@ -147,6 +148,14 @@ class GlobalProviderAccess {
     final context = navigatorKey.currentContext;
     if (context != null) {
       return Provider.of<CallDataProvider>(context, listen: false);
+    }
+    return null;
+  }
+
+  static DateProvider? get dateProvider {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      return Provider.of<DateProvider>(context, listen: false);
     }
     return null;
   }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
+import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 import '../../../Providers/TwilioProvider/twilio_provider.dart';
 import '../../../Providers/actionProvider/actionProvider.dart';
@@ -106,6 +107,8 @@ class SessionDetailScreen extends StatelessWidget {
                       fontFamily: AppFonts.regular, maxLines: 10,
                     ),
                     SizedBox(height: height1,),
+                    if(status != "complete")
+                      if(AppUtils().isTimestampDatePassed(int.parse(model.id)))
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -123,7 +126,7 @@ class SessionDetailScreen extends StatelessWidget {
                                   "status": "cancel",
                                 });
 
-                           ToastMsg().toastMsg("Appointment Cancel successfully");
+                        ToastMsg().toastMsg("Appointment Cancel successfully");
                         },),
                         SubmitButton(
                           width: 40.w,

@@ -3,14 +3,11 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
-import 'package:tabibinet_project/Screens/PatientScreens/StartAppointmentScreen/start_appointment_screen.dart';
 
 import '../../../../Providers/PatientHome/patient_home_provider.dart';
 import '../../../../constant.dart';
@@ -20,7 +17,6 @@ import '../../../../model/res/widgets/text_widget.dart';
 import '../../../Providers/FindDoctor/find_doctor_provider.dart';
 import '../../../Providers/PatientAppointment/patient_appointment_provider.dart';
 import '../../../controller/doctoro_specialiaty_controller.dart';
-import '../../../controller/translation_controller.dart';
 import '../../../model/data/fee_information_model.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
@@ -41,18 +37,12 @@ class AppointmentScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final patientAppointmentP = Provider.of<PatientAppointmentProvider>(context,listen: false);
+    final patientAppointmentP = Provider.of<PatientAppointmentProvider>(context);
     final languageP = Provider.of<TranslationProvider>(context);
-    // final DateTime currentMonth = Provider.of<DateProvider>(context,listen: false).selectedDate;
-
     double height1 = 20;
     double height2 = 10;
-
     final docp = Provider.of<FindDoctorProvider>(context,listen: false);
     final AppDataController findDoctorController = Get.put(AppDataController(docp));
-
-
-
     findDoctorController.fetchFees();
 
     return SafeArea(
@@ -73,7 +63,7 @@ class AppointmentScheduleScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Row(
                           children: [
-                             TextWidget(
+                             const TextWidget(
                               text: "Schedules", fontSize: 20,
                               fontWeight: FontWeight.w600, isTextCenter: false,
                               textColor: textColor, fontFamily: AppFonts.semiBold,),
@@ -87,8 +77,9 @@ class AppointmentScheduleScreen extends StatelessWidget {
                                   lastDate: DateTime(2100),
                                 );
                                 if (selectedDate != null) {
+                                  // dateProvider.updateSelectedDate(selectedDate);
                                   patientAppointmentP.setAppointmentDate(selectedDate);
-                                  dateProvider.updateSelectedDate(selectedDate);
+
                                 }
                               },
                               child: Row(
@@ -141,70 +132,11 @@ class AppointmentScheduleScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                           TextWidget(
+                           const TextWidget(
                             text: "Fees Information", fontSize: 20,
                             fontWeight: FontWeight.w600, isTextCenter: false,
                             textColor: textColor, fontFamily: AppFonts.semiBold,),
                           SizedBox(height: height1,),
-
-
-
-
-                          // Obx((){
-                          //   if (findDoctorController.isFee.value) {
-                          //     return const Center(child: CircularProgressIndicator());
-                          //   }
-                          //   if (findDoctorController.feeList.isEmpty) {
-                          //     return const Center(child: Text('No Fees found'));
-                          //   }
-                          //
-                          //   final specs = findDoctorController.feeList;
-                          //
-                          //   log("List:: $specs");
-                          //
-                          //   if (translationController.feeList.isEmpty) {
-                          //     translationController.translateFees(
-                          //       specs.map((e) => e.type).toList() +
-                          //           specs.map((e) => e.subTitle).toList(),
-                          //     );
-                          //   }
-                          //
-                          //   return Consumer<PatientAppointmentProvider>(
-                          //     builder: (context, provider, child) {
-                          //       return ListView.separated(
-                          //         shrinkWrap: true,
-                          //         physics: const NeverScrollableScrollPhysics(),
-                          //         itemCount: specs.length,
-                          //         itemBuilder: (context, index) {
-                          //           final isSelected = provider.selectFeeIndex == index;
-                          //           final fee = specs[index];
-                          //           final type = translationController.feeList[fee.type] ?? fee.type;
-                          //           final subTitle = translationController.feeList[fee.subTitle] ?? fee.subTitle;
-                          //           final doctorFee = translationController.feeList[fee.fees] ?? fee.fees;
-                          //           log("Translated speciality: $doctorFee");
-                          //           return FeeContainer(
-                          //             onTap: () {
-                          //               provider.setSelectedFee(
-                          //                   index,
-                          //                   fee.type,
-                          //                   fee.fees,
-                          //                   fee.id,
-                          //                   fee.subTitle
-                          //               );
-                          //             },
-                          //             title: type,
-                          //             fees: fee.fees,
-                          //             subTitle: subTitle,
-                          //             borderColor: isSelected ? themeColor : greyColor,
-                          //             icon: isSelected ? AppIcons.radioOnIcon : AppIcons.radioOffIcon,
-                          //           );
-                          //         },
-                          //         separatorBuilder: (context, index) {
-                          //           return SizedBox(height: height1,);
-                          //         },
-                          //       );
-                          //     },);
-                          // }),
 
 
                           Consumer<TranslationNewProvider>(
@@ -254,6 +186,7 @@ class AppointmentScheduleScreen extends StatelessWidget {
                                                  fee.subTitle
                                              );
                                            },
+                                           isSelected: isSelected,
                                            title: type,
                                            fees: fee.fees,
                                            subTitle: subTitle,

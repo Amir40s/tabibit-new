@@ -148,7 +148,7 @@ class ChatListScreen extends StatelessWidget {
 
                                   Get.to(() => ChatScreen(
                                     patientName: otherUser.name,
-                                   profilePic : otherUser.profileUrl,
+                                    profilePic : otherUser.profileUrl,
                                     patientEmail: otherUser.email,
                                     chatRoomId: chatRoomId,
                                     deviceToken: otherUser.deviceToken,

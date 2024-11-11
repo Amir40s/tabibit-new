@@ -115,6 +115,8 @@ class SignInProvider extends ChangeNotifier{
               Get.offAll(() => const DoctorBottomNavbar());
             },);
           }
+          emailC.text = "";
+          passwordC.text = "";
         }else{
           auth.signOut();
           Get.snackbar(

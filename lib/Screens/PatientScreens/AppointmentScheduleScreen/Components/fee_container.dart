@@ -16,6 +16,7 @@ class FeeContainer extends StatelessWidget {
     this.borderColor,
     this.fees,
     this.icon,
+   required this.isSelected,
     this.onTap,
   });
 
@@ -24,6 +25,7 @@ class FeeContainer extends StatelessWidget {
   final Color? borderColor;
   final String? fees;
   final String? icon;
+  final bool isSelected;
   final VoidCallback? onTap;
 
   @override
@@ -33,14 +35,14 @@ class FeeContainer extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: bgColor,
+            color: isSelected ? themeColor :  bgColor,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: borderColor ?? themeColor)
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SvgPicture.asset(icon ?? AppIcons.radioOnIcon,height: 17.sp,),
+            SvgPicture.asset(icon ?? AppIcons.radioOnIcon,height: 17.sp,color: isSelected ? Colors.white :  Colors.black,),
             const SizedBox(width: 20,),
             SizedBox(
               width: 40.w,
@@ -50,11 +52,11 @@ class FeeContainer extends StatelessWidget {
                   TextWidget(
                     text: title, fontSize: 16,
                     fontWeight: FontWeight.w500, isTextCenter: false,
-                    textColor: textColor, fontFamily: AppFonts.medium,),
+                    textColor: isSelected ? Colors.white  :  textColor, fontFamily: AppFonts.medium,),
                   TextWidget(
                     text: subTitle, fontSize: 12,
                     fontWeight: FontWeight.w400, isTextCenter: false,
-                    textColor: textColor,maxLines: 2,),
+                    textColor: isSelected ? Colors.white  : textColor,maxLines: 2,),
                 ],
               ),
             ),

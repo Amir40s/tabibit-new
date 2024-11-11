@@ -172,7 +172,7 @@ class PatientHomeScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: height1,),
-                  SpecialitySliderSection(),
+                 const SpecialitySliderSection(),
                   SizedBox(height: height1,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),

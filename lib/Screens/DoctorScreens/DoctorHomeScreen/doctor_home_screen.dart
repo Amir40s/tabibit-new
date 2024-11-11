@@ -12,7 +12,7 @@ import 'package:tabibinet_project/Providers/translation/translation_provider.dar
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
-import 'package:tabibinet_project/model/res/widgets/submit_button.dart';
+import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
 
 import '../../../Providers/DoctorAppointment/doctor_appointment_provider.dart';
@@ -21,12 +21,10 @@ import '../../../model/data/appointment_model.dart';
 import '../../../model/res/widgets/appointment_container.dart';
 import '../../../model/res/widgets/no_found_card.dart';
 import '../DoctorAppointmentSchedule/doctor_appointment_schedule_screen.dart';
-import '../EPrescriptionScreen/e_prescription_screen.dart';
 import '../SessionDetailScreen/session_detail_screen.dart';
 import 'Components/doctor_home_header.dart';
 import 'Components/patient_detail_chart.dart';
 import 'Components/quick_access_section.dart';
-import 'Components/range_select_calendar.dart';
 
 class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
    const DoctorHomeScreen({super.key});
@@ -51,17 +49,11 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                     SizedBox(height: height,),
                     const PatientDetailChart(),
                     SizedBox(height: height,),
-                    // SubmitButton(
-                    //   title: "View E-prescriptions",
-                    //   press: () {
-                    //     Get.to(()=>const EPrescriptionScreen());
-                    // },),
-                    // SizedBox(height: height,),
                     Consumer<SubscriptionProvider>(
                      builder: (context, provider, child){
                        provider.initialize();
                        return  TextWidget(
-                         text: "${languageP.translatedTexts["Quick Access"] ?? "Quick Access"}", fontSize: 20,
+                         text: languageP.translatedTexts["Quick Access"] ?? "Quick Access", fontSize: 20,
                          fontWeight: FontWeight.w600, isTextCenter: false,
                          textColor: textColor,fontFamily: AppFonts.semiBold,);
                      },
@@ -72,7 +64,7 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                         TextWidget(
+                         const TextWidget(
                           text: "Appointments", fontSize: 20,
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: textColor,fontFamily: AppFonts.semiBold,),
@@ -133,6 +125,10 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                                 final patientPhone = transP.doctorPatientList[patient.patientPhone] ?? patient.patientPhone;
                                 final status = transP.doctorPatientList[patient.status] ?? patient.status;
                                 final appointmentDate = transP.doctorPatientList[patient.appointmentDate] ?? patient.appointmentDate;
+
+                                final isDatePassed = AppUtils().isTimestampDatePassed(int.parse(patient.id));
+
+
                                 return AppointmentContainer(
                                     onTap : () {
                                       Get.to(() =>
@@ -157,7 +153,7 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                                     patientGender: patientGender,
                                     patientAge: patientAge,
                                     patientPhone: patientPhone,
-                                    statusText: isPending ? languageP.translatedTexts["Accept"] ?? "" : status,
+                                    statusText: isDatePassed ? "expire" :   isPending ? languageP.translatedTexts["Accept"] ?? "" : status,
                                     text1: "Appointment Date",
                                     text2: appointmentDate,
                                     statusTextColor: isPending ? bgColor : themeColor,
@@ -179,14 +175,18 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
       ),
     );
   }
-   Future<void> updateStatus(id,deviceToken,doctorName)async{
+   Future<void> updateStatus(id,deviceToken,doctorName,{String? status})async{
     final fcm = FCMService();
+    String subTitle = "Dr $doctorName has changed your appointment status";
      fireStore.collection("appointment").doc(id).update({
        "status" : "upcoming"
      });
+     if(status !=null){
+       subTitle  = "Your Appointment has been expired";
+     }
     fcm.sendNotification(deviceToken,
         "Your Appointment been updated",
-        "Dr $doctorName has changed your appointment status",
+         subTitle,
         auth.currentUser?.uid.toString() ?? ""
     );
    }

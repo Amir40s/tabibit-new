@@ -114,4 +114,10 @@ class AppUtils{
     }
   }
 
+  bool isTimestampDatePassed(int timestamp) {
+    DateTime timestampDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    DateTime currentDate = DateTime.now();
+    return timestampDate.isBefore(currentDate);
+  }
+
 }

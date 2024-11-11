@@ -137,13 +137,13 @@ class _AudioRecorderScreenState extends State<AudioRecorderScreen> {
               ),
               onPressed: _handleMicButton,  // Start/Stop recording
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Display URL if audio was uploaded successfully
             if (_audioUrl != null)
               Text(
                 'Audio Uploaded! URL: $_audioUrl',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
           ],
         ),

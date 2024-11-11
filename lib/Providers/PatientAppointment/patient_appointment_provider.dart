@@ -142,12 +142,15 @@ class PatientAppointmentProvider with ChangeNotifier {
   }
 
   void setAppointmentDate(DateTime date){
-    // Format the time using intl
-    String formattedDate = DateFormat('EEEE, MMMM d').format(date);
-    _appointmentDate = formattedDate;
-    log(_appointmentDate.toString());
+    log("Enter");
+    // String formattedDate = DateFormat('EEEE, MMMM d').format(date);
+    // _appointmentDate = formattedDate;
+    // log("Appointment Date${_appointmentDate.toString()}");
     notifyListeners();
   }
+
+
+
 
   void setAppointmentTime(appointmentTime){
     _appointmentTime = appointmentTime;
@@ -201,6 +204,8 @@ class PatientAppointmentProvider with ChangeNotifier {
 
   Future<void> sendAppointment(paymentId,amount,clientSecret,amountReceived,image) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final provider = GlobalProviderAccess.dateProvider;
 
     String fileUrl = "";
     if(_selectedFilePath !=null) {

@@ -71,10 +71,10 @@ class AppointmentContainer extends StatelessWidget {
                   text: "${languageP.translatedTexts["Gender"] ?? "Gender"}: $patientGender", fontSize: 12.sp,
                   fontWeight: FontWeight.w400, isTextCenter: false,
                   textColor: textColor, fontFamily: AppFonts.regular,),
-                TextWidget(
-                  text: languageP.translatedTexts["Complaint: Heart Burn"] ?? "Complaint: Heart Burn", fontSize: 12.sp,
-                  fontWeight: FontWeight.w400, isTextCenter: false,
-                  textColor: textColor, fontFamily: AppFonts.regular,),
+                // TextWidget(
+                //   text: languageP.translatedTexts["Complaint: Heart Burn"] ?? "Complaint: Heart Burn", fontSize: 12.sp,
+                //   fontWeight: FontWeight.w400, isTextCenter: false,
+                //   textColor: textColor, fontFamily: AppFonts.regular,),
               ],
             ),
             const Spacer(),

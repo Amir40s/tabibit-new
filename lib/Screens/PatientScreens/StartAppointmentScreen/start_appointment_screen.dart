@@ -125,6 +125,7 @@ class StartAppointmentScreen extends StatelessWidget {
                   ),
                   SizedBox(height: height1,),
                   FeeContainer(
+                    isSelected: false,
                     title: consultancyType,
                     subTitle: consultancySubTitle,
                     fees: consultancyFee,

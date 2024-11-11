@@ -89,8 +89,9 @@ class DateProvider extends ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
 
   void updateSelectedDate(DateTime date) {
+
     _selectedDate = date;
-    log(date.toString());
+    log("Date::${date.toString()}");
     notifyListeners();
   }
 
