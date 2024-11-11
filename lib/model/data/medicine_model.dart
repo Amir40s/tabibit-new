@@ -4,6 +4,7 @@ class MedicineModel {
   String duration;
   List<String> repeat;
   String tabletName;
+  String message;
   List<String> taken;
   List<String> timeDay;
 
@@ -15,6 +16,7 @@ class MedicineModel {
     required this.tabletName,
     required this.taken,
     required this.timeDay,
+    required this.message,
   });
 
   // Method to create a MedicineModel from FireStore document (with document ID)
@@ -23,6 +25,7 @@ class MedicineModel {
       id: documentId,  // Assigning document ID
       dosage: data['dosage'] ?? '',
       duration: data['duration'] ?? '',
+      message: data['message'] ?? '',
       repeat: List<String>.from(data['repeat'] ?? []),
       tabletName: data['tabletName'] ?? '',
       taken: List<String>.from(data['taken'] ?? []),
@@ -39,6 +42,7 @@ class MedicineModel {
       'tabletName': tabletName,
       'taken': taken,
       'timeDay': timeDay,
+      'message': message,
     };
   }
 }

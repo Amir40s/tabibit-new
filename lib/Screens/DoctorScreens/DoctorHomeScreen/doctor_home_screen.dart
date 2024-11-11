@@ -126,8 +126,20 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                                 final status = transP.doctorPatientList[patient.status] ?? patient.status;
                                 final appointmentDate = transP.doctorPatientList[patient.appointmentDate] ?? patient.appointmentDate;
 
-                                final isDatePassed = AppUtils().isTimestampDatePassed(int.parse(patient.id));
+                                final isDatePassed = AppUtils().isTimestampDatePassed(int.parse(patient.appointmentTimestamp));
 
+                                log("Time:  $isDatePassed");
+
+
+                                if(isDatePassed && status !="expire"){
+                                  updateStatus(
+                                      patient.id,
+                                      patient.patientToken,
+                                      patient.doctorName,
+                                    status: "Your Appointment has expired",
+                                    docStatus: "expire"
+                                  );
+                                }
 
                                 return AppointmentContainer(
                                     onTap : () {
@@ -153,7 +165,7 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
                                     patientGender: patientGender,
                                     patientAge: patientAge,
                                     patientPhone: patientPhone,
-                                    statusText: isDatePassed ? "expire" :   isPending ? languageP.translatedTexts["Accept"] ?? "" : status,
+                                    statusText: isPending ? languageP.translatedTexts["Accept"] ?? "" : status,
                                     text1: "Appointment Date",
                                     text2: appointmentDate,
                                     statusTextColor: isPending ? bgColor : themeColor,
@@ -175,11 +187,11 @@ class DoctorHomeScreen extends StatelessWidget with WidgetsBindingObserver{
       ),
     );
   }
-   Future<void> updateStatus(id,deviceToken,doctorName,{String? status})async{
+   Future<void> updateStatus(id,deviceToken,doctorName,{String? status,String docStatus = "upcoming"})async{
     final fcm = FCMService();
     String subTitle = "Dr $doctorName has changed your appointment status";
-     fireStore.collection("appointment").doc(id).update({
-       "status" : "upcoming"
+    await fireStore.collection("appointment").doc(id).update({
+       "status" :  docStatus
      });
      if(status !=null){
        subTitle  = "Your Appointment has been expired";

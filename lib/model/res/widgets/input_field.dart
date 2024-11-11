@@ -15,6 +15,7 @@ class InputField extends StatelessWidget {
   final int? maxLines, maxLength;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
+  final String? Function(String?)? validator;
   final bool obscureText;
 
   const InputField({
@@ -23,6 +24,7 @@ class InputField extends StatelessWidget {
     this.type,
     this.maxLines = 1,
     this.textInputAction,
+    this.validator,
     this.hintText,
     this.maxLength,
     this.prefixIcon,
@@ -42,7 +44,7 @@ class InputField extends StatelessWidget {
           fontWeight: FontWeight.w500,
           fontFamily: AppFonts.medium
       ),
-      validator: (value) {
+      validator: validator ?? (value) {
         if(value!.isEmpty){
           return "Enter the Field";
         }else{

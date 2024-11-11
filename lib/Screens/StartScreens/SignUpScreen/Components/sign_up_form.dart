@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../Providers/SignUp/sign_up_provider.dart';
 import '../../../../constant.dart';
 import '../../../../model/res/constant/app_fonts.dart';
+import '../../../../model/res/constant/app_utils.dart';
 import '../../../../model/res/widgets/input_field.dart';
 import '../../../../model/res/widgets/text_widget.dart';
 
@@ -74,6 +75,13 @@ class SignUpForm extends StatelessWidget {
               inputController: value.passwordC,
               hintText: "Enter password",
               obscureText: value.isSignUpPasswordShow,
+              validator: (password) {
+                if (password!.isNotEmpty) {
+                  return AppUtils().passwordValidator(password);
+                } else {
+                  return 'Required';
+                }
+              },
               suffixIcon: InkWell(
                 onTap: () {
                   value.showSignUpPassword();
@@ -97,6 +105,13 @@ class SignUpForm extends StatelessWidget {
             return InputField(
               inputController: value.confirmPasswordC,
               hintText: "Enter password",
+              validator: (password) {
+                if (password!.isNotEmpty) {
+                  return AppUtils().passwordValidator(password);
+                } else {
+                  return 'Required';
+                }
+              },
               obscureText: value.isSignUpConfirmPasswordShow,
               suffixIcon: InkWell(
                 onTap: () {

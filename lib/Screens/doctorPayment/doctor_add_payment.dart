@@ -26,7 +26,7 @@ class DoctorAddPaymentScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 2.h,width: 100.w,),
-            Container(
+            SizedBox(
               width: 100.w,
               child: const TextWidget(
                 text: "Add Bank Details", fontSize: 18,

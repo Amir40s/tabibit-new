@@ -45,6 +45,7 @@ class CalendarSection extends StatelessWidget {
               );
               if (selectedDate != null) {
                 dateProvider.updateSelectedDate(selectedDate);
+                patientAppointmentP.setAppointmentDate(selectedDate);
                 docAppointmentP.selDate(selectedDate);
               }
               log("message");

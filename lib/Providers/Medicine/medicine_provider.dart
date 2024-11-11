@@ -11,6 +11,7 @@ import '../../constant.dart';
 class MedicineProvider extends ChangeNotifier{
 
   final tabletC = TextEditingController();
+  final messageC = TextEditingController();
 
   final List<String> repeatList = [
     "Everyday",
@@ -195,6 +196,7 @@ class MedicineProvider extends ChangeNotifier{
           .doc(appointmentId)
           .collection("prescription").doc(id).set({
         "tabletName" : tabletC.text,
+        "message" : messageC.text,
         "dosage" : _dosage.toString(),
         "duration" : _duration.toString(),
         "repeat" : _selectedRepeats,

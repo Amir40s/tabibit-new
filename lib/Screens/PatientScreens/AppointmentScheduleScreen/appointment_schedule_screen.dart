@@ -77,9 +77,8 @@ class AppointmentScheduleScreen extends StatelessWidget {
                                   lastDate: DateTime(2100),
                                 );
                                 if (selectedDate != null) {
-                                  // dateProvider.updateSelectedDate(selectedDate);
+                                  dateProvider.updateSelectedDate(selectedDate);
                                   patientAppointmentP.setAppointmentDate(selectedDate);
-
                                 }
                               },
                               child: Row(
@@ -119,6 +118,16 @@ class AppointmentScheduleScreen extends StatelessWidget {
                           firstDate: DateTime.now(),
                         );
                       },),
+                    SizedBox(height: height1,),
+                    Padding(
+                      padding:  EdgeInsets.symmetric(
+                        horizontal: 6.w
+                      ),
+                      child: const TextWidget(
+                        text: "Doctor Availability", fontSize: 20,
+                        fontWeight: FontWeight.w600, isTextCenter: false,
+                        textColor: textColor, fontFamily: AppFonts.semiBold,),
+                    ),
                     SizedBox(height: height1,),
                     Consumer<PatientAppointmentProvider>(
                       builder: (context, value, child) {

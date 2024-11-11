@@ -20,6 +20,7 @@ import '../../../Providers/PatientAppointment/patient_appointment_provider.dart'
 import '../../../Providers/PatientHome/patient_home_provider.dart';
 import '../../../model/data/appointment_model.dart';
 import '../../../model/res/constant/app_fonts.dart';
+import '../../../model/res/constant/app_utils.dart';
 import '../../../model/res/widgets/appointment_container.dart';
 import '../../../model/res/widgets/text_widget.dart';
 import '../../PatientScreens/FilterScreen/Components/calender_section.dart';
@@ -32,7 +33,7 @@ import 'Components/doctor_appointment_button.dart';
 class DoctorAppointmentSchedule extends StatelessWidget {
   DoctorAppointmentSchedule({super.key});
 
-  final List<Map<String,String>> suggestion = [
+  final List<Map<String, String>> suggestion = [
     {
       "text1": "All",
       "text2": "All"
@@ -53,11 +54,16 @@ class DoctorAppointmentSchedule extends StatelessWidget {
       "text1": "Cancelled",
       "text2": "cancel"
     },
+    {
+      "text1": "Expire",
+      "text2": "expire"
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
-    final doctorAppointmentP = Provider.of<DoctorAppointmentProvider>(context,listen: false);
+    final doctorAppointmentP = Provider.of<DoctorAppointmentProvider>(
+        context, listen: false);
     final languageP = Provider.of<TranslationProvider>(context);
     double height = 20.0;
     return SafeArea(
@@ -76,13 +82,16 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                           DateTime currentMonth = dateProvider.selectedDate;
                           return Row(
                             children: [
-                               TextWidget(
-                                text: "Schedules", fontSize: 20,
-                                fontWeight: FontWeight.w600, isTextCenter: false,
-                                textColor: textColor, fontFamily: AppFonts.semiBold,),
+                              const TextWidget(
+                                text: "Schedules",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                isTextCenter: false,
+                                textColor: textColor,
+                                fontFamily: AppFonts.semiBold,),
                               const Spacer(),
                               InkWell(
-                                onTap:  () async {
+                                onTap: () async {
                                   DateTime? selectedDate = await showDatePicker(
                                     context: context,
                                     initialDate: currentMonth,
@@ -90,15 +99,19 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                                     lastDate: DateTime(2100),
                                   );
                                   if (selectedDate != null) {
-                                    dateProvider.updateSelectedDate(selectedDate);
+                                    dateProvider.updateSelectedDate(
+                                        selectedDate);
                                     doctorAppointmentP.selDate(selectedDate);
                                   }
                                 },
                                 child: Row(
                                   children: [
                                     TextWidget(
-                                        text: DateFormat('MMMM-yyyy').format(currentMonth), fontSize: 12,
-                                        fontWeight: FontWeight.w400, isTextCenter: false,
+                                        text: DateFormat('MMMM-yyyy').format(
+                                            currentMonth),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        isTextCenter: false,
                                         textColor: textColor),
                                     const SizedBox(width: 8,),
                                     Container(
@@ -114,7 +127,8 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                                             )
                                           ]
                                       ),
-                                      child: const Icon(CupertinoIcons.forward,color: themeColor,size: 20,),
+                                      child: const Icon(CupertinoIcons.forward,
+                                        color: themeColor, size: 20,),
                                     ),
                                   ],
                                 ),
@@ -132,33 +146,39 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                         );
                       },),
                     SizedBox(height: height,),
-                     Padding(
-                      padding:  const EdgeInsets.symmetric(horizontal: 20.0),
-                      child:  DoctorAppointmentButton(
-                        onTap: () {
-                          log('message ::enter');
-                          Get.to(ConsultationScreen());
-                        },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: DoctorAppointmentButton(
+                          onTap: () {
+                            log('message ::enter');
+                            Get.to(ConsultationScreen());
+                          },
                           title: "Smart Agenda",
                           icon: AppIcons.agendaIcon,
-                          buttonColor: Color(0xff45D0EE)
+                          buttonColor: const Color(0xff45D0EE)
                       ),
                     ),
                     SizedBox(height: height,),
-                     Padding(
+                    const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         children: [
                           Row(
                             children: [
                               TextWidget(
-                                text: "Appointment", fontSize: 20,
-                                fontWeight: FontWeight.w600, isTextCenter: false,
-                                textColor: textColor,fontFamily: AppFonts.semiBold,),
+                                text: "Appointment",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                isTextCenter: false,
+                                textColor: textColor,
+                                fontFamily: AppFonts.semiBold,),
                               TextWidget(
-                                text: "", fontSize: 16,
-                                fontWeight: FontWeight.w600, isTextCenter: false,
-                                textColor: Colors.grey,fontFamily: AppFonts.semiBold,)
+                                text: "",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                isTextCenter: false,
+                                textColor: Colors.grey,
+                                fontFamily: AppFonts.semiBold,)
                             ],
                           ),
                         ],
@@ -176,32 +196,42 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               itemCount: suggestion.length,
                               itemBuilder: (context, index) {
-                                final isSelected = provider.selectedIndex == index;
+                                final isSelected = provider.selectedIndex ==
+                                    index;
                                 return GestureDetector(
                                   onTap: () {
-                                    provider.selectButton(index,suggestion[index]["text2"]!);
+                                    provider.selectButton(
+                                        index, suggestion[index]["text2"]!);
                                   },
                                   child: SuggestionContainer(
                                       text: suggestion[index]["text1"]!,
-                                      boxColor: isSelected ? themeColor : bgColor,
-                                      textColor: isSelected ? bgColor : themeColor),
+                                      boxColor: isSelected
+                                          ? themeColor
+                                          : bgColor,
+                                      textColor: isSelected
+                                          ? bgColor
+                                          : themeColor),
                                 );
                               },);
                           },)
                     ),
                     SizedBox(height: height,),
-                    Consumer2<DoctorAppointmentProvider,TranslationNewProvider>(
-                      builder: (context, provider,transP, child) {
+                    Consumer2<DoctorAppointmentProvider,
+                        TranslationNewProvider>(
+                      builder: (context, provider, transP, child) {
                         return StreamBuilder<List<AppointmentModel>>(
                           stream: provider.selectedAppointmentStatus != "All"
                               ? provider.fetchPatients()
                               : provider.fetchAllPatients(),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             }
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             }
                             if (!snapshot.hasData || snapshot.data!.isEmpty) {
                               return const NoFoundCard(
@@ -215,19 +245,41 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                             return ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20),
                               itemCount: patients.length,
                               itemBuilder: (context, index) {
                                 final patient = patients[index];
                                 final isPending = patient.status == "pending";
-                                final patientName = transP.doctorPatientList[patient.name] ?? patient.name;
-                                final patientGender = transP.doctorPatientList[patient.patientGender] ?? patient.patientGender;
-                                final patientAge = transP.doctorPatientList[patient.patientAge] ?? patient.patientAge;
-                                final patientPhone = transP.doctorPatientList[patient.patientPhone] ?? patient.patientPhone;
-                                final status = transP.doctorPatientList[patient.status] ?? patient.status;
-                                final appointmentDate = transP.doctorPatientList[patient.appointmentDate] ?? patient.appointmentDate;
+                                final patientName = transP
+                                    .doctorPatientList[patient.name] ??
+                                    patient.name;
+                                final patientGender = transP
+                                    .doctorPatientList[patient.patientGender] ??
+                                    patient.patientGender;
+                                final status = transP.doctorPatientList[patient
+                                    .status] ?? patient.status;
+                                final appointmentDate = transP
+                                    .doctorPatientList[patient
+                                    .appointmentDate] ??
+                                    patient.appointmentDate;
+
+                                final isDatePassed = AppUtils()
+                                    .isTimestampDatePassed(
+                                    int.parse(patient.appointmentTimestamp));
+
+                                if (isDatePassed && status != "expire") {
+                                  updateStatus(
+                                      patient.id,
+                                      patient.patientToken,
+                                      patient.doctorName,
+                                      status: "Your Appointment has expired",
+                                      docStatus: "expire"
+                                  );
+                                }
+
                                 return AppointmentContainer(
-                                    onTap : () {
+                                    onTap: () {
                                       Get.to(() =>
                                           SessionDetailScreen(
                                             status: patient.status,
@@ -237,19 +289,28 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                                           ));
                                     },
                                     statusTap: () {
-                                      if(isPending){
-                                        updateStatus(patient.id,patient.patientToken,patient.doctorName);
+                                      if (isPending) {
+                                        updateStatus(
+                                            patient.id, patient.patientToken,
+                                            patient.doctorName);
                                       }
                                     },
                                     patientName: patientName,
                                     patientGender: patientGender,
                                     patientAge: patient.patientAge,
                                     patientPhone: patient.patientPhone,
-                                    statusText: isPending ? languageP.translatedTexts['Accept'] ?? 'Accept' : status,
+                                    statusText: isPending
+                                        ? languageP.translatedTexts['Accept'] ??
+                                        'Accept'
+                                        : status,
                                     text1: "Appointment Date",
                                     text2: appointmentDate,
-                                    statusTextColor: isPending ? bgColor : themeColor,
-                                    boxColor: isPending ? themeColor : secondaryGreenColor
+                                    statusTextColor: isPending
+                                        ? bgColor
+                                        : themeColor,
+                                    boxColor: isPending
+                                        ? themeColor
+                                        : secondaryGreenColor
                                 );
                               },
                               separatorBuilder: (context, index) {
@@ -257,7 +318,7 @@ class DoctorAppointmentSchedule extends StatelessWidget {
                               },);
                           },
                         );
-                    },),
+                      },),
                     SizedBox(height: height,),
                   ],
                 )
@@ -267,18 +328,22 @@ class DoctorAppointmentSchedule extends StatelessWidget {
       ),
     );
   }
-  Future<void> updateStatus(id,deviceToken,doctorName)async{
 
+  Future<void> updateStatus(id, deviceToken, doctorName,
+      {String? status, String docStatus = "upcoming"}) async {
     final fcm = FCMService();
+    String subTitle = "Dr $doctorName has changed your appointment status";
+    await fireStore.collection("appointment").doc(id).update({
+      "status": docStatus
+    });
+    if (status != null) {
+      subTitle = "Your Appointment has been expired";
+    }
     fcm.sendNotification(deviceToken,
         "Your Appointment been updated",
-        "Dr $doctorName has changed your appointment status",
+        subTitle,
         auth.currentUser?.uid.toString() ?? ""
     );
-
-    fireStore.collection("appointment").doc(id).update({
-      "status" : "upcoming"
-    });
   }
 }
 

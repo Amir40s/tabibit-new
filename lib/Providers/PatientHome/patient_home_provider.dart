@@ -109,7 +109,7 @@ class DateProvider extends ChangeNotifier {
       _schedulesData = snapshot.docs.map((doc) => ScheduleItem.fromFirestore(doc.data() as Map<String, dynamic>)).toList();
       notifyListeners();
     } catch (e) {
-      print("Error fetching schedules: $e");
+      log("Error fetching schedules: $e");
     }
   }
 

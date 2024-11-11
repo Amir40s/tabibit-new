@@ -24,12 +24,14 @@ class PatientMedicationScreen extends StatelessWidget {
     required this.repeat,
     required this.timeOfDay,
     required this.taken,
+    required this.message,
   });
 
   final String doctorName;
   final String medicineName;
   final String dose;
   final String duration;
+  final String message;
   final List<String> repeat;
   final List<String> timeOfDay;
   final List<String> taken;
@@ -69,75 +71,33 @@ class PatientMedicationScreen extends StatelessWidget {
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   const SizedBox(height: 40,),
                    TextWidget(
-                    text: "${languageP.translatedTexts["Prescription Information"] ?? "Prescription Information"}", fontSize: 20,
+                    text: languageP.translatedTexts["Prescription Information"] ?? "Prescription Information", fontSize: 20,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height1,),
                    TextWidget(
-                    text: "${languageP.translatedTexts["Medicine Name"] ?? "Medicine Name"}", fontSize: 14,
+                    text: languageP.translatedTexts["Medicine Name"] ?? "Medicine Name", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
-                  Container(
-                    width: 100.w,
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: themeColor
-                        )
-                    ),
-                    child: TextWidget(
-                      text: languageNewP.medicationList[medicineName] ?? medicineName, fontSize: 16,
-                      fontWeight: FontWeight.w600, isTextCenter: false,
-                      textColor: textColor, fontFamily: AppFonts.semiBold,),
-                  ),
+                  _inputBox(text: languageNewP.medicationList[medicineName] ?? medicineName),
                   SizedBox(height: height1,),
                    TextWidget(
                     text: "${languageP.translatedTexts["Dose"] ?? "Dose"}", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
-                  Container(
-                    width: 100.w,
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: themeColor
-                        )
-                    ),
-                    child: TextWidget(
-                      text: dose, fontSize: 16,
-                      fontWeight: FontWeight.w600, isTextCenter: false,
-                      textColor: textColor, fontFamily: AppFonts.semiBold,),
-                  ),
+                  _inputBox(text: dose),
                   SizedBox(height: height1,),
                    TextWidget(
-                    text: "${languageP.translatedTexts["Duration"] ?? "Duration"}", fontSize: 14,
+                    text: languageP.translatedTexts["Duration"] ?? "Duration", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
-                  Container(
-                    width: 100.w,
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: themeColor
-                        )
-                    ),
-                    child: TextWidget(
-                      text: duration, fontSize: 16,
-                      fontWeight: FontWeight.w600, isTextCenter: false,
-                      textColor: textColor, fontFamily: AppFonts.semiBold,),
-                  ),
+                 _inputBox(text: duration),
                   SizedBox(height: height1,),
                    TextWidget(
-                    text: "${languageP.translatedTexts["Repeat"] ?? "Repeat"}", fontSize: 14,
+                    text: languageP.translatedTexts["Repeat"] ?? "Repeat", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -159,7 +119,7 @@ class PatientMedicationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: height1,),
                    TextWidget(
-                    text: "${languageP.translatedTexts["Time of Day"] ?? "Time of Day"}", fontSize: 14,
+                    text: languageP.translatedTexts["Time of Day"] ?? "Time of Day", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -181,7 +141,7 @@ class PatientMedicationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: height1,),
                    TextWidget(
-                    text: "${languageP.translatedTexts["To be taken"] ?? "To be taken"}", fontSize: 14,
+                    text: languageP.translatedTexts["To be taken"] ?? "To be taken", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor, fontFamily: AppFonts.semiBold,),
                   SizedBox(height: height2,),
@@ -202,6 +162,13 @@ class PatientMedicationScreen extends StatelessWidget {
                         },)
                   ),
                   SizedBox(height: height1,),
+                  TextWidget(
+                    text: languageP.translatedTexts["Message"] ?? "Message", fontSize: 14,
+                    fontWeight: FontWeight.w600, isTextCenter: false,
+                    textColor: textColor, fontFamily: AppFonts.semiBold,),
+                  SizedBox(height: height2,),
+                  _inputBox(text: message),
+                  SizedBox(height: height1,),
                 ],
               ),
             ),
@@ -216,6 +183,24 @@ class PatientMedicationScreen extends StatelessWidget {
         //     },),
         // ),
       ),
+    );
+  }
+
+  Widget _inputBox({required String text}){
+    return Container(
+      width: 100.w,
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+              color: themeColor
+          )
+      ),
+      child: TextWidget(
+        text: text, fontSize: 16,
+        fontWeight: FontWeight.w600, isTextCenter: false,
+        textColor: textColor, fontFamily: AppFonts.semiBold,),
     );
   }
 }

@@ -10,6 +10,7 @@ import '../../../Providers/SignIn/sign_in_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
+import '../../../model/res/constant/app_utils.dart';
 import '../../../model/res/widgets/dotted_line.dart';
 import '../../../model/res/widgets/input_field.dart';
 import '../../../model/res/widgets/submit_button.dart';
@@ -81,6 +82,13 @@ class SignInScreen extends StatelessWidget {
                         inputController: value.passwordC,
                         hintText: "Enter password",
                         obscureText: value.isSignInPasswordShow,
+                        validator: (password) {
+                          if (password!.isNotEmpty) {
+                            return AppUtils().passwordValidator(password);
+                          } else {
+                            return 'Required';
+                          }
+                        },
                         suffixIcon: InkWell(
                           onTap: () {
                             value.showSignInPassword();

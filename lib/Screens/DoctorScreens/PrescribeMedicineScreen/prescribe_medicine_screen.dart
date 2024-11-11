@@ -54,7 +54,6 @@ class PrescribeMedicineScreen extends StatelessWidget {
     final medP = Provider.of<MedicineProvider>(context,listen: false);
     double height1 = 20.0;
     double height2 = 10.0;
-    final languageP = Provider.of<TranslationNewProvider>(context);
     final transP = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
@@ -280,6 +279,18 @@ class PrescribeMedicineScreen extends StatelessWidget {
                               },);
                           },)
                     ),
+                    SizedBox(height: height1,),
+                    TextWidget(
+                        text: "Message", fontSize: 16.sp,
+                        fontWeight: FontWeight.w600, isTextCenter: false,
+                        textColor: textColor),
+                    SizedBox(height: height2,),
+                    InputField(
+                        inputController: medP.messageC,
+                         hintText: "Type Message for patient",
+                         maxLines: 5,
+                    ),
+
                     const SizedBox(height: 30,),
                     Visibility(
                       visible: isVisible,

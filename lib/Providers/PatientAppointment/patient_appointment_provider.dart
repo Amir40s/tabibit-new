@@ -9,6 +9,7 @@ import 'package:tabibinet_project/global_provider.dart';
 import 'package:tabibinet_project/model/data/fee_information_model.dart';
 import 'package:tabibinet_project/model/data/appointment_model.dart';
 import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
+import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 
 import '../../Screens/PatientScreens/StartAppointmentScreen/start_appointment_screen.dart';
@@ -76,6 +77,7 @@ class PatientAppointmentProvider with ChangeNotifier {
   List<String> _filteredTime = [];
   String? _selectedFile;
   String? _selectedFilePath;
+  String? _appointmentDateTimeStamp;
 
 
   String? get selectedFilePath => _selectedFilePath;
@@ -90,6 +92,7 @@ class PatientAppointmentProvider with ChangeNotifier {
   String? get doctorLocation => _doctorLocation;
   String? get fromTime => _fromTime;
   String? get toTime => _toTime;
+  String? get appointmentDateTimeStamp => _appointmentDateTimeStamp;
   String? get appointmentTime => _appointmentTime;
   String? get appointmentDate => _appointmentDate;
   String? get selectedGender => _selectedGender;
@@ -143,9 +146,9 @@ class PatientAppointmentProvider with ChangeNotifier {
 
   void setAppointmentDate(DateTime date){
     log("Enter");
-    // String formattedDate = DateFormat('EEEE, MMMM d').format(date);
-    // _appointmentDate = formattedDate;
-    // log("Appointment Date${_appointmentDate.toString()}");
+    String formattedDate = DateFormat('EEEE, MMMM d').format(date);
+    _appointmentDate = formattedDate;
+    log("Appointment Date${_appointmentDate.toString()}");
     notifyListeners();
   }
 
@@ -164,17 +167,6 @@ class PatientAppointmentProvider with ChangeNotifier {
     _filterTimes();
   }
 
-  // void _filterTimes() {
-  //   if (_fromTime != null && _toTime != null) {
-  //     int fromIndex = _time.indexOf(_fromTime!);
-  //     int toIndex = _time.indexOf(_toTime!);
-  //
-  //     if (fromIndex <= toIndex) {
-  //       _filteredTime = _time.sublist(fromIndex, toIndex + 1);
-  //     }
-  //     notifyListeners();
-  //   }
-  // }
 
   void _filterTimes() {
     log("in Filter:: $_fromTime : $_toTime");
@@ -205,7 +197,9 @@ class PatientAppointmentProvider with ChangeNotifier {
   Future<void> sendAppointment(paymentId,amount,clientSecret,amountReceived,image) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
 
-    final provider = GlobalProviderAccess.dateProvider;
+
+    int appointmentTimestamp  = AppUtils().convertToTimestamp(_appointmentDate!) ?? 0;
+
 
     String fileUrl = "";
     if(_selectedFilePath !=null) {
@@ -243,6 +237,7 @@ class PatientAppointmentProvider with ChangeNotifier {
       "patientProblem" : problemC.text.toString(),
       "appointmentTime" : _appointmentTime,
       "appointmentDate" : _appointmentDate,
+      "appointmentTimestamp" : appointmentTimestamp.toString(),
       "appointmentPayment" : _selectFee,
       "documentFile" : fileUrl,
       "applyDate" : DateTime.now(),

@@ -60,9 +60,9 @@ class MedicationListSection extends StatelessWidget {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 100,),
+                     const SizedBox(height: 100,),
                       Image.asset(AppAssets.medicineImage,height: 100,),
-                      SizedBox(height: 20,),
+                     const  SizedBox(height: 20,),
                       Center(child: Text(languageP.translatedTexts["No Medication Suggest"] ?? "No Medication Suggest"))
                     ],
                   );
@@ -84,7 +84,6 @@ class MedicationListSection extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final med = meds[index];
                     final tabletName = provider.medicationList[med.tabletName] ?? med.tabletName;
-                    final dosageName = provider.medicationList[med.dosage] ?? med.dosage;
                     return InkWell(
                       onTap: (){
                         if(!isDel){
@@ -96,6 +95,7 @@ class MedicationListSection extends StatelessWidget {
                             repeat: med.repeat,
                             timeOfDay: med.timeDay,
                             taken: med.taken,
+                            message: med.message,
                           ));
                         }
                       },

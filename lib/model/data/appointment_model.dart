@@ -12,6 +12,7 @@ class AppointmentModel {
   final String appointmentTime;
   final String appointmentDate;
   final String doctorId;
+  final String appointmentTimestamp;
   final String doctorName;
   final String doctorEmail;
   final String doctorImage;
@@ -42,6 +43,7 @@ class AppointmentModel {
     required this.patientName,
     required this.patientEmail,
     required this.patientPhone,
+    required this.appointmentTimestamp,
     required this.patientProblem,
     required this.patientGender,
     required this.patientAge,
@@ -74,6 +76,7 @@ class AppointmentModel {
       patientPhone: data['patientPhone'] ?? '',
       patientProblem: data['patientProblem'] ?? '',
       patientGender: data['patientGender'] ?? '',
+      appointmentTimestamp: data['appointmentTimestamp'] ?? '',
       patientAge: data['patientAge'] ?? '',
       appointmentTime: data['appointmentTime'] ?? '',
       appointmentDate: data['appointmentDate'] ?? '',

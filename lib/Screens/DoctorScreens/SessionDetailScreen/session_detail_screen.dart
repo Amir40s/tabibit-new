@@ -107,8 +107,7 @@ class SessionDetailScreen extends StatelessWidget {
                       fontFamily: AppFonts.regular, maxLines: 10,
                     ),
                     SizedBox(height: height1,),
-                    if(status != "complete")
-                      if(AppUtils().isTimestampDatePassed(int.parse(model.id)))
+                    if(status == "upcoming")
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
