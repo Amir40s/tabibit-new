@@ -222,6 +222,11 @@ class PaymentProvider with ChangeNotifier {
           "you have received one new appointment",
           "zyx",
         );
+        fcm.saveNotificationInFirebase(
+            title: "New Appointment",
+            subTitle: "You Book a new appointment",
+          type: "patient"
+        );
 
         Get.to(()=>const BookingConfirmedScreen());
       }else{

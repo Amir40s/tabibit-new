@@ -56,7 +56,7 @@ class AdvancePlanScreen extends StatelessWidget {
             radius: 100,
             press: () async{
               await  payment.initPaymentSheet(
-                  amount: "350",
+                  amount: "660",
                   name: "Membership",
                   type: "trial"
               );

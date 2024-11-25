@@ -101,7 +101,7 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600, isTextCenter: false,
                       textColor: textColor, fontFamily: AppFonts.semiBold,),
                     SizedBox(height: height2,),
-                    InfoTile(title: time.toString(),),
+                    InfoTile(title: "${appointmentDate.toString()} , ${appointmentTime.toString()}",),
                     SizedBox(height: height1,),
                     TextWidget(
                       text: languageP.translatedTexts["Appointment Location"] ?? "Appointment Location", fontSize: 14.sp,

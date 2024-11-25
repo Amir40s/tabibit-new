@@ -15,8 +15,8 @@ class PaywallScreen extends StatelessWidget {
 
   final List<Map<String, String>> tabs = [
     {'title': 'Basic'},
-    {'title': 'Premium'},
-    {'title': 'Advance'},
+    {'title': 'Pro Pack'},
+    {'title': 'Pro+ Pack'},
   ];
 
   @override

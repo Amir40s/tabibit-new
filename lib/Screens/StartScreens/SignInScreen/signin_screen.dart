@@ -82,13 +82,13 @@ class SignInScreen extends StatelessWidget {
                         inputController: value.passwordC,
                         hintText: "Enter password",
                         obscureText: value.isSignInPasswordShow,
-                        validator: (password) {
-                          if (password!.isNotEmpty) {
-                            return AppUtils().passwordValidator(password);
-                          } else {
-                            return 'Required';
-                          }
-                        },
+                        // validator: (password) {
+                        //   if (password!.isNotEmpty) {
+                        //     return AppUtils().passwordValidator(password);
+                        //   } else {
+                        //     return 'Required';
+                        //   }
+                        // },
                         suffixIcon: InkWell(
                           onTap: () {
                             value.showSignInPassword();

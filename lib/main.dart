@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:email_otp/email_otp.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -76,6 +77,15 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   final fcmService = FCMService();
   await fcmService.initialize();
+
+  EmailOTP.config(
+    appName: 'Tabibi Net',
+    otpType: OTPType.numeric,
+    expiry: 300000,
+    emailTheme: EmailTheme.v6,
+    appEmail: 'otp@tabibinet.com',
+    otpLength: 6,
+  );
 
 
   String? deviceToken = await fcmService.getDeviceToken();

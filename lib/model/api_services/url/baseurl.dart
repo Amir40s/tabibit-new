@@ -23,4 +23,6 @@ class BaseUrl{
  static const AGORA_APP_CERTIFICATE = "af7d48c1750a41b6b01dbd23650c50ab";
 
 
+ static const testing_device_token = "e5LjYfu_R_qR6JIehefREN:APA91bE-WSPz0PaCpeawSfrwYmbhNUCeBbftbPpP1ufoIgD8cgY225PSulpWfDwhhKDJ8nbVUCY-m5kRjEb2_zmnrNUKsZS-sx3QOqI7dNFHQUJ3NGXmz_Q";
+
 }

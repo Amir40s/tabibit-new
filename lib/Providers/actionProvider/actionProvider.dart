@@ -8,6 +8,11 @@ class ActionProvider extends ChangeNotifier{
   final Map<int, bool> _isHovered = {};
   final Map<int, bool> _isLoading = {};
 
+
+  String _otpCode = "";
+
+  String get otpCode => _otpCode;
+
   Map<int, bool> _isCardHovered = {};
 
   bool isCardHovered(int index) => _isCardHovered[index] ?? false;
@@ -37,6 +42,12 @@ class ActionProvider extends ChangeNotifier{
 
   void setLoading(bool isLoading) {
     _isLoading[0] = isLoading;
+    notifyListeners();
+  }
+
+
+  void setOtpCode(String code){
+    _otpCode = code;
     notifyListeners();
   }
 

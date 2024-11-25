@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:tabibinet_project/model/data/notification_model.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import '../../constant.dart';
 
 class PatientNotificationProvider extends ChangeNotifier {
@@ -9,6 +12,10 @@ class PatientNotificationProvider extends ChangeNotifier {
 
   bool get isSound => _isSound;
   bool get isVibrate => _isVibrate;
+
+  PatientNotificationProvider(){
+    fetchSound();
+  }
 
   Future<void> storeNotification({
     required String title,
@@ -24,6 +31,14 @@ class PatientNotificationProvider extends ChangeNotifier {
       "read": "false",
       "type": type,
     });
+  }
+
+
+  Future<void> fetchSound() async{
+    final fcm = FCMService();
+    _isSound = await fcm.getMuteStatus();
+    log("Sound:: $_isSound");
+    notifyListeners();
   }
 
   Stream<List<NotificationModel>> fetchNotifications() {

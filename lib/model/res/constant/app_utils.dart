@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -179,5 +180,23 @@ class AppUtils{
       return null;
     }
   }
+
+  void sendOTP({required String email}){
+
+    EmailOTP.sendOTP(email: email)
+        .then((val) {
+      // Provider.of<OtpVerificationProvider>(context,
+      //     listen: false)
+      //     .setOtp(EmailOTP.getOTP()!);
+      // Provider.of<OtpVerificationProvider>(context,
+      //     listen: false)
+      //     .setEmail(emailController.text);
+
+      // Get.toNamed(
+      //   RoutesName.verifyEmailScreen,
+      // );
+    });
+  }
+
 
 }

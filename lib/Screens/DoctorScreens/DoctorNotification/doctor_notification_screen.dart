@@ -84,7 +84,7 @@ class DoctorNotificationScreen extends StatelessWidget {
                                 return DoctorNotificationTile(
                                     title: title,
                                     subTitle: subtitle,
-                                    timeText: "10 min ago",
+                                    timeText: "",
                                     icon: AppIcons.upcomingEventIcon,
                                     iconBgColor: Color(0xffFFECCC));
                               },);

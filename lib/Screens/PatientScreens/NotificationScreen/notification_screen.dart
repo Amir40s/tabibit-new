@@ -1,18 +1,10 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/PatientNotification/patient_notification_provider.dart';
-import 'package:tabibinet_project/controller/notification_controller.dart';
 import 'package:tabibinet_project/model/data/notification_model.dart';
 
 import '../../../constant.dart';
-import '../../../controller/translation_controller.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
 import '../../../model/res/widgets/dotted_line.dart';

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,6 +11,8 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tabibinet_project/Screens/PatientScreens/MyAppointmentScreen/my_appointment_screen.dart';
+import 'package:tabibinet_project/constant.dart';
 
 class FCMService {
   List<Color> getPredefinedColors() {
@@ -65,6 +66,9 @@ class FCMService {
     presentSound: true,
   );
 
+  // Key for storing mute status in SharedPreferences
+  static const String _muteNotificationsKey = "mute_notifications";
+
   Future<void> initialize() async {
     _firebaseMessaging = FirebaseMessaging.instance;
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -72,6 +76,24 @@ class FCMService {
     await setupFlutterNotifications();
     await requestNotificationPermissions();
     configureFirebaseListeners();
+  }
+
+  // Set the mute status
+  Future<void> setMuteStatus(bool isMuted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_muteNotificationsKey, isMuted);
+  }
+
+  // Get the mute status
+  Future<bool> getMuteStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_muteNotificationsKey) ?? false;
+  }
+
+  // Function to toggle mute status (optional)
+  Future<void> toggleMuteStatus() async {
+    bool currentStatus = await getMuteStatus();
+    await setMuteStatus(!currentStatus);
   }
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -89,35 +111,25 @@ class FCMService {
     required String status,
   }) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-      //   builder: (context) => ChatScreen(
-      //       receiverImage: receiverImage,
-      //       senderImage: senderImage,
-      //       token: token,
-      //       senderId: senderId,
-      //       senderName: senderName,
-      //       receiverId: receiverId,
-      //       receiverName: receiverName,
-      //       comingFrom: comingFrom,
-      //       userType: userType,
-      //       status: status),
-      // ));
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
+        builder: (context) => MyAppointmentScreen(),
+      ));
     });
   }
 
   static void navigateToDoctorAppointmentScreen() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-      //   builder: (context) => AppointmentScreenInDoctorApp(),
-      // ));
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
+        builder: (context) => MyAppointmentScreen(),
+      ));
     });
   }
 
   static void navigateToTalkToSpecialistScreen() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-      //   builder: (context) => TalkToASpecialistScreen(),
-      // ));
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
+        builder: (context) => MyAppointmentScreen(),
+      ));
     });
   }
 
@@ -137,7 +149,7 @@ class FCMService {
     );
 
     await _flutterLocalNotificationsPlugin.initialize(
-      InitializationSettings(
+      const InitializationSettings(
         android: AndroidInitializationSettings('launch_background'),
         iOS: DarwinInitializationSettings(),
       ),
@@ -166,42 +178,72 @@ class FCMService {
   }
 
   void configureFirebaseListeners() {
-    FirebaseMessaging.onMessage.listen(showNotification);
+    FirebaseMessaging.onMessage.listen((message) async{
+      bool isMuted = await getMuteStatus();
+      print("Notification :: $isMuted");
+      if (!isMuted) {
+        showNotification(message);
+      }
+    });
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
   }
 
   void handleMessage(RemoteMessage message) async {
-    if (message.notification?.title?.contains('Message From') == true) {
-      final data = message.data;
+    // if (message.notification?.title?.contains('Appointment') == true) {
+    //   final data = message.data;
+    //   print("Data: $data");
+    //   navigateToChatScreen(
+    //     receiverImage: data['receiverImage'] ?? "",
+    //     senderImage: data['senderImage'] ?? "",
+    //     token: data['token'] ?? "",
+    //     senderId: data['senderId'] ?? "",
+    //     senderName: data['senderName'] ?? "",
+    //     receiverId: data['receiverId'] ?? "",
+    //     receiverName: data['receiverName'] ?? "",
+    //     comingFrom: data['comingFrom'] ?? "",
+    //     userType: data['userType'] ?? "",
+    //     status: data['status'] ?? "",
+    //   );
+    // } else if (message.notification?.title?.contains('Appointment Started') ==
+    //     true) {
+    //   final SharedPreferences preferences =
+    //   await SharedPreferences.getInstance();
+    //   final userType = preferences.getString('userType');
+    //   // final AppointmentProvider appointmentProvider = AppointmentProvider();
+    //   if (userType == null) {
+    //     print('type is null');
+    //   } else {
+    //     if (userType == 'patient') {
+    //       navigateToTalkToSpecialistScreen();
+    //     } else {
+    //       // appointmentProvider.fetchAppointments();
+    //       navigateToDoctorAppointmentScreen();
+    //     }
+    //   }
+    // }
+
+    final data = message.data;
+    String screen = data['screen'] ?? '';
+    print("NotificationClickSCreen: $screen");
+    if (screen == 'appointment') {
       navigateToChatScreen(
-        receiverImage: data['receiverImage'],
-        senderImage: data['senderImage'],
-        token: data['token'],
-        senderId: data['senderId'],
-        senderName: data['senderName'],
-        receiverId: data['receiverId'],
-        receiverName: data['receiverName'],
-        comingFrom: data['comingFrom'],
-        userType: data['userType'],
-        status: data['status'],
+        receiverImage: data['receiverImage'] ?? "",
+        senderImage: data['senderImage'] ?? "",
+        token: data['token'] ?? "",
+        senderId: data['senderId'] ?? "",
+        senderName: data['senderName'] ?? "",
+        receiverId: data['receiverId'] ?? "",
+        receiverName: data['receiverName'] ?? "",
+        comingFrom: data['comingFrom'] ?? "",
+        userType: data['userType'] ?? "",
+        status: data['status'] ?? "",
       );
-    } else if (message.notification?.title?.contains('Appointment Started') ==
-        true) {
-      final SharedPreferences preferences =
-      await SharedPreferences.getInstance();
-      final userType = preferences.getString('userType');
-      // final AppointmentProvider appointmentProvider = AppointmentProvider();
-      if (userType == null) {
-        print('type is null');
-      } else {
-        if (userType == 'patient') {
-          navigateToTalkToSpecialistScreen();
-        } else {
-          // appointmentProvider.fetchAppointments();
-          navigateToDoctorAppointmentScreen();
-        }
-      }
+    } else if (screen == 'Appointment') {
+      navigateToTalkToSpecialistScreen();
     }
+
+
+
   }
 
   void showNotification(RemoteMessage message) async {
@@ -221,6 +263,7 @@ class FCMService {
           ),
           iOS: _iOSNotificationDetails,
         ),
+        payload: jsonEncode(message.data)
       );
 
       // Check if the dialog should be shown
@@ -292,6 +335,33 @@ class FCMService {
     final accessToken = await _getAccessToken();
     final projectId = await _getProjectId();
 
+    // Add any screen-specific data you need here
+    // Map<String, dynamic> data = {
+    //   'screen': 'ChatScreen',  // Name of the screen to navigate to
+    //   'receiverImage': 'receiverImage_url',
+    //   'senderImage': 'senderImage_url',
+    //   'token': token,
+    //   'senderId': senderId,
+    //   'senderName': 'Sender Name',
+    //   'receiverId': 'Receiver Id',
+    //   'receiverName': 'Receiver Name',
+    //   'comingFrom': 'appointment',
+    //   'userType': 'patient', // or 'doctor', depending on context
+    //   'status': 'active', // for example
+    // };
+
+    Map<String, dynamic> data = {
+      'screen': 'Appointment',
+      'token': token,
+      'senderId': senderId,
+    };
+
+    // Merge with any additional data passed
+    if (additionalData != null) {
+      data.addAll(additionalData);
+    }
+
+
     final response = await http.post(
       Uri.parse(
           'https://fcm.googleapis.com/v1/projects/$projectId/messages:send'),
@@ -315,8 +385,8 @@ class FCMService {
 
     if (response.statusCode == 200) {
       debugPrint("Notification Send");
-      saveNotificationInFirebase(
-          title: title, subTitle: body, senderId: senderId);
+      // saveNotificationInFirebase(
+      //     title: title, subTitle: body, senderId: senderId);
     } else {}
   }
 
@@ -347,18 +417,21 @@ class FCMService {
   void saveNotificationInFirebase(
       {required String title,
         required String subTitle,
-        required String senderId}) {
+        required String type,
+      }) {
     // Format the current date as dd-MM-yyyy
-    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
     FirebaseFirestore.instance
-        .collection("AppConstants.notificationa")
-        .doc(senderId)
-        .collection("AppConstants.myNotifications")
-        .add({
+        .collection("users")
+        .doc(auth.currentUser?.uid)
+        .collection("notifications")
+        .doc(id).set({
       'title': title,
       'subtitle': subTitle,
-      'date': formattedDate, // Save the formatted date
+      "read" : false,
+      "type" : type,
+      'date': id, // Save the formatted date
     });
   }
 

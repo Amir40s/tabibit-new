@@ -144,7 +144,7 @@ class ChatHeader extends StatelessWidget {
                       textColor: bgColor),
                 ),
                 const TextWidget(
-                    text: "Online", fontSize: 12,
+                    text: "", fontSize: 12,
                     fontWeight: FontWeight.w400, isTextCenter: false,
                     textColor: bgColor),
 
