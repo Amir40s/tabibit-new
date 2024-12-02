@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../Providers/Location/location_provider.dart';
 
 class GoogleMapSection extends StatelessWidget {
@@ -12,34 +11,41 @@ class GoogleMapSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<LocationProvider>(
-        builder: (context,provider,_){
-          return GestureDetector(
-            child: RepaintBoundary(
-              child: GoogleMap(
-                  initialCameraPosition: provider.kGooglePlex,
-                  markers: <Marker>{
-                    Marker(
-                      markerId: const MarkerId("1"),
-                      position: LatLng(
-                          provider.kGooglePlex.target.latitude,
-                          provider.kGooglePlex.target.longitude),
-                    ),
-                  },
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  onMapCreated: (controller){
-                    if (!provider.gController.isCompleted) {
-                      provider.gController.complete(controller);
-                    }
-                    },
-                  gestureRecognizers: Set()
-                    ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer()))
-                    ..add(Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()))
-                    ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()))
-                    ..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer()))
-              ),
+      builder: (context, provider, _) {
+        final initialPosition = provider.kGooglePlex;
+        final markerPosition = LatLng(
+          initialPosition.target.latitude,
+          initialPosition.target.longitude,
+        );
+
+        return GestureDetector(
+          child: RepaintBoundary(
+            child: GoogleMap(
+              initialCameraPosition: initialPosition,
+              markers: {
+                Marker(
+                  markerId: const MarkerId("1"),
+                  position: markerPosition,
+                ),
+              },
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              onMapCreated: (controller) {
+                if (!provider.gController.isCompleted) {
+                  provider.gController.complete(controller);
+                }
+              },
+              gestureRecognizers: {
+                Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
+                Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+                Factory<TapGestureRecognizer>(() => TapGestureRecognizer()),
+                Factory<VerticalDragGestureRecognizer>(
+                        () => VerticalDragGestureRecognizer()),
+              },
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

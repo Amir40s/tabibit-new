@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Screens/SuccessScreen/success_screen.dart';
-
-import '../../../Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import '../../../Providers/Medicine/medicine_provider.dart';
 import '../../../Providers/translation/translation_provider.dart';
 import '../../../constant.dart';
@@ -20,10 +19,16 @@ class PrescribeMedicineScreen extends StatelessWidget {
   PrescribeMedicineScreen({
     super.key,
     required this.appointmentId,
-    required this.isVisible
+    required this.isVisible,
+    required this.deviceToken,
+    required this.doctorName,
+    required this.patientId,
   });
 
   final String appointmentId;
+  final String deviceToken;
+  final String doctorName;
+  final String patientId;
 
   final medC = TextEditingController();
 
@@ -55,6 +60,12 @@ class PrescribeMedicineScreen extends StatelessWidget {
     double height1 = 20.0;
     double height2 = 10.0;
     final transP = Provider.of<TranslationProvider>(context);
+
+
+    Future.microtask((){
+      medP.clearData();
+    });
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -68,7 +79,7 @@ class PrescribeMedicineScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: height1,),
                     TextWidget(
-                        text: transP.translatedTexts["Tablet Name"] ?? "Tablet Name", fontSize: 16.sp,
+                        text: transP.translatedTexts["Name"] ?? "Name", fontSize: 16.sp,
                         fontWeight: FontWeight.w600, isTextCenter: false,
                         textColor: textColor),
                     SizedBox(height: height2,),
@@ -110,10 +121,11 @@ class PrescribeMedicineScreen extends StatelessWidget {
                                 Consumer<MedicineProvider>(
                                   builder: (context, value, child) {
                                     return TextWidget(
-                                      text: "${value.dosage} ${transP.translatedTexts["tablets"] ?? "Tablet"}", fontSize: 16.sp,
+                                      text: "${value.dosage}", fontSize: 16.sp,
                                       fontWeight: FontWeight.w500, isTextCenter: false,
                                       textColor: textColor, fontFamily: AppFonts.medium,);
-                                  },),
+                                  },
+                                ),
                                 const SizedBox(width: 8,),
                                 InkWell(
                                   onTap: () {
@@ -305,9 +317,24 @@ class PrescribeMedicineScreen extends StatelessWidget {
                           ) :
                           SubmitButton(
                             title: transP.translatedTexts["Prescribe Medicine"] ?? "Prescribe Medicine",
-                            press: () {
+                            press: () async{
+
+                              final fcm = FCMService();
+
                               if(formKey.currentState!.validate()){
-                                value.sendPrescription(appointmentId);
+                               await value.sendPrescription(appointmentId);
+                              await fcm.sendNotification(
+                                   deviceToken,
+                                   "Medicine Suggestion",
+                                   "Dr $doctorName suggest you a medicine",
+                                   "senderId"
+                               );
+                              await fcm.saveNotificationInFirebase(
+                                  title: "Medicine Suggestion",
+                                  subTitle: "Dr $doctorName suggest you a medicine",
+                                  type: "medicine",
+                                  uid: patientId
+                              );
                               }
                             },);
                         },),

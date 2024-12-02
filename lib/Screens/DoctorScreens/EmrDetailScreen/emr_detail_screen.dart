@@ -22,12 +22,20 @@ class EmrDetailScreen extends StatelessWidget {
   final String patientAge;
   final String patientGender;
   final String userProblem;
+  final String deviceToken;
+  final String doctorName;
+  final String patientId;
   const EmrDetailScreen({super.key,
     required this.appointmentId,
     required this.patientName,
     required this.patientAge,
     required this.patientGender,
-    required this.userProblem});
+    required this.userProblem,
+    required this.deviceToken,
+    required this.doctorName,
+    required this.patientId,
+
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +133,11 @@ class EmrDetailScreen extends StatelessWidget {
                       press: () {
                         Get.to(()=>PrescribeMedicineScreen(
                             appointmentId: appointmentId,
-                            isVisible: true));
+                            isVisible: true,
+                           deviceToken: deviceToken,
+                          doctorName: doctorName,
+                          patientId: patientId,
+                        ));
                       },),
                     SizedBox(height: height1,),
                   ],

@@ -67,7 +67,8 @@ class ScheduleSection extends StatelessWidget {
                            doc.location,
                            doc.rating,
                            doc.email,
-                           doc.deviceToken
+                           doc.deviceToken,
+                           doc.speciality
                        );
                        log("Doctor Name: ${doc.name}");
                        appointmentScheduleP.setAvailabilityTime(
@@ -83,6 +84,7 @@ class ScheduleSection extends StatelessWidget {
                          patients: doc.patients,
                          reviews: doc.reviews,
                          image: doc.profileUrl,
+                         model: doc,
                        ));
                      },// Use the correct property
                    );

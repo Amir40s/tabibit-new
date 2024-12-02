@@ -57,6 +57,9 @@ class EPrescriptionScreen extends StatelessWidget {
                         Get.to(()=>PrescribeMedicineScreen(
                           isVisible: true,
                           appointmentId: "",
+                          deviceToken: "",
+                           doctorName: "",
+                          patientId: "",
                         ));
                       },
                     ),

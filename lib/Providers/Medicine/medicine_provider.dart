@@ -43,6 +43,9 @@ class MedicineProvider extends ChangeNotifier{
   String? _selectedFile;
   String? _selectedFilePath;
 
+  String _url = "";
+
+
 
   String? get selectedFilePath => _selectedFilePath;
   String? get selectedFile => _selectedFile;
@@ -54,6 +57,7 @@ class MedicineProvider extends ChangeNotifier{
   String get timeOfDay => _timeOfDay;
   String get repetition => _repetition;
   String get taken => _taken;
+  String get url => _url;
   bool get isLoading => _isLoading;
 
   Future<void> pickFile() async {
@@ -83,18 +87,10 @@ class MedicineProvider extends ChangeNotifier{
     try {
       _isLoading = true;
       notifyListeners();
-      // Create a reference to Firebase Storage
       final storageRef = storage.ref();
-      // Create a reference to the file you want to upload
       final fileRef = storageRef.child('reports/${file.uri.pathSegments.last}');
-
-      // Upload the file
       await fileRef.putFile(file);
-
-      // Get the download URL
       final String downloadUrl = await fileRef.getDownloadURL();
-
-      // await addFile(appointmentId, downloadUrl);
 
       log('File uploaded successfully: $downloadUrl');
       return downloadUrl;
@@ -106,15 +102,16 @@ class MedicineProvider extends ChangeNotifier{
 
   Future<void> addFile(appointmentId) async {
     final String id = DateTime.now().millisecondsSinceEpoch.toString();
-    String fileUrl = await uploadFile() ?? "";
+    _url = await uploadFile() ?? "";
     fireStore.collection("appointment")
         .doc(appointmentId)
         .collection("report")
         .doc(id).set({
       "id" : id,
-      "fileUrl" : fileUrl,
+      "fileUrl" : _url,
     }).whenComplete(() {
       _isLoading = false;
+      _selectedFilePath = null;
       notifyListeners();
     },);
   }
@@ -181,7 +178,7 @@ class MedicineProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future sendPrescription(appointmentId) async {
+  Future<void> sendPrescription(appointmentId) async {
 
     final id = DateTime.now().millisecondsSinceEpoch.toString();
 

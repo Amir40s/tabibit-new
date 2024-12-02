@@ -186,7 +186,7 @@ class TopDoctorContainer extends StatelessWidget {
                 SubmitButton(
                     width: 30.w,
                     height: 40,
-                    title: "Appointment",
+                    title: "Book Now",
                     press: onTap ?? (){}
                 ),
                 const SizedBox(width: 10,),

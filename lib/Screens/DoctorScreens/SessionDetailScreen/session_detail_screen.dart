@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
+import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
 import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 import '../../../Providers/TwilioProvider/twilio_provider.dart';
@@ -134,7 +135,7 @@ class SessionDetailScreen extends StatelessWidget {
                           bgColor: const Color(0xff04AD01).withOpacity(0.1),
                           bdColor: const Color(0xff04AD01),
                           press: () {
-                            ActionProvider.startLoading();
+                            ActionProvider().startLoading();
                             uploadReminder();
                             ToastMsg().toastMsg("Successfully added to reminders!");
 
@@ -159,8 +160,7 @@ class SessionDetailScreen extends StatelessWidget {
 
   void uploadReminder() async {
     var timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-    ActionProvider.startLoading();
-
+    ActionProvider().startLoading();
     try {
       final docRef = FirebaseFirestore.instance.collection('appointmentReminder').doc(timeStamp);
       await docRef.set({
@@ -173,6 +173,7 @@ class SessionDetailScreen extends StatelessWidget {
         'appointmentDate': model.appointmentDate,
         'appointmentTime': model.appointmentTime,
         'status': status,
+        'patientId': model.patientId.toString(),
         'id': timeStamp,
         'deviceToken': model.deviceToken,
         'location': model.feesType,
@@ -180,10 +181,10 @@ class SessionDetailScreen extends StatelessWidget {
       }).whenComplete(() {
         ToastMsg().toastMsg("Patient Add to Reminder Screen");
       },);
-      ActionProvider.stopLoading();
+      ActionProvider().stopLoading();
       log('Reminder uploaded successfully');
     } catch (e) {
-      ActionProvider.stopLoading();
+      ActionProvider().stopLoading();
       log('Error uploading reminder: $e');
     }
   }

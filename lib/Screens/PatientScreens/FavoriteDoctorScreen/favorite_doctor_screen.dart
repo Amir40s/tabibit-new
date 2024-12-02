@@ -116,7 +116,8 @@ class FavoriteScreen extends StatelessWidget {
                                       doctor.location,
                                       doctor.rating,
                                       doctor.email,
-                                      doctor.deviceToken
+                                      doctor.deviceToken,
+                                       doctor.speciality
                                     );
                                     appointmentScheduleP.setAvailabilityTime(
                                       doctor.availabilityFrom,
@@ -130,6 +131,7 @@ class FavoriteScreen extends StatelessWidget {
                                       patients: doctor.patients,
                                       reviews: doctor.reviews,
                                       image: doctor.profileUrl,
+                                      model: doctor,
                                     ));
                                   },
                                 );

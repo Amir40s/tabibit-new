@@ -51,9 +51,9 @@ class MakePaymentScreen extends StatelessWidget {
                     SubmitButton(
                       title: "Confirm Appointment",
                       press: () async{
-                        ActionProvider.startLoading();
+                        ActionProvider().startLoading();
                         await provider.initPaymentSheet(
-                          amount: appointmentP.selectFee.toString(),
+                          amount: appointmentP.selectedFee.toString(),
                           name: appointmentP.nameC.text.toString(),
                           image: image
                         );

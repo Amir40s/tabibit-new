@@ -228,6 +228,13 @@ class PaymentProvider with ChangeNotifier {
           type: "patient"
         );
 
+        fcm.saveNotificationInFirebase(
+            title: "New Appointment",
+            subTitle: "you have received one new appointment",
+            type: "appointment",
+            uid: patientAppointmentP!.doctorId.toString()
+        );
+
         Get.to(()=>const BookingConfirmedScreen());
       }else{
         String uid = auth.currentUser?.uid.toString() ?? "";

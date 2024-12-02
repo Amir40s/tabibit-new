@@ -8,7 +8,9 @@ import 'package:tabibinet_project/Screens/SuccessScreen/success_screen.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/widgets/dotted_border_container.dart';
 import 'package:tabibinet_project/model/res/widgets/header.dart';
+import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 
+import '../../../model/puahNotification/push_notification.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/widgets/submit_button.dart';
 import '../../../model/res/widgets/text_widget.dart';
@@ -16,14 +18,21 @@ import '../../../model/res/widgets/text_widget.dart';
 class UploadReportFileScreen extends StatelessWidget {
   const UploadReportFileScreen({
     super.key,
-    required this.appointmentId
+    required this.appointmentId,
+    required this.patientId,
+    required this.deviceToken,
+    required this.doctorName,
+    required this.patientName,
   });
 
   final String appointmentId;
+  final String patientId;
+  final String deviceToken;
+  final String doctorName;
+  final String patientName;
 
   @override
   Widget build(BuildContext context) {
-    final medP = Provider.of<MedicineProvider>(context,listen: false);
     double height1 = 20.0;
     double height2 = 10.0;
     return SafeArea(
@@ -97,14 +106,35 @@ class UploadReportFileScreen extends StatelessWidget {
                         ],
                       ) :
                       SubmitButton(
-                        title: "Send Document to Micheal",
+                        title: "Send Document to $patientName",
                         press: () {
-                          value.addFile(appointmentId)
-                              .whenComplete(() {
-                            Get.off(()=> SuccessScreen(
-                                title: "Document Sent Successfully",
-                                subTitle: "Document has been sent to the patient"));
-                          },);
+                          final fcm = FCMService();
+
+
+                          if(value.selectedFilePath !=null){
+                            value.addFile(appointmentId)
+                                .whenComplete(() async{
+                              await fcm.sendNotification(
+                                  deviceToken,
+                                  "Lap Report",
+                                  "Dr $doctorName send you a Lap Report of $patientName",
+                                  "senderId"
+                              );
+                              await fcm.saveNotificationInFirebase(
+                                  title: "Lap Report",
+                                  subTitle: "Dr $doctorName send you a Lap Report of $patientName",
+                                  type: "medicine",
+                                  uid: patientId
+                              );
+                              Get.off(()=> SuccessScreen(
+                                  title: "Document Sent Successfully",
+                                  subTitle: "Document has been sent to the patient"));
+                            },);
+                          }else{
+                            ToastMsg().toastMsg("Please select File");
+                          }
+
+
                         },);
                     },)
                 ],

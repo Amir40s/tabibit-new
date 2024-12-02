@@ -17,7 +17,30 @@ class ProfileProvider extends ChangeNotifier{
   final CloudinaryService _cloudinaryService = CloudinaryService();
 
   final TextEditingController nameC = TextEditingController();
+  final TextEditingController diplomaC = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+
+  final List<String> nameFields = [
+    "Full Name",
+    "Diploma",
+    "Video Consultation Fee",
+    "In Office Consultation Fee",
+    "Home Visit Consultation Fee",
+    "Language",
+    // "Phone Number",
+  ];
+  final List<TextEditingController> _controllers = [];
+
+
+  ProfileProvider(){
+    for (int i = 0; i < nameFields.length; i++) {
+      _controllers.add(TextEditingController());
+    }
+  }
+
+  TextEditingController getNameController(int index) {
+    return _controllers[index];
+  }
 
   String _doctorName = "";
   String _doctorPhone = "";
@@ -99,12 +122,19 @@ class ProfileProvider extends ChangeNotifier{
         _name = value.get("name");
         _balance = value.get("balance") ?? "0.0";
         _phoneNumber = value.get("phoneNumber");
-        // _speciality = value.get("speciality ") ?? "";
         _country = value.get("country");
         _birthDate = value.get("birthDate");
         _email = value.get("email");
         _profileUrl = value.get("profileUrl");
-        nameC.text = _name;
+
+        _controllers[0].text = value.get('name') ?? '';
+        _controllers[1].text = value.get('diploma') ?? '';
+        _controllers[2].text = value.get('appointmentFee') ?? '';
+        _controllers[3].text = value.get('inOfficeFee') ?? '';
+        _controllers[4].text = value.get('homeVisitFee') ?? '';
+        _controllers[5].text = value.get('language') ?? '';
+        // _controllers[6].text = value.get('phoneNumber') ?? '';
+
         _isDataFetched = false;
         notifyListeners();
       },);
@@ -123,7 +153,13 @@ class ProfileProvider extends ChangeNotifier{
 
     uploadFile().whenComplete(() {
       fireStore.collection("users").doc(auth.currentUser!.uid).update({
-        "name" : nameC.text,
+        "name" : _controllers[0].text,
+        "diploma" : _controllers[1].text,
+        "appointmentFee" : _controllers[2].text,
+        "inOfficeFee" : _controllers[3].text,
+        "homeVisitFee" : _controllers[4].text,
+        "language" : _controllers[5].text,
+        // "phoneNumber" : _controllers[6].text,
         "birthDate" : _birthDate,
         "profileUrl" : _imageUrl,
       })
@@ -143,7 +179,13 @@ class ProfileProvider extends ChangeNotifier{
     _isLoading = true;
     notifyListeners();
     await fireStore.collection("users").doc(auth.currentUser?.uid).update({
-      "name" : nameC.text,
+      "name" : _controllers[0].text,
+      "diploma" : _controllers[1].text,
+      "appointmentFee" : _controllers[2].text,
+      "inOfficeFee" : _controllers[3].text,
+      "homeVisitFee" : _controllers[4].text,
+      "language" : _controllers[5].text,
+      // "phoneNumber" : _controllers[6].text,
       "birthDate" : _doctorDOB,
     })
         .whenComplete(() async{
@@ -269,19 +311,16 @@ class ProfileProvider extends ChangeNotifier{
     notifyListeners(); // Notify listeners when data is cleared
   }
 
+  @override
+  void dispose() {
+    disposeControllers();
+    super.dispose();
+  }
+
+  void disposeControllers() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+  }
+
 }
-
-
-//FilePickerResult? result = await FilePicker.platform.pickFiles(
-//       type: FileType.image,
-//       allowedExtensions: ['png',],
-//     );
-//
-//     if (result != null) {
-//       // Handle the file selection here
-//       // Example: Access the file using result.files.first
-//       print('File selected: ${result.files.first.name}');
-//     } else {
-//       // User canceled the picker
-//       print('File selection canceled');
-//     }

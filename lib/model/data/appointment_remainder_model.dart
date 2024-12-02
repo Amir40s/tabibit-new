@@ -8,6 +8,7 @@ class AppointmentRemainderModel {
   final String location;
   final String patientAge;
   final String patientEmail;
+  final String patientId;
   final String patientGender;
   final String patientName;
   final String patientPhone;
@@ -29,6 +30,7 @@ class AppointmentRemainderModel {
     required this.patientProblem,
     required this.status,
     required this.userUid,
+    required this.patientId,
   });
 
   // Factory method to create AppointmentRemainderModel from Firestore data
@@ -48,6 +50,7 @@ class AppointmentRemainderModel {
       patientProblem: data['patientProblem'] ?? '',
       status: data['status'] ?? '',
       userUid: data['userUid'] ?? '',
+      patientId: data['patientId'] ?? '',
     );
   }
 }

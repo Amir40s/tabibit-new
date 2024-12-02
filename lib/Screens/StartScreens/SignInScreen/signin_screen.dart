@@ -136,14 +136,8 @@ class SignInScreen extends StatelessWidget {
                   if(formKey.currentState!.validate()){
                     await value.signIn();
                   }
-
-                  // if(signInP.userType == "Patient"){
-                  //   Get.to(()=>PatientBottomNavBar());
-                  // }else{
-                  //   Get.to(()=>DoctorBottomNavbar());
-                  // }
-
-                },);
+                },
+              );
             },),
             SizedBox(height: height2,),
             const Row(

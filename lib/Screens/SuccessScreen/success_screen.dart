@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/DoctorBottomNavBar/doctor_bottom_navbar.dart';
+import 'package:tabibinet_project/Screens/StartScreens/AccountTypeScreen/account_type_screen.dart';
 import 'package:tabibinet_project/Screens/StartScreens/PayWallScreens/paywall_screen.dart';
 
 import '../../../constant.dart';
@@ -41,6 +42,7 @@ class SuccessScreen extends StatelessWidget {
               Center(
                 child: TextWidget(
                     text: title, fontSize: 24,
+                    align: TextAlign.center,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor),
               ),
@@ -67,6 +69,8 @@ class SuccessScreen extends StatelessWidget {
                     Get.to(()=>PaywallScreen());
                   }else if(title == "Transaction Successful"){
                     Get.to(()=>DoctorBottomNavbar());
+                  }else if(title == "Reset Successfully!"){
+                    Get.offAll(()=>const AccountTypeScreen());
                   }
                   else {
                     Get.back();

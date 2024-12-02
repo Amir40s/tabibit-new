@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/actionProvider/country_code_picker.dart';
+import 'package:tabibinet_project/Screens/StartScreens/OtpScreen/otp_screen.dart';
 import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 import '../../../Providers/Location/location_provider.dart';
 import '../../../Providers/SignIn/sign_in_provider.dart';
 import '../../../Providers/SignUp/sign_up_provider.dart';
+import '../../../Providers/TwilioProvider/twilio_provider.dart';
 import '../../../constant.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
@@ -28,6 +31,9 @@ class SignUpScreen extends StatelessWidget {
     double height2 = 30.0;
     final signInP = Provider.of<SignInProvider>(context,listen: false);
     final locationP = Provider.of<LocationProvider>(context,listen: false);
+    final twilioProvider = Provider.of<TwilioProvider>(context,listen: false);
+    final countryP = Provider.of<CountryPickerProvider>(context,listen: false);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -69,10 +75,35 @@ class SignUpScreen extends StatelessWidget {
                       },),
                   );
                 },),
-                const TextWidget(
-                    text: "Remember Password", fontSize: 14,
+                const Expanded(
+                  child: TextWidget(
+                      text: "I accept the General Conditions of Use of the service", fontSize: 14,
+                      fontWeight: FontWeight.w600, isTextCenter: false,
+                      textColor: textColor,fontFamily: AppFonts.semiBold,),
+                ),
+              ],
+            ),
+            SizedBox(height: height1,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Consumer<SignUpProvider>(builder: (context, provider, child) {
+                  return SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: Checkbox(
+                      value: provider.isPrivacy,
+                      onChanged: (value) {
+                        provider.checkPrivacy(value!);
+                      },),
+                  );
+                },),
+                const Expanded(
+                  child: TextWidget(
+                    text: " I accept the privacy policy", fontSize: 14,
                     fontWeight: FontWeight.w600, isTextCenter: false,
                     textColor: textColor,fontFamily: AppFonts.semiBold,),
+                ),
               ],
             ),
             SizedBox(height: height2,),
@@ -90,22 +121,31 @@ class SignUpScreen extends StatelessWidget {
                   : SubmitButton(
                 title: "Sign Up",
                 press: () async {
-                  if(value.passwordC.text == value.confirmPasswordC.text){
-                    if(formKey.currentState!.validate()){
+                  if (value.passwordC.text == value.confirmPasswordC.text) {
+                    if (formKey.currentState!.validate()) {
                       int otp = AppUtils().generateUniqueNumber();
                       value.setLoading(true);
-                      await appUtils.sendMail(
-                          recipientEmail: value.emailC.text.toString(),
-                          otpCode: otp.toString(),
-                          context: context
-                      );
-                      Provider.of<SignUpProvider>(context,listen: false).setOTP(otp.toString());
-                      value.setLoading(false);
+
+                      bool isPhoneRegistered = await twilioProvider.checkPhoneNumberExists(countryP.enteredPhoneNumber);
+
+                      if (isPhoneRegistered) {
+                        ToastMsg().toastMsg("This phone number is already registered!");
+                        value.setLoading(false);
+                      } else {
+                        Provider.of<SignUpProvider>(context, listen: false).setOTP(otp.toString());
+                        await twilioProvider.sendSmsReminder(
+                          countryP.enteredPhoneNumber,
+                          "Your TabibiNet Verification Code is: ${otp.toString()}",
+                        );
+                        Get.to(OtpScreen());
+                        ToastMsg().toastMsg("OTP sent to your phone number!");
+                        value.setLoading(false);
+                      }
                     }
-                  }else{
-                    ToastMsg().toastMsg("Confirm Password is InCorrect!");
+                  } else {
+                    ToastMsg().toastMsg("Confirm Password is incorrect!");
                   }
-                  },
+                },
               );
             },),
             SizedBox(height: height2,),

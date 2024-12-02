@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Screens/DoctorScreens/LabReportScreen/Components/lap_report_list_widget.dart';
 import 'package:tabibinet_project/controller/audioController.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
 
 import '../../../Providers/PatientAppointment/patient_appointment_provider.dart';
 import '../../../constant.dart';
+import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/widgets/header.dart';
 import '../../DoctorScreens/EmrDetailScreen/Components/medication_list_section.dart';
 
@@ -25,41 +28,33 @@ class PrescriptionListScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
-        body: Column(
-          children: [
-            const Header(text: "Prescription"),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            //   child: InputField2(
-            //     inputController: searchC,
-            //     hintText: "Find here!",
-            //     prefixIcon: Icons.search,
-            //     suffixIcon: Container(
-            //       margin: const EdgeInsets.all(14),
-            //       padding: const EdgeInsets.all(3),
-            //       height: 20,
-            //       width: 20,
-            //       decoration: const BoxDecoration(
-            //         color: greenColor,
-            //         shape: BoxShape.circle,
-            //       ),
-            //       child: SvgPicture.asset(AppIcons.crossIcon),
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: height1,),
-            Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: MedicationListSection(
-                    appointmentId: appointmentId,
-                    isDel: false,
-                    doctorName: doctorName,
-                  ),
-                ),
-            ),
-            SizedBox(height: height1,),
-          ],
+        body: SingleChildScrollView(
+          padding:  EdgeInsets.symmetric(horizontal: 5.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Header(text: "Prescription",isPadding: false,),
+              SizedBox(height: height1,),
+              TextWidget(
+                text: "Lap Reports", fontSize: 18.sp,
+                fontWeight: FontWeight.w600, isTextCenter: false,
+                textColor: textColor, fontFamily: AppFonts.semiBold,),
+              SizedBox(height: height1,),
+              LapReportListWidget(appointmentId: appointmentId,type: "patient",),
+              SizedBox(height: height1,),
+              TextWidget(
+                text: "Medication List", fontSize: 18.sp,
+                fontWeight: FontWeight.w600, isTextCenter: false,
+                textColor: textColor, fontFamily: AppFonts.semiBold,),
+              SizedBox(height: height1,),
+              MedicationListSection(
+                appointmentId: appointmentId,
+                isDel: false,
+                doctorName: doctorName,
+              ),
+              SizedBox(height: height1,),
+            ],
+          ),
         ),
         // floatingActionButton: FloatingActionButton(
         //   backgroundColor: redColor,

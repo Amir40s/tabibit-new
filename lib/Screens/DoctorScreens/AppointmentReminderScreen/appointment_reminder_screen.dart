@@ -112,6 +112,7 @@ class AppointmentReminderScreen extends StatelessWidget {
                                      location: reminder.location,
                                      time: reminder.id,
                                      phone: reminder.patientPhone,
+                                     patientId: reminder.patientId,
                                      appointmentDate: reminder.appointmentDate,
                                      appointmentTime: reminder.appointmentTime,
                                      deviceToken: reminder.deviceToken ?? "",

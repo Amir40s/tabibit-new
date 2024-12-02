@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
-import 'package:tabibinet_project/Screens/PatientScreens/PatientBottomNavBar/patient_bottom_nav_bar.dart';
-import 'package:tabibinet_project/Screens/PatientScreens/PatientHomeScreen/patient_home_screen.dart';
-import 'package:tabibinet_project/controller/translation_controller.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/PatientBottomNavBar/patient_bottom_nav_bar.dart';
 import 'package:tabibinet_project/model/res/components/circle_icon.dart';
 import '../../../../constant.dart';
@@ -51,13 +46,13 @@ class BookingConfirmedScreen extends StatelessWidget {
                                 children: [
                                   const CircleIcon(icon: Icons.done_rounded),
                                   SizedBox(height: 20.sp,),
-                                   TextWidget(
+                                  const TextWidget(
                                       text: "Booking Confirmed",
                                       fontSize: 24, fontWeight: FontWeight.w600,
                                       isTextCenter: false, textColor: textColor),
                                    TextWidget(
-                                      text: "Dr. ${appointmentP.doctorName} ${languageP.translatedTexts["Wilson is a highly skilled cardiologist"
-                                          " dedicated to providing exceptional cardiac care. With "] ?? "Wilson is a highly skilled cardiologist"
+                                      text: "Dr. ${appointmentP.doctorName} ${languageP.translatedTexts["is a highly skilled ${appointmentP.doctorSpeciality}"
+                                          " dedicated to providing exceptional cardiac care. With "] ?? "is a highly skilled cardiologist"
                                           " dedicated to providing exceptional cardiac care. With "}",
                                       fontSize: 12, fontWeight: FontWeight.w400,
                                       align: TextAlign.center,
@@ -98,15 +93,6 @@ class BookingConfirmedScreen extends StatelessWidget {
                                           fontSize: 14, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor),
                                       const Spacer(),
-                                      // Container(
-                                      //   padding: const EdgeInsets.all(5),
-                                      //   decoration: BoxDecoration(
-                                      //       color: bgColor,
-                                      //       shape: BoxShape.circle,
-                                      //       border: Border.all(color: greyColor)
-                                      //   ),
-                                      //   child: Icon(Icons.edit,color: Colors.grey,size: 18.sp,),
-                                      // ),
                                     ],
                                   ),
                                   const SizedBox(height: 20,),
@@ -137,8 +123,8 @@ class BookingConfirmedScreen extends StatelessWidget {
                                           const SizedBox(height: 10,),
                                           SizedBox(
                                             width: 35.w,
-                                            child:  TextWidget(
-                                              text: "Online", fontSize: 14,
+                                            child: const TextWidget(
+                                              text: "", fontSize: 14,
                                               fontWeight: FontWeight.w400, isTextCenter: false,
                                               textColor: textColor, fontFamily: AppFonts.regular,),
                                           ),
@@ -171,7 +157,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                          TextWidget(
-                                          text: "${languageP.translatedTexts["Time:"] ?? 'Time:'}",
+                                          text: languageP.translatedTexts["Time:"] ?? 'Time:',
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
                                         TextWidget(
@@ -187,7 +173,7 @@ class BookingConfirmedScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                          TextWidget(
-                                          text: "${languageP.translatedTexts["Date:"] ?? 'Date:'}",
+                                          text: languageP.translatedTexts["Date:"] ?? 'Date:',
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
                                         TextWidget(
@@ -202,12 +188,12 @@ class BookingConfirmedScreen extends StatelessWidget {
                                     child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                         TextWidget(
+                                         const TextWidget(
                                           text: "Total",
                                           fontSize: 12, fontWeight: FontWeight.w400,
                                           isTextCenter: false, textColor: textColor,maxLines: 1,),
                                         TextWidget(
-                                            text: "${appointmentP.selectFee} MAD", fontFamily: AppFonts.semiBold,
+                                            text: "${appointmentP.selectedFee} MAD", fontFamily: AppFonts.semiBold,
                                             fontSize: 12, fontWeight: FontWeight.w600,
                                             isTextCenter: false, textColor: themeColor),
                                       ],
@@ -220,8 +206,8 @@ class BookingConfirmedScreen extends StatelessWidget {
                             SubmitButton(
                               title: "Done",
                               press: () async {
-                                appointmentP.clearData();
-                                Get.offAll(()=>PatientBottomNavBar());
+                                 appointmentP.clearData();
+                                Get.offAll(()=>const PatientBottomNavBar());
                                 // await appointmentP.sendAppointment();
                             },),
                             const SizedBox(height: 20,),

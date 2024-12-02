@@ -34,107 +34,95 @@ class MedicationListSection extends StatelessWidget {
     double height1 = 20.0;
     double height2 = 10.0;
     final languageP = Provider.of<TranslationProvider>(context);
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        TextWidget(
-          text: "Medication List", fontSize: 18.sp,
-          fontWeight: FontWeight.w600, isTextCenter: false,
-          textColor: textColor, fontFamily: AppFonts.semiBold,),
-        SizedBox(height: height1,),
+    return Consumer<TranslationNewProvider>(
+      builder: (context, provider, child){
+        return StreamBuilder<List<MedicineModel>>(
+          stream: getMedicinesStream(),
+          builder: (context, snapshot) {
 
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 const SizedBox(height: 100,),
+                  Image.asset(AppAssets.medicineImage,height: 100,),
+                 const  SizedBox(height: 20,),
+                  Center(child: Text(languageP.translatedTexts["No Medication Suggest"] ?? "No Medication Suggest"))
+                ],
+              );
+            }
 
-        Consumer<TranslationNewProvider>(
-          builder: (context, provider, child){
-            return StreamBuilder<List<MedicineModel>>(
-              stream: getMedicinesStream(),
-              builder: (context, snapshot) {
+            // List of users
+            final meds = snapshot.data!;
+            if(provider.medicationList.isEmpty){
+              provider.translateMedication(
+                meds.map((e) => e.tabletName).toList() +
+                    meds.map((e) => e.dosage).toList(),
+              );
+            }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                     const SizedBox(height: 100,),
-                      Image.asset(AppAssets.medicineImage,height: 100,),
-                     const  SizedBox(height: 20,),
-                      Center(child: Text(languageP.translatedTexts["No Medication Suggest"] ?? "No Medication Suggest"))
-                    ],
-                  );
-                }
-
-                // List of users
-                final meds = snapshot.data!;
-                if(provider.medicationList.isEmpty){
-                  provider.translateMedication(
-                    meds.map((e) => e.tabletName).toList() +
-                        meds.map((e) => e.dosage).toList(),
-                  );
-                }
-
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: meds.length,
-                  itemBuilder: (context, index) {
-                    final med = meds[index];
-                    final tabletName = provider.medicationList[med.tabletName] ?? med.tabletName;
-                    return InkWell(
-                      onTap: (){
-                        if(!isDel){
-                          Get.to(()=> PatientMedicationScreen(
-                            doctorName: doctorName ?? "",
-                            medicineName: med.tabletName,
-                            dose: med.dosage,
-                            duration: med.duration,
-                            repeat: med.repeat,
-                            timeOfDay: med.timeDay,
-                            taken: med.taken,
-                            message: med.message,
-                          ));
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: bgColor,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: greyColor)
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 5),
-                          leading: SvgPicture.asset(AppIcons.radioOffIcon),
-                          title: TextWidget(
-                            text: tabletName, fontSize: 16.sp,
-                            fontWeight: FontWeight.w500, isTextCenter: false,
-                            textColor: textColor, fontFamily: AppFonts.medium,),
-                          subtitle: TextWidget(
-                            text: "${languageP.translatedTexts["Dosage"] ?? "Dosage"}: ${med.dosage} ${languageP.translatedTexts["tablets"] ?? "tablets"}", fontSize: 12.sp,
-                            fontWeight: FontWeight.w400, isTextCenter: false,
-                            textColor: textColor, fontFamily: AppFonts.regular,),
-                          trailing: Visibility(
-                            visible: isDel ?? true,
-                            child: IconButton(
-                                onPressed: () {
-                                  deleteMed(med.id);
-                                },
-                                icon: const Icon(CupertinoIcons.delete,color: textColor,)
-                            ),
-                          ),
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: meds.length,
+              itemBuilder: (context, index) {
+                final med = meds[index];
+                final tabletName = provider.medicationList[med.tabletName] ?? med.tabletName;
+                return InkWell(
+                  onTap: (){
+                    if(!isDel){
+                      Get.to(()=> PatientMedicationScreen(
+                        doctorName: doctorName ?? "",
+                        medicineName: med.tabletName,
+                        dose: med.dosage,
+                        duration: med.duration,
+                        repeat: med.repeat,
+                        timeOfDay: med.timeDay,
+                        taken: med.taken,
+                        message: med.message,
+                      ));
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: greyColor)
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+                      leading: SvgPicture.asset(AppIcons.radioOffIcon),
+                      title: TextWidget(
+                        text: tabletName, fontSize: 16.sp,
+                        fontWeight: FontWeight.w500, isTextCenter: false,
+                        textColor: textColor, fontFamily: AppFonts.medium,),
+                      subtitle: TextWidget(
+                        text: "${languageP.translatedTexts["Dosage"] ?? "Dosage"}: ${med.dosage} ${languageP.translatedTexts["tablets"] ?? "tablets"}", fontSize: 12.sp,
+                        fontWeight: FontWeight.w400, isTextCenter: false,
+                        textColor: textColor, fontFamily: AppFonts.regular,),
+                      trailing: Visibility(
+                        visible: isDel ?? true,
+                        child: IconButton(
+                            onPressed: () {
+                              deleteMed(med.id);
+                            },
+                            icon: const Icon(CupertinoIcons.delete,color: textColor,)
                         ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(height: height2,),
+                    ),
+                  ),
                 );
-              },);
-          },
-        ),
-      ],
+              },
+              separatorBuilder: (context, index) => SizedBox(height: height2,),
+            );
+          },);
+      },
     );
   }
 

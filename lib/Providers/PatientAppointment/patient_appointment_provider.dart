@@ -17,6 +17,31 @@ import '../../model/services/CloudinaryServices/cloudinary_services.dart';
 
 class PatientAppointmentProvider with ChangeNotifier {
 
+  int _selectedIndex = -1; // No selection initially
+  String _selectedTitle = '';
+  String _selectedSubtitle = '';
+  String _selectedFee = "0.0";
+
+  int get selectedIndex => _selectedIndex;
+  String get selectedTitle => _selectedTitle;
+  String get selectedSubtitle => _selectedSubtitle;
+  String get selectedFee => _selectedFee;
+
+  // Update the selected index and details
+  void updateFee(int index, String title, String subtitle, String fee) {
+    _selectedIndex = index;
+    _selectedTitle = title;
+    _selectedSubtitle = subtitle;
+    _selectedFee = fee;
+    notifyListeners();
+  }
+
+  // Check if a specific index is selected
+  bool isSelected(int index) {
+    return _selectedIndex == index;
+  }
+
+
   PatientAppointmentProvider() {
     _filteredTime = List.from(_time); // Initially show all times
   }
@@ -54,6 +79,7 @@ class PatientAppointmentProvider with ChangeNotifier {
   String? _doctorId;
   String? _doctorName;
   String? _doctorEmail;
+  String? _doctorSpeciality;
   String? _doctorRating;
   String? _doctorLocation;
   String? _doctorDeviceToken;
@@ -97,6 +123,7 @@ class PatientAppointmentProvider with ChangeNotifier {
   String? get appointmentDate => _appointmentDate;
   String? get selectedGender => _selectedGender;
   String? get patientAge => _patientAge;
+  String? get doctorSpeciality => _doctorSpeciality;
   //Fee Variables
   String get selectFeeType => _selectFeeType;
   String get selectFee => _selectFee;
@@ -133,13 +160,14 @@ class PatientAppointmentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setDoctorDetails(doctorId,doctorName,doctorLocation,doctorRating,doctorEmail,deviceToken){
+  void setDoctorDetails(doctorId,doctorName,doctorLocation,doctorRating,doctorEmail,deviceToken,speciality){
     _doctorId = doctorId;
     _doctorName = doctorName;
     _doctorEmail = doctorEmail;
     _doctorLocation = doctorLocation;
     _doctorRating = doctorRating;
     _doctorDeviceToken = deviceToken;
+    _doctorSpeciality = speciality;
     log(_doctorId.toString());
     notifyListeners();
   }
@@ -200,6 +228,9 @@ class PatientAppointmentProvider with ChangeNotifier {
 
     int appointmentTimestamp  = AppUtils().convertToTimestamp(_appointmentDate!) ?? 0;
 
+    final coutnryP = GlobalProviderAccess.countryPickerProvider;
+
+
 
     String fileUrl = "";
     if(_selectedFilePath !=null) {
@@ -226,13 +257,13 @@ class PatientAppointmentProvider with ChangeNotifier {
       "doctorImage": image,
       "fees": _selectFee,
       "feesId": _selectFeeId,
-      "feesType": _selectFeeType,
-      "feeSubTitle": _selectFeeSubTitle,
+      "feesType": _selectedFee,
+      "feeSubTitle": _selectedTitle,
       "status": "pending",
       "patientName" : nameC.text.toString(),
       "patientEmail" : profileP!.email,
       "patientAge" : _patientAge,
-      "patientPhone" : phoneC.text.toString(),
+      "patientPhone" : coutnryP!.enteredPhoneNumber,
       "patientGender" : _selectedGender,
       "patientProblem" : problemC.text.toString(),
       "appointmentTime" : _appointmentTime,
@@ -345,14 +376,15 @@ class PatientAppointmentProvider with ChangeNotifier {
     _selectedGender = null;
     _patientAge = null;
     _selectFeeIndex = null;
-    _selectFeeType = "";
-    _selectFee = "";
-    _selectFeeId = "";
+    _selectedSubtitle = "";
+    _selectedTitle = "";
+    _selectedFee = "";
     _selectFeeSubTitle = "";
     _filteredTime = [];
     _selectedFile = null;
     _selectedFilePath = null;
     _uploadedFileUrl = null;
+    _doctorSpeciality = null;
     notifyListeners();
   }
 

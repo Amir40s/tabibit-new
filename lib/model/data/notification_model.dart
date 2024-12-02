@@ -1,29 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class NotificationModel{
-  final String id;
+class NotificationModel {
+  final String date ;
+  final bool read;
   final String title;
-  final String subTitle;
-  final String read;
+  final String subtitle;
   final String type;
 
-
   NotificationModel({
-    required this.id,
-    required this.title,
-    required this.subTitle,
+    required this.date ,
     required this.read,
+    required this.title,
+    required this.subtitle,
     required this.type,
   });
 
-  // Factory method to create a UserModel from FireStore data
-  factory NotificationModel.fromDocumentSnapshot(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+
+  factory NotificationModel.fromMap(Map<String, dynamic> data) {
     return NotificationModel(
-      id: doc.id,
+      date : data['date'] ?? '',
+      read: data['read'] ?? false,
       title: data['title'] ?? '',
-      subTitle: data['subTitle'] ?? '',
-      read: data['read'] ?? '',
+      subtitle: data['subtitle'] ?? '',
       type: data['type'] ?? '',
     );
   }

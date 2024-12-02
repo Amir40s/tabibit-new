@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabibinet_project/Providers/FaqProvider/faq_provider.dart';
 import 'package:tabibinet_project/Providers/Language/language_provider.dart';
+import 'package:tabibinet_project/Providers/actionProvider/country_code_picker.dart';
 import 'package:tabibinet_project/Providers/agora/webrtc_provider.dart';
 import 'package:tabibinet_project/Providers/call_data_provider.dart';
 import 'package:tabibinet_project/Providers/payment/payment_provider.dart';
@@ -156,6 +157,14 @@ class GlobalProviderAccess {
     final context = navigatorKey.currentContext;
     if (context != null) {
       return Provider.of<DateProvider>(context, listen: false);
+    }
+    return null;
+  }
+
+  static CountryPickerProvider? get countryPickerProvider {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      return Provider.of<CountryPickerProvider>(context, listen: false);
     }
     return null;
   }

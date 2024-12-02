@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Screens/StartScreens/LanguageScreen/language_screen.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/global_provider.dart';
 import 'package:tabibinet_project/model/services/SharedPreference/shared_preference.dart';
@@ -57,13 +58,13 @@ class SplashServices {
             }
           } else {
             Timer(const Duration(seconds: 3), () {
-              Get.off(()=> OnboardingScreen());
+              Get.off(()=> LanguageScreen(isNextButton: true));
             },);
             debugPrint("Document does not exist.");
           }
         } else {
           Timer(const Duration(seconds: 3), () {
-            Get.off(()=> OnboardingScreen());
+            Get.off(()=> LanguageScreen(isNextButton: true));
           },);
           // Collection is empty
           debugPrint("Collection is empty.");
@@ -74,7 +75,7 @@ class SplashServices {
     }
     else{
       Timer(const Duration(seconds: 3), () {
-        Get.off(()=> OnboardingScreen());
+        Get.off(()=> LanguageScreen(isNextButton: true));
       },);
     }
   }

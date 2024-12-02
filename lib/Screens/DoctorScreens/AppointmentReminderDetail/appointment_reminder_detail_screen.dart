@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/Providers/actionProvider/actionProvider.dart';
 import 'package:tabibinet_project/Screens/DoctorScreens/ReminderScreen/reminder_screen.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/puahNotification/push_notification.dart';
@@ -33,11 +34,12 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
     required this.appointmentDate,
     required this.appointmentTime,
     required this.deviceToken,
+    required this.patientId,
   });
 
   final appUtils = AppUtils();
 
-  final String name,age,gender,time,location,email,phone,appointmentDate,appointmentTime,deviceToken;
+  final String name,age,gender,time,location,email,phone,appointmentDate,appointmentTime,deviceToken,patientId;
 
   @override
   Widget build(BuildContext context) {
@@ -110,33 +112,42 @@ class AppointmentReminderDetailScreen extends StatelessWidget {
                     SizedBox(height: height2,),
                     InfoTile(title: transP.appointmentRemainder[location.toString()] ?? location.toString()),
                     const SizedBox(height: 30,),
-                    SubmitButton(
-                      title: languageP.translatedTexts["Send Reminder"] ?? "Send Reminder",
-                      bgColor: const Color(0xff04AD01).withOpacity(0.1),
-                      textColor: const Color(0xff04AD01),
-                      bdColor: const Color(0xff04AD01),
-                      press: () {
-                        twilioProvider.sendSmsReminder(
-                            phone,
-                            "Reminder: You have an appointment scheduled on $appointmentDate, at $appointmentTime"
-                        );
-                        // appUtils.sendReminder(
-                        //     recipientEmail: email,
-                        //     messageText: "Hello, Your Time of Appointment"
-                        //         " is mentions please be on time "
-                        //         "for doctor appointment",
-                        //     context: context);
 
-                        // Get.to(()=> ReminderScreen(
-                        //   appBarText: "Send Reminder",
-                        //   email: email,
-                        //   age: age,
-                        //   gender: gender,
-                        //   name: name,
-                        //   time: time,
-                        //   location: location,
-                        // ));
-                      },),
+
+
+                    Consumer<ActionProvider>(
+                      builder: (cont,value,_){
+                        return
+                          value.isLoading ?
+                          const  Center(child:   CircularProgressIndicator(color: themeColor,))
+                              : SubmitButton(
+                          title: languageP.translatedTexts["Send Reminder"] ?? "Send Reminder",
+                          bgColor: const Color(0xff04AD01).withOpacity(0.1),
+                          textColor: const Color(0xff04AD01),
+                          bdColor: const Color(0xff04AD01),
+                          press: () async{
+                            value.startLoading();
+                            final fcm = FCMService();
+                            await  fcm.saveNotificationInFirebase(
+                                title: "Appointment Remainder",
+                                subTitle: "Reminder: You have an appointment scheduled on $appointmentDate, at $appointmentTime",
+                                type: "remainder",
+                                uid: patientId
+                            );
+                            await  fcm.saveNotificationInFirebase(
+                                title: "Appointment Remainder",
+                                subTitle: "Reminder: You scheduled an Appointment on $appointmentDate, at $appointmentTime with $name",
+                                type: "remainder"
+                            );
+                            await twilioProvider.sendSmsReminder(
+                                type: "remainder",
+                                phone,
+                                "Reminder: You have an appointment scheduled on $appointmentDate, at $appointmentTime"
+                            );
+                            value.stopLoading();
+                          },);
+                      },
+                    ),
                     SizedBox(height: height1,),
                     SubmitButton(
                       title: languageP.translatedTexts["Cancel Appointment"] ?? "Cancel Appointment",

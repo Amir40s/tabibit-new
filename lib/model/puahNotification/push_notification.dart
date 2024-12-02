@@ -414,34 +414,35 @@ class FCMService {
     }
   }
 
-  void saveNotificationInFirebase(
+  Future<void> saveNotificationInFirebase(
       {required String title,
         required String subTitle,
         required String type,
-      }) {
+        String? uid
+      }) async{
     // Format the current date as dd-MM-yyyy
 
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-    FirebaseFirestore.instance
+   await FirebaseFirestore.instance
         .collection("users")
-        .doc(auth.currentUser?.uid)
+        .doc(uid ?? auth.currentUser?.uid)
         .collection("notifications")
         .doc(id).set({
       'title': title,
       'subtitle': subTitle,
       "read" : false,
       "type" : type,
-      'date': id, // Save the formatted date
+      'date': id.toString(),
     });
   }
 
   Future<String?> getDeviceToken() async {
     try {
       String? token = await _firebaseMessaging.getToken();
-      print("FCM Device Token: $token");
+      debugPrint("FCM Device Token: $token");
       return token;
     } catch (e) {
-      print("Error getting device token: $e");
+      debugPrint("Error getting device token: $e");
       return null;
     }
   }

@@ -7,6 +7,7 @@ import '../../../../constant.dart';
 import '../../../../model/res/widgets/header.dart';
 import '../../../Providers/Language/new/translation_new_provider.dart';
 import '../../../controller/translation_controller.dart';
+import '../../../model/data/user_model.dart';
 import 'Components/about_section.dart';
 import 'Components/info_section.dart';
 
@@ -20,6 +21,7 @@ class DoctorDetailScreen extends StatelessWidget {
     required this.patients,
     required this.reviews,
     required this.image,
+    required this.model,
   });
 
   final String doctorName;
@@ -29,6 +31,7 @@ class DoctorDetailScreen extends StatelessWidget {
   final String patients;
   final String reviews;
   final String image;
+  final UserModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +63,12 @@ class DoctorDetailScreen extends StatelessWidget {
                     yearsOfExperience: yearsOfExperience,
                     patients: patients,
                     reviews: reviews,
+                    model: model,
                   ),
                   AboutSection(
                     doctorDetail: providerP.translations[doctorDetail] ?? doctorDetail,
                     image: image,
+                    model: model,
                   ),
                 ],
               ),

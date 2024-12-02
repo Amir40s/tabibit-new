@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/model/data/user_model.dart';
 
 import '../../../../../constant.dart';
 import '../../../../../model/res/constant/app_fonts.dart';
@@ -13,10 +14,12 @@ class AboutSection extends StatelessWidget {
   const AboutSection({
     super.key,
     required this.doctorDetail,
-    required this.image
+    required this.image,
+    required this.model,
   });
 
   final String doctorDetail,image;
+  final UserModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +61,7 @@ class AboutSection extends StatelessWidget {
             press: () {
               Get.to(()=>AppointmentScheduleScreen(
                 image: image,
+                model: model,
               ));
             },)
         ],

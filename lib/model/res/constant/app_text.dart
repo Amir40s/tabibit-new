@@ -10,6 +10,7 @@ class AppText{
     "Next",
     "Remind",
     "Decline",
+    "Delete",
     "Amount Status:",
     "Date",
     "Dosage",

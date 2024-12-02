@@ -40,6 +40,11 @@ class SignInProvider extends ChangeNotifier{
   TextEditingController specialityDetailC = TextEditingController();
   TextEditingController yearsOfExperienceC = TextEditingController();
   TextEditingController appointmentFeeC = TextEditingController();
+  TextEditingController diplomaController = TextEditingController();
+  TextEditingController professionalExpController = TextEditingController();
+  TextEditingController languageController = TextEditingController();
+  TextEditingController inOfficeFeeC = TextEditingController();
+  TextEditingController homeVisitFeeC = TextEditingController();
   bool _isSignInPasswordShow = true;
   bool _isLoading = false;
 

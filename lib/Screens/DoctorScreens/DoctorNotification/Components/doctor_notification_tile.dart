@@ -64,7 +64,7 @@ class DoctorNotificationTile extends StatelessWidget {
                     child: TextWidget(
                       text: subTitle,
                       fontSize: 14.sp, fontWeight: FontWeight.w400,
-                      isTextCenter: false, textColor: textColor, maxLines: 1,),
+                      isTextCenter: false, textColor: textColor),
                   ),
 
                 ],

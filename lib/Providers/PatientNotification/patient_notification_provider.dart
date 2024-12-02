@@ -22,13 +22,13 @@ class PatientNotificationProvider extends ChangeNotifier {
     required String subTitle,
     required String type,
   })async{
-    final docId = DateTime.now().millisecondsSinceEpoch;
-    await fireStore.collection("users").doc(auth.currentUser!.uid)
+    final docId = DateTime.now().millisecondsSinceEpoch.toString();
+    await fireStore.collection("users").doc(auth.currentUser?.uid)
         .collection("notifications").doc(docId.toString()).set({
-      "id": docId,
+      "date": docId,
       "title": title,
-      "subTitle": subTitle,
-      "read": "false",
+      "subtitle": subTitle,
+      "read": false,
       "type": type,
     });
   }
@@ -43,10 +43,11 @@ class PatientNotificationProvider extends ChangeNotifier {
 
   Stream<List<NotificationModel>> fetchNotifications() {
     return fireStore.collection('users')
-        .doc(auth.currentUser!.uid)
+        .doc(auth.currentUser?.uid)
         .collection("notifications")
+        .orderBy("date", descending: true)
         .snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => NotificationModel.fromDocumentSnapshot(doc)).toList();
+      return snapshot.docs.map((doc) => NotificationModel.fromMap(doc.data())).toList();
     });
   }
 

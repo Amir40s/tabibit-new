@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -127,7 +128,8 @@ class TranslationProvider with ChangeNotifier {
         notifyListeners();
         return null;
       }
-    } catch (e) {
+    } catch (e,s) {
+      FirebaseCrashlytics.instance.recordError(e, s);
       log("Error: ${e.toString()}");
       return null;
     }
@@ -203,10 +205,11 @@ class TranslationProvider with ChangeNotifier {
           notifyListeners();
         }
       }
-    } catch (e) {
+    } catch (e,s) {
       for (var text in texts) {
         _translatedTexts[text] = text;
       }
+      FirebaseCrashlytics.instance.recordError(e, s);
       notifyListeners();
     }
   }

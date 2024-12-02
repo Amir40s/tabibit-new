@@ -25,6 +25,7 @@ class SignUpProvider extends ChangeNotifier{
 
   String _otp = "";
   bool _isCheck = false;
+  bool _isPrivacy = false;
   bool _isLoading = false;
   bool _isSignUpPasswordShow = true;
   bool _isSignUpConfirmPasswordShow = true;
@@ -36,6 +37,7 @@ class SignUpProvider extends ChangeNotifier{
   TextEditingController confirmPasswordC = TextEditingController();
   String get otp => _otp;
   bool get isCheck => _isCheck;
+  bool get isPrivacy => _isPrivacy;
   bool get isLoading => _isLoading;
   bool get isSignUpPasswordShow => _isSignUpPasswordShow;
   bool get isSignUpConfirmPasswordShow => _isSignUpConfirmPasswordShow;
@@ -55,6 +57,11 @@ class SignUpProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  checkPrivacy(bool isCheck){
+    _isPrivacy = isCheck;
+    notifyListeners();
+  }
+
   showSignUpPassword(){
     _isSignUpPasswordShow = !_isSignUpPasswordShow;
     notifyListeners();
@@ -70,7 +77,8 @@ class SignUpProvider extends ChangeNotifier{
     required yearsOfExperience, required appointmentFrom,
     required appointmentTo, required appointmentFee,
     required type, required country, required location,
-    required latitude, required longitude
+    required latitude, required longitude, required diploma,required language,
+    required professionalExperience, required inOfficeFee, required homeVisitFee,required phoneNumber
   }) async{
     _isLoading = true;
     notifyListeners();
@@ -97,7 +105,7 @@ class SignUpProvider extends ChangeNotifier{
                 "userUid": userUID,
                 "email": emailC.text.toString(),
                 "name": nameC.text,
-                "phoneNumber": phoneC.text,
+                "phoneNumber": phoneNumber,
                 "country": country,
                 "birthDate": "",
                 "memberShip": "No",
@@ -117,6 +125,11 @@ class SignUpProvider extends ChangeNotifier{
                 "appointmentFee": appointmentFee,
                 "reviews": "0",
                 "patients": "0",
+                "diploma": diploma,
+                "language": language,
+                "professionalExperience": professionalExperience,
+                "inOfficeFee": inOfficeFee,
+                "homeVisitFee": homeVisitFee,
                 "userType": type,
                 "balance": "0.0",
                 "accountType": "Custom",

@@ -27,6 +27,11 @@ class UserModel {
   final String longitude;
   final String accountType;
   final String deviceToken;
+  final String diploma;
+  final String language;
+  final String professionalExperience;
+  final String homeVisitFee;
+  final String inOfficeFee;
   final bool isFav;
 
   UserModel({
@@ -57,6 +62,11 @@ class UserModel {
     required this.accountType,
     required this.deviceToken,
     required this.isFav,
+    required this.diploma,
+    required this.language,
+    required this.homeVisitFee,
+    required this.inOfficeFee,
+    required this.professionalExperience,
   });
 
   // Factory method to create a UserModel from FireStore data
@@ -89,6 +99,11 @@ class UserModel {
       longitude: data['longitude'] ?? '',
       accountType: data['accountType'] ?? '',
       deviceToken: data['deviceToken'] ?? '',
+      homeVisitFee: data['homeVisitFee'] ?? '',
+      inOfficeFee: data['inOfficeFee'] ?? '',
+      diploma: data['diploma'] ?? '',
+      language: data['language'] ?? '',
+      professionalExperience: data['professionalExperience'] ?? '',
       isFav: data['isFav'] ?? false,
     );
   }

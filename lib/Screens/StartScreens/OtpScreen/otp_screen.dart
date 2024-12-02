@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/actionProvider/country_code_picker.dart';
 import '../../../Providers/Location/location_provider.dart';
 import '../../../Providers/SignIn/sign_in_provider.dart';
 import '../../../Providers/SignUp/sign_up_provider.dart';
+import '../../../Providers/TwilioProvider/twilio_provider.dart';
 import '../../../constant.dart';
 import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 import '../../../model/res/constant/app_fonts.dart';
@@ -12,7 +14,8 @@ import '../../../model/res/widgets/text_widget.dart';
 import '../../../model/res/widgets/toast_msg.dart';
 
 class OtpScreen extends StatelessWidget {
-  OtpScreen({super.key,});
+  final String type;
+  OtpScreen({super.key,this.type = "new"});
 
   final pinC = TextEditingController();
   final appUtils = AppUtils();
@@ -25,6 +28,8 @@ class OtpScreen extends StatelessWidget {
     double height2 = 30.0;
     final signInP = Provider.of<SignInProvider>(context,listen: false);
     final locationP = Provider.of<LocationProvider>(context,listen: false);
+    final counp = Provider.of<CountryPickerProvider>(context,listen: false);
+    final twilioProvider = Provider.of<TwilioProvider>(context,listen: false);
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -84,13 +89,21 @@ class OtpScreen extends StatelessWidget {
                     return InkWell(
                         onTap: () async {
                           int otp = AppUtils().generateUniqueNumber();
-                          await appUtils.sendMail(
-                              recipientEmail: value.emailC.text.toString(),
-                              otpCode: otp.toString(),
-                              context: context
-                          );
+
+                          if(type == "forgot"){
+                            await twilioProvider.sendSmsReminder(
+                              counp.enteredPhoneNumber,
+                              "Your TabibiNet Account Recovery Verification Code is: ${otp.toString()}\nPlease Don't Share OTP Code anyone",
+                            );
+                          }else{
+                            await twilioProvider.sendSmsReminder(
+                              counp.enteredPhoneNumber,
+                              "Your TabibiNet Verification Code is: ${otp.toString()}",
+                            );
+                          }
+
                           Provider.of<SignUpProvider>(context,listen: false).setOTP(otp.toString());
-                          // Get.to(()=>SignUpScreen());
+                          ToastMsg().toastMsg("Otp Send Successfully");
                         },
                         child: const TextWidget(
                           text: "Resend", fontSize: 16, fontWeight: FontWeight.w400,
@@ -115,8 +128,12 @@ class OtpScreen extends StatelessWidget {
                   press: () async {
                     FocusScope.of(context).unfocus();
                     if(value.otp == pinC.text){
-                      // sentOTP(value.emailC.text.toString());
-                      await value.signUp(
+
+                      if(type == "forgot"){
+
+                      }else{
+                        await value.signUp(
+                          phoneNumber: counp.enteredPhoneNumber,
                           speciality:  signInP.speciality,
                           specialityId: signInP.specialityId,
                           specialityDetail:  signInP.specialityDetailC.text.toString(),
@@ -128,8 +145,14 @@ class OtpScreen extends StatelessWidget {
                           country: locationP.countryName,
                           location: locationP.userLocation,
                           latitude: locationP.latitude,
-                          longitude: locationP.longitude
-                      );
+                          longitude: locationP.longitude,
+                          diploma: signInP.diplomaController.text.toString(),
+                          language: signInP.languageController.text.toString(),
+                          professionalExperience: signInP.professionalExpController.text.toString(),
+                          inOfficeFee: signInP.inOfficeFeeC.text.toString(),
+                          homeVisitFee: signInP.homeVisitFeeC.text.toString(),
+                        );
+                      }
                     }
                     else{
                       ToastMsg().toastMsg("OTP is Incorrect");

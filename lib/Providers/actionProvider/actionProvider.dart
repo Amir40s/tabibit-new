@@ -6,7 +6,6 @@ import 'package:tabibinet_project/constant.dart';
 class ActionProvider extends ChangeNotifier{
   int _selectedIndex = 0;
   final Map<int, bool> _isHovered = {};
-  final Map<int, bool> _isLoading = {};
 
 
   String _otpCode = "";
@@ -28,7 +27,6 @@ class ActionProvider extends ChangeNotifier{
 
   int get selectedIndex => _selectedIndex;
   bool  isHovered(int index) => _isHovered[index] ?? false;
-  bool  isLoading(int index) => _isLoading[index] ?? false;
 
   void selectMenu(int index) {
     _selectedIndex = index;
@@ -40,10 +38,6 @@ class ActionProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  void setLoading(bool isLoading) {
-    _isLoading[0] = isLoading;
-    notifyListeners();
-  }
 
 
   void setOtpCode(String code){
@@ -51,14 +45,6 @@ class ActionProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  // Static methods to start and stop loading globally
-  static void startLoading() {
-    _instance.setLoading(true);
-  }
-
-  static void stopLoading() {
-    _instance.setLoading(false);
-  }
   ///to update the value of button on updating speciality
   String _buttonText = 'Add';
   String? _editingId;
@@ -196,5 +182,19 @@ class ActionProvider extends ChangeNotifier{
     await fireStore.collection("users").doc(uid).update({
       "isOnline" : false
     });
+  }
+
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  void startLoading() {
+    _isLoading = true;
+    notifyListeners();
+  }
+
+  void stopLoading() {
+    _isLoading = false;
+    notifyListeners();
   }
 }

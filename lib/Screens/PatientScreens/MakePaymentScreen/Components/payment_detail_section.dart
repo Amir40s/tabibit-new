@@ -68,7 +68,7 @@ class PaymentDetailSection extends StatelessWidget {
             trailing: Consumer<PatientAppointmentProvider>(
               builder: (context, value, child) {
                 return TextWidget(
-                    text: "${value.selectFee} MAD", fontSize: 16,
+                    text: "${value.selectedFee} MAD", fontSize: 16,
                     fontWeight: FontWeight.w400, isTextCenter: false,
                     textColor: themeColor,fontFamily: AppFonts.semiBold,
                 );

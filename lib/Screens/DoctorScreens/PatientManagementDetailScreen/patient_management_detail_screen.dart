@@ -41,6 +41,9 @@ class PatientManagementDetailScreen extends StatelessWidget {
     required this.patientEmail,
     required this.doctorEmail,
     required this.profilePic,
+    required this.patientDeviceToken,
+    required this.patientId,
+    required this.doctorName,
   });
 
   final String appointmentId;
@@ -51,6 +54,9 @@ class PatientManagementDetailScreen extends StatelessWidget {
   final String patientEmail;
   final String doctorEmail;
   final String profilePic;
+  final String patientDeviceToken;
+  final String patientId;
+  final String doctorName;
 
 
   @override
@@ -111,6 +117,9 @@ class PatientManagementDetailScreen extends StatelessWidget {
                                 patientName: patientName,
                                 patientAge: patientAge,
                                 patientGender: patientGender,
+                                patientId: patientId,
+                                doctorName: doctorName,
+                                deviceToken: patientDeviceToken,
                               ));
                             },
                           ),
@@ -126,6 +135,9 @@ class PatientManagementDetailScreen extends StatelessWidget {
                                 patientGender: patientGender,
                                 patientName: patientName,
                                 userProblem: userProblem,
+                                deviceToken: patientDeviceToken,
+                                patientId: patientId,
+                                doctorName: doctorName,
 
                               ));
                             },
@@ -150,7 +162,8 @@ class PatientManagementDetailScreen extends StatelessWidget {
                                   patientName: patientName,
                                   patientAge: patientAge,
                                   patientGender: patientGender,
-                                  userProblem: userProblem));
+                                  userProblem: userProblem
+                              ));
                             },
                           ),
                           SizedBox(width: 4.w,),
@@ -161,7 +174,10 @@ class PatientManagementDetailScreen extends StatelessWidget {
                             onTap: () {
                               Get.to(()=> PrescribeMedicineScreen(
                                   appointmentId: appointmentId,
-                                  isVisible: true
+                                  isVisible: true,
+                                  deviceToken: patientDeviceToken,
+                                  doctorName: doctorName,
+                                  patientId: patientId,
                               ));
                             },
                           ),

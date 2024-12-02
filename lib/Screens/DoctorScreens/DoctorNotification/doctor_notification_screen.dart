@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
@@ -9,23 +8,16 @@ import '../../../constant.dart';
 import '../../../model/data/notification_model.dart';
 import '../../../model/res/constant/app_fonts.dart';
 import '../../../model/res/constant/app_icons.dart';
-import '../../../model/res/widgets/dotted_line.dart';
 import '../../../model/res/widgets/header.dart';
 import '../../../model/res/widgets/text_widget.dart';
-import '../../PatientScreens/NotificationScreen/Components/notification_container.dart';
 import 'Components/doctor_notification_tile.dart';
 
 class DoctorNotificationScreen extends StatelessWidget {
   DoctorNotificationScreen({super.key});
 
-  String? _selectedItem;
-
-  final List<String> _dropdownItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
-
   @override
   Widget build(BuildContext context) {
     final notificationP = Provider.of<PatientNotificationProvider>(context, listen: false);
-    double height = 20;
     final languageP = Provider.of<TranslationProvider>(context);
     return SafeArea(
       child: Scaffold(
@@ -37,14 +29,10 @@ class DoctorNotificationScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  Row(
-                    children: [
-                      TextWidget(
-                        text: "Latest Update", fontSize: 20,
-                        fontWeight: FontWeight.w600, isTextCenter: false,
-                        textColor: textColor, fontFamily: AppFonts.semiBold,),
-                    ],
-                  ),
+                  const TextWidget(
+                    text: "Latest Update", fontSize: 20,
+                    fontWeight: FontWeight.w600, isTextCenter: false,
+                    textColor: textColor, fontFamily: AppFonts.semiBold,),
                   const SizedBox(height: 20,),
                   Consumer<TranslationNewProvider>(
                       builder: (context,provider,child){
@@ -68,7 +56,7 @@ class DoctorNotificationScreen extends StatelessWidget {
                             if (provider.notificationTranslationList.isEmpty) {
                               provider.translateNotification(
                                 nots.map((e) => e.title).toList() +
-                                    nots.map((e) => e.subTitle).toList(),
+                                    nots.map((e) => e.subtitle).toList(),
                               );
                             }
 
@@ -80,13 +68,14 @@ class DoctorNotificationScreen extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final not = nots[index];
                                 final title = provider.notificationTranslationList[not.title] ?? not.title;
-                                final subtitle = provider.notificationTranslationList[not.subTitle] ?? not.subTitle;
+                                final subtitle = provider.notificationTranslationList[not.subtitle] ?? not.subtitle;
                                 return DoctorNotificationTile(
                                     title: title,
                                     subTitle: subtitle,
                                     timeText: "",
                                     icon: AppIcons.upcomingEventIcon,
-                                    iconBgColor: Color(0xffFFECCC));
+                                    iconBgColor: const Color(0xffFFECCC)
+                                );
                               },);
                           },
                         );

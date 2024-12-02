@@ -5,6 +5,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
+import 'package:tabibinet_project/model/res/components/phone_number_widget.dart';
 import 'package:tabibinet_project/model/res/constant/app_fonts.dart';
 import 'package:tabibinet_project/model/res/widgets/toast_msg.dart';
 
@@ -85,21 +86,22 @@ class PatientDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600, isTextCenter: false,
                         textColor: textColor, fontFamily: AppFonts.semiBold,),
                       SizedBox(height: height1,),
-                      ValidatedTextField(
-                        validator: (value) {
-                          if (!RegExp(phonePattern).hasMatch(value ?? '')) {
-                            return languageP.translatedTexts["Please enter a valid phone number with country code"] ?? "Please enter a valid phone number with country code";
-                          }
-                          return null;
-                        },
-                        inputController: patientAppointmentP.phoneC,
-                        hintText: "Phone Number",
-                        type: TextInputType.phone,
-                        suffixIcon: const Padding(
-                          padding: EdgeInsets.all(9.0),
-                          child: Icon(Icons.phone_in_talk_rounded,color: greyColor,),
-                        ),
-                      ),
+                      PhoneNumberWidget(controller: patientAppointmentP.phoneC,),
+                      // ValidatedTextField(
+                      //   validator: (value) {
+                      //     if (!RegExp(phonePattern).hasMatch(value ?? '')) {
+                      //       return languageP.translatedTexts["Please enter a valid phone number with country code"] ?? "Please enter a valid phone number with country code";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   inputController: patientAppointmentP.phoneC,
+                      //   hintText: "Phone Number",
+                      //   type: TextInputType.phone,
+                      //   suffixIcon: const Padding(
+                      //     padding: EdgeInsets.all(9.0),
+                      //     child: Icon(Icons.phone_in_talk_rounded,color: greyColor,),
+                      //   ),
+                      // ),
                       SizedBox(height: height1,),
                       const TextWidget(
                         text: "Gender", fontSize: 14,

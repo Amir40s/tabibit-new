@@ -690,16 +690,16 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                 },
               ),
-              _buildIconOption(
-                  icon: Icons.audiotrack,
-                  label: 'Audio',
-                  color: Colors.blue,
-                  press: () {
-
-                  },
-                  onLongPressStart: _onLongPressStart,
-                  onLongPressEnd: _onLongPressEnd
-              ),
+              // _buildIconOption(
+              //     icon: Icons.audiotrack,
+              //     label: 'Audio',
+              //     color: Colors.blue,
+              //     press: () {
+              //
+              //     },
+              //     onLongPressStart: _onLongPressStart,
+              //     onLongPressEnd: _onLongPressEnd
+              // ),
             ],
           ),
         );
@@ -707,46 +707,6 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _onLongPressStart() async {
-    log("Long press started");
-    var audioPlayer = AudioPlayer();
-    await audioPlayer.play(AssetSource("Notification.mp3"));
-    audioPlayer.onPlayerComplete.listen((a) {
-      audioController.start.value = DateTime.now();
-      // startRecord();
-      audioController.isRecording.value = true;
-    });
-  }
-
-  void _onLongPressEnd() {
-    log("Long press ended");
-    // Add your logic here (e.g., revert UI, stop animation, etc.)
-  }
-
-  // void startRecord() async {
-  //   bool hasPermission = await checkPermission();
-  //   if (hasPermission) {
-  //     recordFilePath = await getFilePath();
-  //     RecordMp3.instance.start(recordFilePath, (type) {
-  //       setState(() {});
-  //     });
-  //   } else {}
-  //   setState(() {});
-  // }
-  //
-  //
-  // void stopRecord() async {
-  //   bool stop = RecordMp3.instance.stop();
-  //   audioController.end.value = DateTime.now();
-  //   audioController.calcDuration();
-  //   var ap = AudioPlayer();
-  //   await ap.play(AssetSource("Notification.mp3"));
-  //   ap.onPlayerComplete.listen((a) {});
-  //   if (stop) {
-  //     audioController.isRecording.value = false;
-  //     audioController.isSending.value = true;
-  //   }
-  // }
 
   int i = 0;
 
@@ -797,8 +757,8 @@ class _ChatScreenState extends State<ChatScreen> {
             backgroundColor: color,
             child: Icon(icon, size: 30, color: Colors.white),
           ),
-          SizedBox(height: 8),
-          Text(label, style: TextStyle(fontSize: 16)),
+          const SizedBox(height: 8),
+          Text(label, style: const TextStyle(fontSize: 16)),
         ],
       ),
     );
@@ -1000,13 +960,4 @@ class PlayButton extends StatelessWidget {
     );
   }
 
-
-
-// Future<void> _deleteSelectedMessages() async {
-//   final provider = Provider.of<ChatProvider>(context, listen: false);
-//   for (String messageId in selectedMessages) {
-//     await provider.deleteMessage(widget.chatRoomId, messageId);
-//   }
-//   Fluttertoast.showToast(msg: "Selected messages deleted");
-// }
 }

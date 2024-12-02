@@ -16,7 +16,6 @@ import 'package:tabibinet_project/model/res/widgets/header.dart';
 import 'package:tabibinet_project/model/res/widgets/no_found_card.dart';
 
 import '../../../Providers/DoctorAppointment/doctor_appointment_provider.dart';
-import '../../../Providers/PatientAppointment/patient_appointment_provider.dart';
 import '../../../Providers/PatientHome/patient_home_provider.dart';
 import '../../../model/data/appointment_model.dart';
 import '../../../model/res/constant/app_fonts.dart';

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,6 +39,16 @@ class LocationProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  void showSuggestions() {
+    suggestions = true;
+    notifyListeners();
+  }
+
+  void hideSuggestions() {
+    suggestions = false;
+    notifyListeners();
+  }
+
   CameraPosition kGooglePlex = const CameraPosition(
     target: LatLng(31.418715, 73.079109),
     zoom: 14,
@@ -45,29 +56,21 @@ class LocationProvider extends ChangeNotifier{
 
   Future<Position> getUserCurrentLocation(BuildContext context) async {
     LocationPermission permission = await Geolocator.checkPermission();
-
-    // Check if location permission is already granted
     if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
       return await Geolocator.getCurrentPosition();
     } else if (permission == LocationPermission.denied) {
-      // If permission is denied, request it
       permission = await Geolocator.requestPermission();
 
       if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
-        // Permission granted after requesting
         return await Geolocator.getCurrentPosition();
       } else if (permission == LocationPermission.denied) {
         await openAppSettings();
-        // If permission is denied permanently, show dialog to open app settings
         _showPermissionDialog(context);
       }
     } else if (permission == LocationPermission.deniedForever) {
       await openAppSettings();
-      // Permission denied forever, user needs to manually enable it from settings
       _showPermissionDialog(context);
     }
-
-    // Return a default position if permission is denied or not granted
     return Future.error('Location permissions are not granted.');
   }
 
@@ -117,15 +120,23 @@ class LocationProvider extends ChangeNotifier{
             " ${place.reversed.last.locality}, ${place.reversed.last.postalCode} ${place.reversed.last.country}";
         notifyListeners();
       });
-    }catch(e){
+    }catch(e,s){
+      FirebaseCrashlytics.instance.recordError(e, s);
       log(e.toString());
     }
   }
 
   moveLocation(latitude,longitude,index) async {
 
+    if (latitude == null || longitude == null) {
+      latitude = 31.418715;
+      longitude = 73.079109;
+    }
+
     _latitude = latitude.toString();
     _longitude= longitude.toString();
+
+
 
     List<Placemark> place = await placemarkFromCoordinates(latitude, longitude);
     _userLocation = "${place.reversed.last.street}, ${place.reversed.last.subLocality},"
@@ -138,17 +149,24 @@ class LocationProvider extends ChangeNotifier{
         target: LatLng(latitude,longitude),
         zoom: 14
     );
-    GoogleMapController controller = await gController.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(latitude,longitude),
-            zoom: 14
-        )
-    ));
+
+    if(gController.isCompleted){
+      GoogleMapController controller = await gController.future;
+      await controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(latitude,longitude),
+              zoom: 14
+          )
+      ));
+    }
     log(_userLocation);
     log(_latitude);
     log(_longitude);
     notifyListeners();
+  }
+
+  void onSearchChanged(String value) {
+    onChanged(value);
   }
 
   onChanged(searchResult){
@@ -164,25 +182,29 @@ class LocationProvider extends ChangeNotifier{
     String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request = '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$sessionToken';
 
-    var response = await http.get(Uri.parse(request));
-    var data = response.body.toString();
-    log("data");
-    log(data);
-    if(response.statusCode == 200){
-      placesList = jsonDecode(response.body.toString())["predictions"];
-      notifyListeners();
-    }else{
-      throw Exception("Failed to Load ");
+    try {
+      var response = await http.get(Uri.parse(request));
+      log("Response data: ${response.body}");
+      if (response.statusCode == 200) {
+         placesList = jsonDecode(response.body)["predictions"];
+        notifyListeners();
+      } else {
+        throw Exception("Failed to load suggestions");
+      }
+    } catch (e, s) {
+      FirebaseCrashlytics.instance.recordError(e, s);
+      log('Error occurred: $e', error: e, stackTrace: s);
+      rethrow;
     }
 
   }
 
-// @override
-// void dispose() {
-//   if (gController.isCompleted) {
-//     gController.future.then((controller) => controller.dispose());
-//   }
-//   super.dispose();
-// }
+@override
+void dispose() {
+  if (gController.isCompleted) {
+    gController.future.then((controller) => controller.dispose());
+  }
+  super.dispose();
+}
 
 }

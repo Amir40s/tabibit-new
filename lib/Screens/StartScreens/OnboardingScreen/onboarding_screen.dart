@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/language_provider.dart';
 import 'package:tabibinet_project/Providers/Onboard/onboard_provider.dart';
-import 'package:tabibinet_project/Screens/StartScreens/LanguageScreen/language_screen.dart';
+import 'package:tabibinet_project/Screens/StartScreens/AccountTypeScreen/account_type_screen.dart';
+import 'package:tabibinet_project/Screens/StartScreens/LocationScreen/location_screen.dart';
 import 'package:tabibinet_project/model/res/constant/app_assets.dart';
 import '../../../constant.dart';
 import '../../../model/res/widgets/text_widget.dart';
@@ -16,19 +16,19 @@ class OnboardingScreen extends StatelessWidget {
 
   final List<Map<String, String>> onboardingData = [
     {
-      'text1': "Médecin expert ",
-      'text2': 'Conseils en ligne',
-      'text3': 'Accédez à une expertise médicale de haut niveau dans le confort de votre maison. Notre plateforme vous met en relation avec des médecins spécialisés pour des conseils et des soins personnalisés, à tout moment et en tout lieu.',
+      'text1': "Expert Doctor ",
+      'text2': 'Advice Online',
+      'text3': 'Access top-tier medical expertise from the comfort of your home. Our platform connects you with specialized doctors for personalized advice and care, anytime, anywhere.',
     },
     {
-      'text1': "Assistance médicale, toujours",
-      'text2': 'Prêt',
-      'text3': "Nos médecins dévoués sont là pour vous soutenir 24h/24 et 7j/7. Qu'il s'agisse d'une simple consultation ou d'un conseil urgent, vous pouvez compter sur nous pour être là lorsque vous en avez le plus besoin.",
+      'text1': "Doctor Support, Always",
+      'text2': 'Ready',
+      'text3': "Our dedicated doctors are here to support you 24/7. Whether it's a simple consultation or urgent advice, you can count on us to be there when you need it most.",
     },
     {
-      'text1': "Restez en bonne santé,",
-      'text2': 'Restez connecté',
-      'text3': "Votre santé est notre priorité. Restez en contact avec vos prestataires de soins de santé et maintenez votre bien-être grâce à des soins et un soutien continus et fluides.",
+      'text1': "Stay Healthy,",
+      'text2': 'Stay Connected',
+      'text3': "Your health is our priority. Stay connected with your healthcare providers and maintain your well-being through seamless, continuous care and support.",
     },
   ];
 
@@ -221,7 +221,7 @@ class OnboardingScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Get.to(() => LanguageScreen(isNextButton: true));
+                                Get.to(() => const LocationScreen());
                               },
                               child: const TextWidget(
                                   text: "Skip",
@@ -236,7 +236,7 @@ class OnboardingScreen extends StatelessWidget {
                                 if (value.currentIndex < onboardingData.length - 1) {
                                   value.nextIndex();
                                 } else {
-                                  Get.to(() => LanguageScreen(isNextButton: true));
+                                  Get.to(() =>const LocationScreen());
                                 }
                               },
                               child: Container(

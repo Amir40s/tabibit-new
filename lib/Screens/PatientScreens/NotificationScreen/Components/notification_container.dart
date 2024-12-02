@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tabibinet_project/model/res/constant/app_utils.dart';
 
 import '../../../../constant.dart';
 import '../../../../model/res/constant/app_fonts.dart';
@@ -17,6 +18,7 @@ class NotificationContainer extends StatelessWidget {
     required this.image,
     required this.iconColor,
     required this.boxColor,
+    required this.time,
     required this.isButton,
     required this.onTap,
   });
@@ -24,6 +26,7 @@ class NotificationContainer extends StatelessWidget {
   final String title;
   final String subTitle;
   final String image;
+  final String time;
   final Color iconColor;
   final Color boxColor;
   final bool isButton;
@@ -67,10 +70,23 @@ class NotificationContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget(
-                      text: title, fontSize: 16,
-                      fontWeight: FontWeight.w600, isTextCenter: false,
-                      textColor: textColor, fontFamily: AppFonts.semiBold,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 56.w,
+                          child: TextWidget(
+                            text: title, fontSize: 16,
+                            fontWeight: FontWeight.w600, isTextCenter: false,
+                            textColor: textColor, fontFamily: AppFonts.semiBold,),
+                        ),
+
+                        // TextWidget(
+                        //   text: AppUtils().getRelativeTime(time), fontSize: 10,
+                        //   fontWeight: FontWeight.normal, isTextCenter: false,
+                        //   textColor: Colors.black, fontFamily: AppFonts.semiBold,),
+                      ],
+                    ),
                     const SizedBox(height: 10,),
                     SizedBox(
                       width: 56.w,

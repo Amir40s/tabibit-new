@@ -101,6 +101,7 @@ class SpecificDoctorScreen extends StatelessWidget {
                                       patients: doc.patients,
                                       reviews: doc.reviews,
                                       image: doc.profileUrl,
+                                      model: doc,
                                     ));
                                   },
                                 );

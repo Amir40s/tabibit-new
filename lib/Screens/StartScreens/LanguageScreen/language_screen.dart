@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Screens/StartScreens/OnboardingScreen/onboarding_screen.dart';
 import 'package:tabibinet_project/controller/translation_controller.dart';
 import 'package:tabibinet_project/model/res/constant/app_text.dart';
 import 'package:tabibinet_project/model/services/SharedPreference/shared_preference.dart';
@@ -12,6 +13,7 @@ import '../../../controller/doctoro_specialiaty_controller.dart';
 import '../../../model/res/constant/app_icons.dart';
 import '../../../model/res/widgets/submit_button.dart';
 import '../../../model/res/widgets/text_widget.dart';
+import '../AccountTypeScreen/account_type_screen.dart';
 import '../LocationScreen/location_screen.dart';
 import 'Components/language_container.dart';
 
@@ -89,7 +91,7 @@ class LanguageScreen extends StatelessWidget {
                 title: isNextButton? "Next" : languageP.translatedTexts["Select"] ?? "Select",
                 press: () {
                   if(isNextButton){
-                  Get.to(()=>const LocationScreen());
+                  Get.to(()=> OnboardingScreen());
                   }else{
                     Get.back();
                   }

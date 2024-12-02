@@ -10,7 +10,9 @@ import '../../../../../constant.dart';
 import '../../../../../model/res/constant/app_fonts.dart';
 import '../../../../../model/res/widgets/text_widget.dart';
 import '../../../../Providers/translation/translation_provider.dart';
+import '../../../../model/data/user_model.dart';
 import '../../../../model/res/constant/app_icons.dart';
+import '../../reviews/doctor_review_list_screen.dart';
 
 class InfoSection extends StatelessWidget {
   const InfoSection({
@@ -20,6 +22,7 @@ class InfoSection extends StatelessWidget {
     required this.yearsOfExperience,
     required this.patients,
     required this.reviews,
+    required this.model,
   });
 
   final String doctorName;
@@ -27,6 +30,7 @@ class InfoSection extends StatelessWidget {
   final String yearsOfExperience;
   final String patients;
   final String reviews;
+  final UserModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -118,18 +122,23 @@ class InfoSection extends StatelessWidget {
                 ),
                 child: SvgPicture.asset(AppIcons.msgIcon, height: 18.sp,),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget(
-                      text: languageP.translatedTexts["Reviews"] ?? "Reviews", fontSize: 12.sp,
-                      fontWeight: FontWeight.w400, isTextCenter: false,
-                      textColor: bgColor),
-                  TextWidget(
-                    text: "#$reviews", fontSize: 12.sp,
-                    fontWeight: FontWeight.w600, isTextCenter: false,
-                    textColor: bgColor, fontFamily: AppFonts.semiBold,),
-                ],
+              GestureDetector(
+                onTap: (){
+                  Get.to(DoctorReviewListScreen(model: model,),transition: Transition.rightToLeft);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextWidget(
+                        text: languageP.translatedTexts["Reviews"] ?? "Reviews", fontSize: 12.sp,
+                        fontWeight: FontWeight.w400, isTextCenter: false,
+                        textColor: bgColor),
+                    TextWidget(
+                      text: "#$reviews", fontSize: 12.sp,
+                      fontWeight: FontWeight.w600, isTextCenter: false,
+                      textColor: bgColor, fontFamily: AppFonts.semiBold,),
+                  ],
+                ),
               )
             ],)
         ],

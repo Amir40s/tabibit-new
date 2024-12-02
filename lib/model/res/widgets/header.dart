@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Screens/PatientScreens/PatientMessageScreen/patient_message_screen.dart';
 import 'package:tabibinet_project/model/res/widgets/text_widget.dart';
 
+import '../../../Providers/TwilioProvider/twilio_provider.dart';
 import '../../../constant.dart';
 import '../constant/app_fonts.dart';
 import 'image_loader.dart';
@@ -17,16 +19,18 @@ class Header extends StatelessWidget {
     required this.text,
     this.iconColor,
     this.boxColor,
+    this.isPadding = true,
   });
 
   final String text;
   final Color? iconColor;
   final Color? boxColor;
+  final bool isPadding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+      padding:  EdgeInsets.symmetric(horizontal: isPadding ? 20.0 : 0.0,vertical: isPadding ? 10 : 0),
       child: SizedBox(
         height: 8.h,
         child: Row(
@@ -47,12 +51,13 @@ class Header extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15,),
-            SizedBox(
-              width: 70.w,
-              child: TextWidget(
-                text: text, fontSize: 19.sp,
-                fontWeight: FontWeight.w600, isTextCenter: false,
-                textColor: textColor,fontFamily: AppFonts.semiBold,),
+            Expanded(
+              child: SizedBox(
+                child: TextWidget(
+                  text: text, fontSize: 19.sp,
+                  fontWeight: FontWeight.w600, isTextCenter: false,
+                  textColor: textColor,fontFamily: AppFonts.semiBold,),
+              ),
             ),
           ],
         ),

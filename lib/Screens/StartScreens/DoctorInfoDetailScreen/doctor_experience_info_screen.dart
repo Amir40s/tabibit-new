@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:tabibinet_project/Screens/StartScreens/DoctorInfoDetailScreen/doctor_experience_info_screen.dart';
 import 'package:tabibinet_project/Screens/StartScreens/SignUpScreen/sign_up_screen.dart';
 
 import '../../../Providers/SignIn/sign_in_provider.dart';
@@ -15,8 +14,8 @@ import '../SignInScreen/signin_screen.dart';
 import 'Components/doctor_appointment_time_section.dart';
 import 'Components/speciality_dropdown.dart';
 
-class DoctorInfoDetailScreen extends StatelessWidget {
-  DoctorInfoDetailScreen({super.key});
+class DoctorExperienceInfoScreen extends StatelessWidget {
+  DoctorExperienceInfoScreen({super.key});
 
   final formKey = GlobalKey<FormState>();
 
@@ -58,7 +57,7 @@ class _DoctorInfoForm extends StatelessWidget {
           SizedBox(height: height),
           const Center(
             child: TextWidget(
-              text: "Add Information",
+              text: "Add Experience Information",
               fontSize: 24,
               fontWeight: FontWeight.w600,
               isTextCenter: false,
@@ -76,55 +75,26 @@ class _DoctorInfoForm extends StatelessWidget {
             ),
           ),
           SizedBox(height: height1),
-         const _SectionTitle(title: "Speciality"),
-          SizedBox(height: height2),
-          const SpecialityDropdown(),
-          SizedBox(height: height1),
-          const _SectionTitle(title: "Years of Experience"),
+          const _SectionTitle(title: "Years of Professional Experience"),
           SizedBox(height: height2),
           InputField(
-            inputController: signInProvider.yearsOfExperienceC,
-            hintText: "Enter Experience",
+            inputController: signInProvider.professionalExpController,
+            hintText: "Enter Professional Experience",
             type: TextInputType.number,
           ),
           SizedBox(height: height1),
-          const _SectionTitle(title: "Availability Time"),
-          SizedBox(height: height2),
-           DoctorAppointmentTimeSection(),
-          SizedBox(height: height1),
-         const _SectionTitle(title: "Video Consultation Fee (MAD)"),
+          const _SectionTitle(title: "Name of Diploma"),
           SizedBox(height: height2),
           InputField(
-            inputController: signInProvider.appointmentFeeC,
-            hintText: "Enter Video Consultation Fee",
-            type: TextInputType.number,
-          ),
-
-          SizedBox(height: height1),
-          const _SectionTitle(title: "In-Office Consultation Fee (MAD)"),
-          SizedBox(height: height2),
-          InputField(
-            inputController: signInProvider.inOfficeFeeC,
-            hintText: "Enter In-Office Consultation Fee",
-            type: TextInputType.number,
-          ),
-          SizedBox(height: height1),
-
-          const _SectionTitle(title: "Home Visit Consultation Fee (MAD)"),
-          SizedBox(height: height2),
-          InputField(
-            inputController: signInProvider.homeVisitFeeC,
-            hintText: "Enter Home Visit Consultation Fee",
-            type: TextInputType.number,
-          ),
-          SizedBox(height: height1),
-
-         const _SectionTitle(title: "Speciality Detail"),
-          SizedBox(height: height2),
-          InputField(
-            inputController: signInProvider.specialityDetailC,
+            inputController: signInProvider.diplomaController,
             hintText: "Enter the Detail on your Speciality",
-            maxLines: 6,
+          ),
+          SizedBox(height: height1),
+          const _SectionTitle(title: "Language"),
+          SizedBox(height: height2),
+          InputField(
+            inputController: signInProvider.languageController,
+            hintText: "Enter your language",
           ),
           SizedBox(height: height1),
           SubmitButton(
@@ -132,14 +102,13 @@ class _DoctorInfoForm extends StatelessWidget {
             press: () {
               if (formKey.currentState!.validate()) {
                 if (signInProvider.appointmentFrom != null && signInProvider.appointmentTo != null) {
-                  Get.to(DoctorExperienceInfoScreen());
+                  Get.to(SignUpScreen());
                 } else {
                   ToastMsg().toastMsg("Enter the Availability Time");
                 }
               }
             },
           ),
-          SizedBox(height: height1),
         ],
       ),
     );

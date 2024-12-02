@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
+import 'package:tabibinet_project/Providers/stream/stream_data_provider.dart';
 import 'package:tabibinet_project/Providers/translation/translation_provider.dart';
+import 'package:tabibinet_project/Screens/DoctorScreens/LabReportScreen/Components/lap_report_list_widget.dart';
 import 'package:tabibinet_project/constant.dart';
 import 'package:tabibinet_project/model/res/constant/app_icons.dart';
 import 'package:tabibinet_project/model/res/widgets/header.dart';
@@ -28,6 +30,9 @@ class LabReportScreen extends StatelessWidget {
     required this.patientName,
     required this.patientAge,
     required this.patientGender,
+    required this.patientId,
+    required this.deviceToken,
+    required this.doctorName,
   });
 
   final String date;
@@ -35,6 +40,12 @@ class LabReportScreen extends StatelessWidget {
   final String patientName;
   final String patientAge;
   final String patientGender;
+  final String patientId;
+  final String deviceToken;
+  final String doctorName;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +53,7 @@ class LabReportScreen extends StatelessWidget {
     double height2 = 10.0;
     final languageP = Provider.of<TranslationNewProvider>(context);
     final provider = Provider.of<TranslationProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: bgColor,
@@ -96,64 +108,13 @@ class LabReportScreen extends StatelessWidget {
                           fontWeight: FontWeight.w600, isTextCenter: false,
                           textColor: textColor, fontFamily: AppFonts.semiBold,),
                         TextWidget(
-                          text: "Result", fontSize: 18.sp,
+                          text: "", fontSize: 18.sp,
                           fontWeight: FontWeight.w500, isTextCenter: false,
                           textColor: themeColor, fontFamily: AppFonts.medium,),
                       ],
                     ),
                     SizedBox(height: height1,),
-                    StreamBuilder<List<ReportModel>>(
-                      stream: fetchReport(),
-                      builder: (context, snapshot) {
-
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        }
-                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const NoFoundCard(subTitle: "",);
-                        }
-
-                        final reps = snapshot.data!;
-
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: reps.length,
-                          itemBuilder: (context, index) {
-                            final rep = reps[index];
-                            return Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: bgColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: greyColor)
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.asset(AppIcons.pdfIcon,height: 30,),
-                                  SizedBox(width: 1.w,),
-                                  TextWidget(
-                                    text: "PDF File", fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600, isTextCenter: false,
-                                    textColor: textColor, fontFamily: AppFonts.semiBold,),
-                                  const Spacer(),
-                                  SubmitButton(
-                                    title: provider.translatedTexts["view"] ?? "view",
-                                    width: 18.w,
-                                    radius: 6,
-                                    height: 30,
-                                    press: () {
-                                      _launchURL(rep.fileUrl);
-                                    },)
-                                ],
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) => const SizedBox(height: 10,),
-                        );
-                      },),
+                    LapReportListWidget(appointmentId: appointmentId),
                     SizedBox(height: height1,),
                   ],
             ))
@@ -166,6 +127,10 @@ class LabReportScreen extends StatelessWidget {
             press: () {
               Get.to(()=>UploadReportFileScreen(
                 appointmentId: appointmentId,
+                deviceToken: deviceToken,
+                doctorName: doctorName,
+                patientId: patientId,
+                patientName: patientName
               ));
             },),
         ),
@@ -173,52 +138,8 @@ class LabReportScreen extends StatelessWidget {
     );
   }
 
-  Stream<List<ReportModel>> fetchReport() {
-    return fireStore.collection('appointment')
-        .doc(appointmentId)
-        .collection("report")
-        .snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => ReportModel.fromDocumentSnapshot(doc)).toList();
-    });
-  }
 
-  void _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      throw 'Could not launch $url';
-    }
-  }
+
 
 
 }
-
-
-//const ReportTile(
-//                         title: "TSH",
-//                         subTitle: "Reference: 0.8-1.3 mg/dL",
-//                         trailText: "26",
-//                         trailColor: red1Color),
-//                     const ReportTile(
-//                         title: "Ammonia",
-//                         subTitle: "40–70 μg/dL",
-//                         trailText: "56",
-//                         trailColor: green1Color),
-//                     const ReportTile(
-//                         title: "Blood Urea Nitrogen (BUN",
-//                         subTitle: "8–20 mg/dL",
-//                         trailText: "55",
-//                         trailColor: red1Color),
-//                     const ReportTile(
-//                         title: "Ammonia",
-//                         subTitle: "40–70 μg/dL",
-//                         trailText: "56",
-//                         trailColor: yellow1Color),
-//SizedBox(height: height1,),
-//                     const Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                       children: [
-//                         ColorIndicator(text: "Within Range", color: green1Color),
-//                         ColorIndicator(text: "Borderline", color: yellow1Color),
-//                         ColorIndicator(text: "Danger", color: red1Color),
-//                       ],
-//                     ),

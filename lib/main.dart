@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:email_otp/email_otp.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,13 +11,12 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tabibinet_project/Providers/Language/new/translation_new_provider.dart';
-import 'package:tabibinet_project/Providers/agora/agora_provider.dart';
+import 'package:tabibinet_project/Providers/actionProvider/actionProvider.dart';
 import 'package:tabibinet_project/Providers/agora/webrtc_provider.dart';
 import 'package:tabibinet_project/Providers/payment/payment_provider.dart';
 import 'package:tabibinet_project/Providers/schedule/schedule_provider.dart';
-import 'package:tabibinet_project/chart_screen.dart';
+import 'package:tabibinet_project/Providers/stream/stream_data_provider.dart';
 import 'package:tabibinet_project/model/api_services/url/baseurl.dart';
-import 'package:tabibinet_project/sample_test_screen.dart';
 
 import 'Providers/AudioPlayerProvider/audio_player_provider.dart';
 import 'Providers/BottomNav/bottom_navbar_provider.dart';
@@ -40,6 +40,8 @@ import 'Providers/SignIn/sign_in_provider.dart';
 import 'Providers/SignUp/sign_up_provider.dart';
 
 import 'Providers/TwilioProvider/twilio_provider.dart';
+import 'Providers/actionProvider/country_code_picker.dart';
+import 'Providers/actionProvider/forgot_provider.dart';
 import 'Providers/bankDetails/bank_details_provider.dart';
 import 'Providers/call_data_provider.dart';
 import 'Providers/smartAgenda/smartAgendaProvider.dart';
@@ -68,6 +70,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
   // await dotenv.load(fileName: ".env");
   Stripe.publishableKey=BaseUrl.STRIPE_PUBLISH_KEY;
   Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
@@ -87,15 +92,12 @@ void main() async {
     otpLength: 6,
   );
 
-
   String? deviceToken = await fcmService.getDeviceToken();
   
   log("Message Token:: $deviceToken");
   // await dotenv.load(fileName: ".env").whenComplete((){
   //   log("ENV Loaded");
   // });
-
-
   runApp(const MyApp());
 
   SystemChrome.setPreferredOrientations(
@@ -103,7 +105,6 @@ void main() async {
         DeviceOrientation.portraitUp
       ]
   );
-
 
   // runApp(DevicePreview(
   //   enabled: !kReleaseMode,
@@ -148,8 +149,10 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => BankDetailsProvider(),),
             ChangeNotifierProvider(create: (context) => TranslationNewProvider(),),
             ChangeNotifierProvider(create: (context) => AppDataProvider(),),
-            // ChangeNotifierProvider(create: (context) => AgoraProvider(),),
-
+            ChangeNotifierProvider(create: (context) => CountryPickerProvider(),),
+            ChangeNotifierProvider(create: (context) => StreamDataProvider(),),
+            ChangeNotifierProvider(create: (context) => ActionProvider(),),
+            ChangeNotifierProvider(create: (context) => ForgotProvider(),),
             ChangeNotifierProvider(create: (context) => TwilioProvider(
                 accountSid: BaseUrl.SID_TWILLO,
                 authToken: BaseUrl.AUTH_TOKEN_TWILLO,
@@ -177,7 +180,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           // home: PatientStatusChart(),
-          home:  SplashScreen(),
+          home:  const SplashScreen(),
           // home: const DoctorBottomNavbar(),
           // home: const PatientBottomNavBar(),
         ),

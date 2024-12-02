@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tabibinet_project/Providers/actionProvider/country_code_picker.dart';
 
 import '../../../../Providers/SignUp/sign_up_provider.dart';
 import '../../../../constant.dart';
+import '../../../../model/res/components/phone_number_widget.dart';
 import '../../../../model/res/constant/app_fonts.dart';
 import '../../../../model/res/constant/app_utils.dart';
 import '../../../../model/res/widgets/input_field.dart';
@@ -17,6 +19,7 @@ class SignUpForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final signUpP = Provider.of<SignUpProvider>(context,listen: false);
+    final countP = Provider.of<CountryPickerProvider>(context,listen: false);
     double height1 = 10.0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,16 +50,19 @@ class SignUpForm extends StatelessWidget {
           fontWeight: FontWeight.w600, isTextCenter: false,
           textColor: textColor,fontFamily: AppFonts.semiBold,),
         SizedBox(height: height1,),
-        ValidatedTextField(
-            inputController: signUpP.phoneC,
-            hintText: "+1234567890",
-            type: TextInputType.phone,
-            validator: (value) {
-              if (!RegExp(phonePattern).hasMatch(value ?? '')) {
-                return 'Please enter a valid phone number with country code';
-              }
-              return null;
-            },
+        // ValidatedTextField(
+        //     inputController: signUpP.phoneC,
+        //     hintText: "+1234567890",
+        //     type: TextInputType.phone,
+        //     validator: (value) {
+        //       if (!RegExp(phonePattern).hasMatch(value ?? '')) {
+        //         return 'Please enter a valid phone number with country code';
+        //       }
+        //       return null;
+        //     },
+        // ),
+        PhoneNumberWidget(
+          controller: signUpP.phoneC,
         ),
         // InputField(
         //   inputController: signUpP.phoneC,

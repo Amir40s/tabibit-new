@@ -95,7 +95,13 @@ class EPrescriptionDataScreen extends StatelessWidget {
                                   textColor: themeColor,
                                   bgColor: themeColor.withOpacity(0.1),
                                   press: () {
-                                    Get.to(()=> PrescribeMedicineScreen(isVisible: false,appointmentId: "",));
+                                    Get.to(()=> PrescribeMedicineScreen(
+                                      isVisible: false,
+                                      appointmentId: "",
+                                      deviceToken: "",
+                                      doctorName: "",
+                                      patientId: "",
+                                    ));
                                   },)
                               ],
                             ),
